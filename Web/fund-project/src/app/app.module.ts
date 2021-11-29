@@ -9,13 +9,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { RegisterComponent } from './components/register/register.component';
+import { FundsPageComponent } from './components/funds-page/funds-page.component';
+import { FundListComponent } from './components/funds-page/fund-list/fund-list.component';
+import { CreateFundComponent } from './components/funds-page/create-fund/create-fund.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    RegisterComponent
+    RegisterComponent,
+    FundsPageComponent,
+    FundListComponent,
+    CreateFundComponent
   ],
   imports: [
     BrowserModule,

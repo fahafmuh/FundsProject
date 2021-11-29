@@ -23,7 +23,18 @@ export class LoginComponent implements OnInit {
 
   Login(){
     console.log(this.loginForm.value);
-    this.router.navigate(['dashboard'])
+    if(this.loginForm.valid){
+      if(this.loginForm.value.username == 'admin' && this.loginForm.value.password == 'admin'){
+        sessionStorage.setItem('role','admin');
+      }else if(this.loginForm.value.username == 'supervisor' && this.loginForm.value.password == 'supervisor'){
+        sessionStorage.setItem('role','supervisor');
+      }else if(this.loginForm.value.username == 'manager' && this.loginForm.value.password == 'manager'){
+        sessionStorage.setItem('role','manager');
+      }else{
+        return;
+      }
+      this.router.navigate(['dashboard']);
+    }
   }
 
   Register(){
