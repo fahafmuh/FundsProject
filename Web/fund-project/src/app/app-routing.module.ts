@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
+import { NoPageComponent } from './components/no-page/no-page.component';
 import { RegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
@@ -11,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component:DashboardComponent
+    loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
     path: 'register',
@@ -23,8 +24,12 @@ const routes: Routes = [
     redirectTo: 'login',
   },
   {
+    path: 'no-page-found',
+    component:NoPageComponent
+  },
+  {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: 'no-page-found',
   },
 ];
 
