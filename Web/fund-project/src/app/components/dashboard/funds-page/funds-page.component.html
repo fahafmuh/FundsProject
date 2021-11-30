@@ -1,7 +1,7 @@
+<div *ngIf="!isCreated">
 <app-fund-list></app-fund-list>
 
 <button type="button" class="btn btn-info" (click)="addForm()">Create Fund</button>
+</div>
 
-<br>
-<hr>
 <app-create-fund *ngIf="isCreated"></app-create-fund>
