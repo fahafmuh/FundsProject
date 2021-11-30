@@ -12,6 +12,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { FundsPageComponent } from './components/funds-page/funds-page.component';
 import { FundListComponent } from './components/funds-page/fund-list/fund-list.component';
 import { CreateFundComponent } from './components/funds-page/create-fund/create-fund.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CreateFundComponent } from './components/funds-page/create-fund/create-
     FormsModule,
     RouterModule,
     CommonModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
