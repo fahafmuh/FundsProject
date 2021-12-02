@@ -1,26 +1,44 @@
 <section class="container">
-    <div class="row justify-content-center align-items-center vh-100">
-        <div class="col-xl-6 mx-auto box-sha p-4 rounded">
-            <div class="text-center mb-4 ">
-                <h2 class="text-primary text-uppercase "><span>FIS SYSTEMS</span></h2>
-            </div>
-            <form [formGroup]="loginForm" class="">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" formControlName="username" class="form-control" />
-                </div>
-                <div class="form-group mt-2">
-                    <label for="password">Password</label>
-                    <input type="password" formControlName="password" class="form-control" />
-                </div>
-                <div class="mt-4 text-center">
-                    <button [disabled]="!loginForm.valid" class="btn btn-secondary btn-block w-100 mb-4" (click)="Login()">
-                        Log In
-                    </button>
-                    <a *ngIf="userRole == 'fund-admin'" role="button" style="cursor: pointer;" (click)="Register()" class="text-primary mt-4">Register</a>
-                </div>
-            </form>
+  <div class="row justify-content-center align-items-center vh-100">
+    <div class="col-xl-6 mx-auto box-sha p-4 rounded">
+      <div class="text-center mb-4">
+        <h2 class="text-primary text-uppercase"><span>FIS SYSTEMS</span></h2>
+      </div>
+      <form [formGroup]="loginForm" class="">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" formControlName="username" class="form-control" />
         </div>
+        <div class="form-group mt-2">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            formControlName="password"
+            class="form-control"
+          />
+        </div>
+        <div class="mt-4 text-center">
+          <button
+            [disabled]="!loginForm.valid"
+            class="btn btn-secondary btn-block w-100 mb-4"
+            (click)="Login()"
+          >
+            <ngx-bootstrap-spinner
+              name="loginLoading"
+              bdColor="rgba(0, 0, 0, 0.8)"
+              size="small"
+              color="#d91d1d"
+              type="border"
+              isButtonSpinner="true"
+              autoDisableButton="true"
+              loadingText=""
+            >
+            </ngx-bootstrap-spinner>
+            Log In
+          </button>
+          <!-- <a *ngIf="userRole == 'fund-admin'" role="button" style="cursor: pointer;" (click)="Register()" class="text-primary mt-4">Register</a> -->
+        </div>
+      </form>
     </div>
-
+  </div>
 </section>
