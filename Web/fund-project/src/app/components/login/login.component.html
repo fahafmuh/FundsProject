@@ -1,21 +1,26 @@
-<div class="card">
-    <h4 class="card-header">Login</h4>
-    <div class="card-body">
-        <form [formGroup]="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" formControlName="username" class="form-control" />
+<section class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-xl-6 mx-auto box-sha p-4 rounded">
+            <div class="text-center mb-4 ">
+                <h2 class="text-primary text-uppercase "><span>FIS SYSTEMS</span></h2>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" formControlName="password" class="form-control" />
-            </div>
-            <div class="form-group">
-                <button [disabled]="!loginForm.valid" class="btn btn-primary" (click)="Login()">
-                    Login
-                </button>
-                <a *ngIf="userRole == 'fund-admin'" role="button" style="cursor: pointer;" (click)="Register()" class="btn btn-link">Register</a>
-            </div>
-        </form>
+            <form [formGroup]="loginForm" class="">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" formControlName="username" class="form-control" />
+                </div>
+                <div class="form-group mt-2">
+                    <label for="password">Password</label>
+                    <input type="password" formControlName="password" class="form-control" />
+                </div>
+                <div class="mt-4 text-center">
+                    <button [disabled]="!loginForm.valid" class="btn btn-secondary btn-block w-100 mb-4" (click)="Login()">
+                        Log In
+                    </button>
+                    <a *ngIf="userRole == 'fund-admin'" role="button" style="cursor: pointer;" (click)="Register()" class="text-primary mt-4">Register</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+
+</section>
