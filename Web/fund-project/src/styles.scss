@@ -2,3 +2,17 @@
  /* Importing Bootstrap SCSS file. */
  
  @import '~bootstrap/scss/bootstrap';
+ h1,
+ h2,
+ h3,
+ h4 {
+     font-family: 'Poppins', sans-serif;
+ }
+ 
+ .box-sha {
+     box-shadow: 3px 1px 13px 1px rgba(66, 68, 90, 0.18);
+ }
+ 
+ h2 {
+     font-weight: 700 !important;
+ }
