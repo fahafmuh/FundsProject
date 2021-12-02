@@ -12,6 +12,7 @@ import { APIService } from 'src/app/services/api.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   userRole = 'fund-admin';
+  yes=true;
   constructor(
     private formBuilder: FormBuilder,
     private apiService: APIService,
