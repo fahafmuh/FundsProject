@@ -10,7 +10,7 @@ import { CreateFundComponent } from './funds-page/create-fund/create-fund.compon
 import { DashboardRoutingModule } from './dashboard.routing.module';
 import { HeaderComponent } from './header/header.component';
 import { ApprovalComponent } from './approval/approval.component';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -24,6 +24,7 @@ import { ApprovalComponent } from './approval/approval.component';
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
+    NgbModule,
     CommonModule,
     DashboardRoutingModule
   ],

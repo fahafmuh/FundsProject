@@ -18,4 +18,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  Reload(){
+    location.reload();
+  }
+
 }
