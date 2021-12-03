@@ -8,13 +8,16 @@ import { APIService } from 'src/app/services/api.service';
   styleUrls: ['./create-fund.component.scss'],
 })
 export class CreateFundComponent implements OnInit {
-  fundForm:FormGroup | undefined;
+  fundForm: FormGroup | undefined;
   active = 1;
+  items: any;
 
-  constructor(private apiService:APIService,private formBuilder:FormBuilder) {}
- 
+  constructor(
+    private apiService: APIService,
+    private formBuilder: FormBuilder
+  ) {}
+
   ngOnInit(): void {
-
     // Section 1:
     this.fundForm = this.formBuilder.group({
       fundName: ['', [Validators.required]],
@@ -40,19 +43,22 @@ export class CreateFundComponent implements OnInit {
       catchUp: [null, []],
 
       // Section 2:
-      reportingFrequency:['', []],
+      reportingFrequency: ['', []],
       legalCounsel: ['', [Validators.required]],
       legalCounselRep: ['', [Validators.required]],
       auditor: ['', [Validators.required]],
       auditorRep: ['', [Validators.required]],
       trustee: ['', [Validators.required]],
       trusteeRep: ['', [Validators.required]],
-      investmentComittee: ['', [Validators.required]],
+      investmentComittee: [new FormArray([]), [Validators.required]],
       AUM: ['', [Validators.required]],
       directors: [new FormArray([]), [Validators.required]],
       directorSignature: ['', [Validators.required]],
       subscribers: [new FormArray([]), [Validators.required]],
-      subscribersCommitment: [this.formBuilder.array([]), [Validators.required]],
+      subscribersCommitment: [
+        this.formBuilder.array([]),
+        [Validators.required],
+      ],
 
       // Section 3:
       authorizedSignatory: [[], [Validators.required]],
@@ -92,17 +98,39 @@ export class CreateFundComponent implements OnInit {
     });
   }
 
-  Submit() {
-    if(this.fundForm && this.fundForm.valid){
-      this.apiService.onSave(this.fundForm.value).subscribe((result:any)=>{
-        if(result.status == "ok"){
-          this.apiService.isCreatedForm.next(false);
-        }
-      },(err:any)=>{
-  
-      })
+  createItem(): FormGroup {
+    return this.formBuilder.group({
+      name: ['', [Validators.required]],
+    });
+  }
+
+  addItem(name: string) {
+    if (this.fundForm) {
+      this.items = this.fundForm.get(name) as FormArray;
+      this.items.push(this.createItem());
     }
   }
+
+  deleteItem(index: number, name: string) {
+    if (this.fundForm) {
+      const remove = this.fundForm.get(name) as FormArray;
+      remove.removeAt(index);
+    }
+  }
+
+  Submit() {
+    if (this.fundForm && this.fundForm.valid) {
+      this.apiService.onSave(this.fundForm.value).subscribe(
+        (result: any) => {
+          if (result.status == 'ok') {
+            this.apiService.isCreatedForm.next(false);
+          }
+        },
+        (err: any) => {}
+      );
+    }
+  }
+  
   Cancel() {
     this.apiService.isCreatedForm.next(false);
   }
