@@ -28,6 +28,7 @@ def example_view(request, format=None):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
 def Logout(request):
     request.user.auth_token.delete()
     logout(request)
