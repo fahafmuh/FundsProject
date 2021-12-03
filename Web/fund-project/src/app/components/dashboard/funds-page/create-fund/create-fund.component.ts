@@ -90,10 +90,6 @@ export class CreateFundComponent implements OnInit {
       liquidate: ['', []],
       liquidateReason: ['', []],
     });
-
-    // this.fundFormSection2 = this.formBuilder.group({
-
-    // });
   }
 
   Submit() {
