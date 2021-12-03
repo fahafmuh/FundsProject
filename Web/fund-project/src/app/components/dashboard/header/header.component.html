@@ -1,36 +1,28 @@
-<header class="p-3 border-bottom bg-dark text-white">
-  <div class="container">
-    <div class="d-flex flex-wrap align-items-center justify-content-between">
-      <a
-        style="cursor: pointer"
-        (click)="Reload()"
-        class="
+<header class="p-3 border-bottom bg-secondary text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a style="cursor: pointer" (click)="Reload()" class="
           d-flex
           align-items-center
           mb-2 mb-lg-0
           text-white text-decoration-none
           h2
-        "
-      >
+        ">
         FIS SYSTEMS
       </a>
 
-      <div class="row">
-        <div class="col">
-          <div ngbDropdown class="d-inline-block">
-            <button
-              class="btn btn-outline-primary"
-              id="profile"
-              ngbDropdownToggle
-            >
-              User
-            </button>
-            <div ngbDropdownMenu aria-labelledby="profile">
-              <button ngbDropdownItem (click)="Logout()">Sign Out</button>
+            <div class="row">
+                <div class="col">
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-primary " id="profile" ngbDropdownToggle>
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                  </button>
+                        <div ngbDropdownMenu aria-labelledby="profile">
+                            <button ngbDropdownItem (click)="Logout()">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
