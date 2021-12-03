@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-create-fund',
@@ -14,8 +15,10 @@ export class CreateFundComponent implements OnInit {
 
   constructor(
     private apiService: APIService,
+    private toastService:ToastService,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     // Section 1:
@@ -123,6 +126,7 @@ export class CreateFundComponent implements OnInit {
       this.apiService.onSave(this.fundForm.value).subscribe(
         (result: any) => {
           if (result.status == 'ok') {
+            this.toastService.show('Fund created successfully!', { classname: 'bg-success text-light', delay: 4500 });
             this.apiService.isCreatedForm.next(false);
           }
         },
@@ -130,7 +134,7 @@ export class CreateFundComponent implements OnInit {
       );
     }
   }
-  
+
   Cancel() {
     this.apiService.isCreatedForm.next(false);
   }
