@@ -9,20 +9,16 @@
           h2
         ">
         FIS SYSTEMS
-      </a>
-
-            <div class="row">
-                <div class="col">
-                    <div ngbDropdown class="d-inline-block">
-                        <button class="btn btn-primary " id="profile" ngbDropdownToggle>
-                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                  </button>
-                        <div ngbDropdownMenu aria-labelledby="profile">
-                            <button ngbDropdownItem (click)="Logout()">Sign Out</button>
-                        </div>
-                    </div>
+            </a>
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-primary " id="profile" ngbDropdownToggle>
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          </button>
+                <div ngbDropdownMenu aria-labelledby="profile">
+                    <button ngbDropdownItem (click)="Logout()">Sign Out</button>
                 </div>
             </div>
+
         </div>
     </div>
 </header>
