@@ -12,11 +12,11 @@ import { APIService } from 'src/app/services/api.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   userRole = 'fund-admin';
-  yes=true;
+  mappingBoolean = true;
   constructor(
     private formBuilder: FormBuilder,
     private apiService: APIService,
-    private spinner:NgxSpinnerService,
+    private spinner: NgxSpinnerService,
     private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
@@ -29,29 +29,43 @@ export class LoginComponent implements OnInit {
     console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       this.spinner.show('loginLoading');
-      this.apiService.login(this.loginForm.value).subscribe((result: any) => {
-        console.log(result);
-        sessionStorage.setItem('token',result.token);
-        this.spinner.hide('loginLoading');
-        this.setRoleAndRedirect();
-      });
-    
+      this.apiService.login(this.loginForm.value).subscribe(
+        (result: any) => {
+          console.log(result);
+          sessionStorage.setItem('token', result.token);
+          this.spinner.hide('loginLoading');
+          this.setRoleAndRedirect();
+        },
+        (err) => {
+          this.spinner.hide('loginLoading');
+          return;
+        }
+      );
     }
   }
 
-  setRoleAndRedirect(){
-  if(this.loginForm.value.username == 'fundsadmin' && this.loginForm.value.password == 'fundsadmin'){
-        sessionStorage.setItem('role','admin');
-        this.router.navigate(['dashboard/funds']);
-      }else if(this.loginForm.value.username == 'fundssupervisor' && this.loginForm.value.password == 'fundssupervisor'){
-        sessionStorage.setItem('role','supervisor');
-        this.router.navigate(['dashboard/approval/'+ 'supervisor']);
-      }else if(this.loginForm.value.username == 'fundsmanager' && this.loginForm.value.password == 'fundsmanager'){
-        sessionStorage.setItem('role','manager');
-        this.router.navigate(['dashboard/approval/'+ 'manager']);
-      }else{
-        return;
-      }
+  setRoleAndRedirect() {
+    if (
+      this.loginForm.value.username == 'fundsadmin' &&
+      this.loginForm.value.password == 'fundsadmin'
+    ) {
+      sessionStorage.setItem('role', 'admin');
+      this.router.navigate(['dashboard/funds']);
+    } else if (
+      this.loginForm.value.username == 'fundssupervisor' &&
+      this.loginForm.value.password == 'fundssupervisor'
+    ) {
+      sessionStorage.setItem('role', 'supervisor');
+      this.router.navigate(['dashboard/approval/' + 'supervisor']);
+    } else if (
+      this.loginForm.value.username == 'fundsmanager' &&
+      this.loginForm.value.password == 'fundsmanager'
+    ) {
+      sessionStorage.setItem('role', 'manager');
+      this.router.navigate(['dashboard/approval/' + 'manager']);
+    } else {
+      return;
+    }
   }
 
   Register() {
