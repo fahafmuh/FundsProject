@@ -18,6 +18,9 @@
                     <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                   </button>
                         <div ngbDropdownMenu aria-labelledby="profile">
+                            <button ngbDropdownItem (click)="Logout()">Hi, {{displayName(role)}}</button>
+
+                            <div class="dropdown-divider"></div>
                             <button ngbDropdownItem (click)="Logout()">Sign Out</button>
                         </div>
                     </div>

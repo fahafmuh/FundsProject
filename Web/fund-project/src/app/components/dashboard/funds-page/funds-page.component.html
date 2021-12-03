@@ -9,20 +9,17 @@
 
 <main role="main" class="container">
     <div class="col-md-12 ml-sm-auto col-lg-12">
-        <div *ngIf="!isCreated" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h3 class="h2">Funds List</h3>
+        <div  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h6 class="h2">Funds List</h6>
             <div class="btn-toolbar mb-2 mb-md-0">
 
-                <div class="btn-group mr-3">
+                <div class="btn-group mr-3" *ngIf="!isCreated" (click)="addForm()">
                     <button type="button" class="btn btn-outline-primary">Create</button>
                     <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-                        <button class="btn btn-primary" (click)="addForm()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
 
                     </div>
                 </div>
-                <!-- <div class="btn-group mr-2">
-                    <button type="button" class="btn btn-md btn-outline-primary" (click)="addForm()">Create</button>
-                </div> -->
             </div>
         </div>
     </div>
