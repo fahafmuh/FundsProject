@@ -32,9 +32,11 @@ export class LoginComponent implements OnInit {
       this.apiService.login(this.loginForm.value).subscribe(
         (result: any) => {
           console.log(result);
-          sessionStorage.setItem('token', result.token);
+          if(result.status == "ok"){
+            sessionStorage.setItem('token', result.token);
+            this.setRoleAndRedirect();
+          }
           this.spinner.hide('loginLoading');
-          this.setRoleAndRedirect();
         },
         (err) => {
           this.spinner.hide('loginLoading');

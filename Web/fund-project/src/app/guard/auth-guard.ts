@@ -1,23 +1,23 @@
-// import { Injectable } from '@angular/core';
-// import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
+import { Observable } from "rxjs";
 
+@Injectable()
+export class AuthGuard implements CanActivate {
+    constructor(private _router: Router) {
 
-// @Injectable({ providedIn: 'root' })
-// export class AuthGuard implements CanActivate {
-//     constructor(
-//         private router: Router,
-//         private accountService: AccountService
-//     ) {}
-
-//     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-//         const user = this.accountService.userValue;
-//         if (user) {
-//             // authorised so return true
-//             return true;
-//         }
-
-//         // not logged in so redirect to login page with the return url
-//         this.router.navigate(['/account/login'], { queryParams: { returnUrl: state.url }});
-//         return false;
-//     }
-// }
+    }
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+        console.log(sessionStorage.getItem('role') && sessionStorage.getItem('token'));
+        
+        if(sessionStorage.getItem('role') && sessionStorage.getItem('token')){
+            return true;
+        }
+        else{
+            this._router.navigate(['login']);
+            return false;
+        }
+        
+    }
+   
+}

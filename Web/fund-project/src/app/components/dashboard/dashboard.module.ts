@@ -11,6 +11,10 @@ import { DashboardRoutingModule } from './dashboard.routing.module';
 import { HeaderComponent } from './header/header.component';
 import { ApprovalComponent } from './approval/approval.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AuthGuard } from 'src/app/guard/auth-guard';
+import { MaterialModule } from 'src/app/app.material.module';
+import { ConfirmationDialogComponent } from 'src/app/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -25,10 +29,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     RouterModule,
     NgbModule,
+    MaterialModule,
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
   ],
-  providers: [],
+  entryComponents:[ConfirmationDialogComponent],
+  providers: [AuthGuard],
+  exports:[MaterialModule],
   bootstrap: [DashboardComponent]
 })
 export class DashboardModule { }

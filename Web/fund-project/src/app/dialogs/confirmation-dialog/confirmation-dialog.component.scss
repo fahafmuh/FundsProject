@@ -1,0 +1,20 @@
+.app-details-popup {
+    .footer-section {
+        background: lightblue;
+        padding: 16px;
+        text-align: right;
+
+        button {
+            margin-left: 8px;
+        }
+    }
+}
+
+
+app-confirmation-dialog {
+    display: block;
+    max-width: 800px;
+    .app-form-fields {
+        padding: 20px 20px 10px;
+    }
+}

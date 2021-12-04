@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from 'src/app/dialogs/confirmation-dialog/confirmation-dialog.component';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-create-fund',
   templateUrl: './create-fund.component.html',
@@ -13,12 +19,15 @@ export class CreateFundComponent implements OnInit {
   active = 1;
   items: any;
 
+  horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
   constructor(
     private apiService: APIService,
-    private toastService:ToastService,
+    private _snackBar: MatSnackBar,
+    private dialogRef: MatDialog,
     private formBuilder: FormBuilder
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     // Section 1:
@@ -28,25 +37,25 @@ export class CreateFundComponent implements OnInit {
       fundDescription: ['', [Validators.required]],
       subFund: ['', []],
       domicile: ['Singapore', []],
-      fundType: ['', []],
+      fundType: ['regulated', []],
       fundManagerEntity: ['', [Validators.required]],
       fundManagerRep: ['', [Validators.required]],
-      fundStructure: ['', []],
-      offerPrice: [null, []],
-      issuedShares: [null, []],
-      ordinaryShare: [null, []],
-      fundStatus: [null, []],
-      reportingCurrency: [null, []],
-      fundSize: [null, []],
-      lookupPeriod: [null, []],
-      fundYearEnd: [null, []],
-      productType: [null, []],
+      fundStructure: ['open-ended', []],
+      offerPrice: [1.00, []],
+      issuedShares: [1, []],
+      ordinaryShare: [1, []],
+      fundStatus: ['onboarding', []],
+      reportingCurrency: ['USD', []],
+      fundSize: [0.00, []],
+      lookupPeriod: [0, []],
+      fundYearEnd: ['Dec', []],
+      productType: ['private-equity', []],
       fundLife: [null, [Validators.required]],
       fundEndDate: [null, []],
-      catchUp: [null, []],
+      catchUp: [0.00, []],
 
       // Section 2:
-      reportingFrequency: ['', []],
+      reportingFrequency: ['month', []],
       legalCounsel: ['', [Validators.required]],
       legalCounselRep: ['', [Validators.required]],
       auditor: ['', [Validators.required]],
@@ -54,12 +63,12 @@ export class CreateFundComponent implements OnInit {
       trustee: ['', [Validators.required]],
       trusteeRep: ['', [Validators.required]],
       investmentComittee: [new FormArray([]), [Validators.required]],
-      AUM: ['', [Validators.required]],
+      AUM: [0.00, [Validators.required]],
       directors: [new FormArray([]), [Validators.required]],
       directorSignature: ['', [Validators.required]],
       subscribers: [new FormArray([]), [Validators.required]],
       subscribersCommitment: [
-        this.formBuilder.array([]),
+        0.00,
         [Validators.required],
       ],
 
@@ -71,16 +80,16 @@ export class CreateFundComponent implements OnInit {
       GIIN: ['', [Validators.required]],
       preparer: ['', []],
       closingPeriod: [[], [Validators.required]],
-      reclassificationFreq: ['', []],
+      reclassificationFreq: ['month', []],
       approver: ['', [Validators.required]],
       subscriptionAgreement: [null, [Validators.required]],
       investmentAgreement: [null, [Validators.required]],
       PPM: [null, [Validators.required]],
-      directorFee: [null, []],
-      managementFee: [null, []],
-      hurdleRate: [null, []],
-      CTC: [null, []],
-      bank: ['', []],
+      directorFee: [0.00, []],
+      managementFee: [0.00, []],
+      hurdleRate: [0.0000, []],
+      CTC: [0.00, []],
+      bank: ['ocbc', []],
       bankAccount: ['', [Validators.required]],
       bankAccessId: ['', [Validators.required]],
       bankAccessPassword: ['', [Validators.required]],
@@ -90,7 +99,7 @@ export class CreateFundComponent implements OnInit {
       freezeReason: ['', []],
       unfreeze: ['', []],
       unfreezeReason: ['', []],
-      refund: ['', []],
+      refund: [0.00, []],
       refundReason: ['', []],
       redeem: ['', []],
       redeemReason: ['', []],
@@ -126,7 +135,10 @@ export class CreateFundComponent implements OnInit {
       this.apiService.onSave(this.fundForm.value).subscribe(
         (result: any) => {
           if (result.status == 'ok') {
-            this.toastService.show('Fund created successfully!', { classname: 'bg-success text-light', delay: 4500 });
+            this._snackBar.open('Fund created successfully!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+            });
             this.apiService.isCreatedForm.next(false);
           }
         },
@@ -136,6 +148,13 @@ export class CreateFundComponent implements OnInit {
   }
 
   Cancel() {
+    this.dialogRef.open(ConfirmationDialogComponent, {
+      data: {
+        text: 'You have unsaved changes, are you sure want to leave this page?',
+        okButtonLabel: 'Yes',
+        cancelButtonLable: 'Cancel',
+      },
+    });
     this.apiService.isCreatedForm.next(false);
   }
 }
