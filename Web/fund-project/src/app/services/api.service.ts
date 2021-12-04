@@ -11,9 +11,9 @@ export class APIService {
 
   private loginApi = 'api/login/';
   private logoutApi = 'api/logout/';
-  private fundCreateApi = 'api/fund-create';
+  private fundCreateApi = 'api/createFund';
+  private getDirectorsApi = 'api/getDirectors';
 
-  public isCreatedForm: BehaviorSubject<any> = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {}
 
@@ -41,9 +41,29 @@ export class APIService {
     });
   }
 
-  logout() {
+  getFromLocal(item:any) {
+    return sessionStorage.getItem(item);
+  }
+
+  setHeaders(){
+    let options;
+    let user = this.getFromLocal('token');
+    if (!!user) {
+      let token = user;
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Authorization: 'token' + token
+      });
+      options = {
+        headers: headers,
+      };
+    }
+    return options;
+  }
+
+  logout(): Observable<any> {
     return new Observable((observer) => {
-      this.http.get(this.serverURL + this.logoutApi).subscribe(
+      this.http.get(this.serverURL + this.logoutApi,this.setHeaders()).subscribe(
         (response) => {
           console.log(response);
           observer.next({
@@ -78,6 +98,26 @@ export class APIService {
             observer.complete();
           }
         );
+    });
+  }
+
+  getDirectors(){
+    return new Observable((observer) => {
+      this.http.get(this.serverURL + this.getDirectorsApi,this.setHeaders()).subscribe(
+        (res) => {
+          let response:any = res;
+          console.log(response);
+          observer.next({
+            status: 'ok',
+            directors : (response.directors && response.directors.length ? response.directors : [])
+          });
+          observer.complete();
+        },
+        (err) => {
+          observer.next({ status: 'error' });
+          observer.complete();
+        }
+      );
     });
   }
 }

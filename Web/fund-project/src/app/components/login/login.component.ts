@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
         (result: any) => {
           console.log(result);
           if(result.status == "ok"){
-            sessionStorage.setItem('token', result.token);
+            sessionStorage.setItem('token', result.value);
             this.setRoleAndRedirect();
           }
           this.spinner.hide('loginLoading');
@@ -52,18 +52,24 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.password == 'fundsadmin'
     ) {
       sessionStorage.setItem('role', 'admin');
+      sessionStorage.setItem('username', 'fundsadmin');
+      sessionStorage.setItem('password', 'fundsadmin');
       this.router.navigate(['dashboard/funds']);
     } else if (
       this.loginForm.value.username == 'fundssupervisor' &&
       this.loginForm.value.password == 'fundssupervisor'
     ) {
       sessionStorage.setItem('role', 'supervisor');
+      sessionStorage.setItem('username', 'fundssupervisor');
+      sessionStorage.setItem('password', 'fundssupervisor');
       this.router.navigate(['dashboard/approval/' + 'supervisor']);
     } else if (
       this.loginForm.value.username == 'fundsmanager' &&
       this.loginForm.value.password == 'fundsmanager'
     ) {
       sessionStorage.setItem('role', 'manager');
+      sessionStorage.setItem('username', 'fundsmanager');
+      sessionStorage.setItem('password', 'fundsmanager');
       this.router.navigate(['dashboard/approval/' + 'manager']);
     } else {
       return;

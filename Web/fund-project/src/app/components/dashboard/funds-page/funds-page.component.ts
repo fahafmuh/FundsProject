@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { APIService } from 'src/app/services/api.service';
 
 @Component({
@@ -8,15 +9,13 @@ import { APIService } from 'src/app/services/api.service';
 })
 export class FundsPageComponent implements OnInit {
   isCreated = false;
-  constructor(private apiService: APIService) {
-    this.apiService.isCreatedForm.subscribe((res) => {
-      this.isCreated = res;
-    });
+  constructor(private apiService: APIService,public router:Router) {
+  
   }
 
   ngOnInit(): void {}
 
   addForm() {
-    this.apiService.isCreatedForm.next(true);
+    this.router.navigate(['dashboard/funds/create']);
   }
 }

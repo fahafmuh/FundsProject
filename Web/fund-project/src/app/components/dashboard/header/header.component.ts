@@ -17,8 +17,10 @@ export class HeaderComponent implements OnInit {
 
   Logout() {
     this.apiService.logout().subscribe((result: any) => {
-      sessionStorage.clear();
-      this.router.navigate(['login']);
+      if(result.status == "ok"){
+        sessionStorage.clear();
+        this.router.navigate(['login']);
+      }
     });
   }
 

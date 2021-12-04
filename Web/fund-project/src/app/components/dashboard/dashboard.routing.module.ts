@@ -4,6 +4,8 @@ import { AuthGuard } from 'src/app/guard/auth-guard';
 import { NoPageComponent } from '../no-page/no-page.component';
 import { ApprovalComponent } from './approval/approval.component';
 import { DashboardComponent } from './dashboard.component';
+import { CreateFundComponent } from './funds-page/create-fund/create-fund.component';
+import { FundListComponent } from './funds-page/fund-list/fund-list.component';
 import { FundsPageComponent } from './funds-page/funds-page.component';
 
 const routes: Routes = [
@@ -15,8 +17,14 @@ const routes: Routes = [
     children: [
       {
         path: 'funds',
-        component: FundsPageComponent,
         canActivate: [AuthGuard],
+        component: FundsPageComponent,
+        children: [
+          { path: '', redirectTo: 'list' },
+          { path: 'list', component: FundListComponent },
+          { path: 'create', component: CreateFundComponent },
+          { path: 'edit/:id', component: CreateFundComponent },
+        ],
       },
       {
         path: 'approval/:role',

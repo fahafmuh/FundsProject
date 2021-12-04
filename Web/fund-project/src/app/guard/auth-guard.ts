@@ -8,8 +8,7 @@ export class AuthGuard implements CanActivate {
 
     }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-        console.log(sessionStorage.getItem('role') && sessionStorage.getItem('token'));
-        
+
         if(sessionStorage.getItem('role') && sessionStorage.getItem('token')){
             return true;
         }
