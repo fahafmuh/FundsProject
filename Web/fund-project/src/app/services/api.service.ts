@@ -129,7 +129,7 @@ export class APIService {
     });
   }
 
-  addDirector(value: string): Observable<any> {
+  addDirector(value: any): Observable<any> {
     return new Observable((observer) => {
       this.http
         .post(this.serverURL + this.addDirectorApi, {

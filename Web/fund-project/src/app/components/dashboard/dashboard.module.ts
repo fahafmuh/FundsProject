@@ -14,7 +14,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthGuard } from 'src/app/guard/auth-guard';
 import { MaterialModule } from 'src/app/app.material.module';
 import { ConfirmationDialogComponent } from 'src/app/dialogs/confirmation-dialog/confirmation-dialog.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { CreateDirectorsComponent } from './funds-page/create-directors/create-directors.component';
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -22,11 +23,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FundsPageComponent,
     HeaderComponent,
     ApprovalComponent,
-    CreateFundComponent
+    CreateFundComponent,
+    CreateDirectorsComponent
   ],
   imports: [
     ReactiveFormsModule,
     FormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
     RouterModule,
     NgbModule,
     MaterialModule,

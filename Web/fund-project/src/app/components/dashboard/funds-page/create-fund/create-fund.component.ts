@@ -1,8 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable } from 'rxjs';
-import { map, max, startWith } from 'rxjs/operators';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2';
@@ -12,7 +9,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
 @Component({
   selector: 'app-create-fund',
   templateUrl: './create-fund.component.html',
@@ -20,11 +17,6 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 })
 export class CreateFundComponent implements OnInit {
   fundForm: FormGroup;
-  @ViewChild('directorInput') directorInput: ElementRef<HTMLInputElement>;
-  filteredFruits: Observable<string[]>;
-  selectable = true;
-  removable = true;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
   sectionNo = 1;
   items: any;
   today = new Date();
@@ -32,6 +24,8 @@ export class CreateFundComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
   noNeed = false;
   disable = true;
+  dropdownSettings = {};
+
   // Data for dropdowns
   domicileData = [
     { value: 'singapore', viewValue: 'Singapore' },
@@ -144,6 +138,18 @@ export class CreateFundComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder
   ) {
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 4,
+      allowSearchFilter: true,
+      enableCheckAll:true
+    };
+    
     this.apiService.getDirectors().subscribe(
       (result: any) => {
         if (result.status == 'ok') {
@@ -281,13 +287,6 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
     });
 
-    this.filteredFruits = this.fundForm.valueChanges.pipe(
-      startWith(null),
-      map((director: string | null) =>
-        director ? this._filter(director) : this.directors.slice()
-      )
-    );
-
     this.fundForm.valueChanges.subscribe((val) => {
       if (val.fundSize && val.offerPrice) {
         const issuedShareValue = val.fundSize / val.offerPrice;
@@ -298,91 +297,16 @@ export class CreateFundComponent implements OnInit {
     });
   }
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value) {
-      this.directors.map((res: any, index: any) => {
-        if (res.name != value) {
-          this.apiService.addDirector(value).subscribe(
-            (result: any) => {
-              if (result.status == 'ok') {
-                this.directors.push(value);
-                this.refresh();
-              } else {
-                this.refresh();
-              }
-            },
-            (err: any) => {
-              this.refresh();
-            }
-          );
-        }
-      });
-    }
-
-
-  
-
-    // Clear the input value
-    // event.chipInput!.clear();
-
-    // this.fruitCtrl.setValue(null);
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.directors.push(event.option.viewValue);
-    this.directorInput.nativeElement.value = '';
-  }
-
   refresh(){
     return this.directors = [...this.directors];
   }
-
-  remove(value: string): void {
-    const index = this.directors.indexOf(value);
-
-    if (index >= 0) {
-      this.apiService.deleteDirector(value).subscribe((res:any)=>{
-        if(res.status == "ok"){
-          this.directors.splice(index, 1);
-          this.refresh();
-        }else{
-          this.refresh();
-        }
-      },err=>{
-        this.refresh();
-      })
-    }
+  
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.directors.filter((director: any) =>
-      director.toLowerCase().includes(filterValue)
-    );
-  }
-
-  createItem(): FormGroup {
-    return this.formBuilder.group({
-      name: ['', [Validators.required]],
-    });
-  }
-
-  addItem(name: string) {
-    if (this.fundForm) {
-      this.items = this.fundForm.get(name) as FormArray;
-      this.items.push(this.createItem());
-    }
-  }
-
-  deleteItem(index: number, name: string) {
-    if (this.fundForm) {
-      const remove = this.fundForm.get(name) as FormArray;
-      remove.removeAt(index);
-    }
+  onItemSelect(items: any) {
+    console.log(items);
   }
 
   Submit() {
