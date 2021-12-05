@@ -1,14 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable } from 'rxjs';
+import { map, max, startWith } from 'rxjs/operators';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from 'src/app/dialogs/confirmation-dialog/confirmation-dialog.component';
+import Swal from 'sweetalert2';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-create-fund',
   templateUrl: './create-fund.component.html',
@@ -16,6 +20,11 @@ import { Router } from '@angular/router';
 })
 export class CreateFundComponent implements OnInit {
   fundForm: FormGroup;
+  @ViewChild('directorInput') directorInput: ElementRef<HTMLInputElement>;
+  filteredFruits: Observable<string[]>;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   sectionNo = 1;
   items: any;
   today = new Date();
@@ -127,13 +136,12 @@ export class CreateFundComponent implements OnInit {
     { value: 'UOB', viewValue: 'UOB' },
   ];
 
-  directors = [];
+  directors: any = [];
 
   constructor(
     private apiService: APIService,
     private _snackBar: MatSnackBar,
     private router: Router,
-    private dialogRef: MatDialog,
     private formBuilder: FormBuilder
   ) {
     this.apiService.getDirectors().subscribe(
@@ -162,7 +170,7 @@ export class CreateFundComponent implements OnInit {
       fundManagerEntity: ['', []],
       fundManagerRep: ['', [Validators.required]],
       fundStructure: ['open-end', []],
-      offerPrice: [1.00, []],
+      offerPrice: [1.0, []],
       fundSize: [0.0, []],
       issuedShares: [1, []],
       ordinaryShare: [1, []],
@@ -233,7 +241,7 @@ export class CreateFundComponent implements OnInit {
       if (value === 'regulated') {
         this.fundForm
           .get('fundManagerEntity')!
-          .setValidators([Validators.required,Validators.maxLength(256)]);
+          .setValidators([Validators.required, Validators.maxLength(256)]);
       } else {
         this.fundForm.get('fundManagerEntity')!.setValidators(null);
       }
@@ -247,23 +255,23 @@ export class CreateFundComponent implements OnInit {
           .get('legalCounsel')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
 
-          this.fundForm
+        this.fundForm
           .get('legalCounselRep')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
 
-          this.fundForm
+        this.fundForm
           .get('auditor')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
 
-          this.fundForm
+        this.fundForm
           .get('auditorRep')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
 
-          this.fundForm
+        this.fundForm
           .get('trustee')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
 
-          this.fundForm
+        this.fundForm
           .get('trusteeRep')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
       } else {
@@ -273,12 +281,88 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
     });
 
-    this.fundForm.valueChanges.subscribe(val =>{
+    this.filteredFruits = this.fundForm.valueChanges.pipe(
+      startWith(null),
+      map((director: string | null) =>
+        director ? this._filter(director) : this.directors.slice()
+      )
+    );
+
+    this.fundForm.valueChanges.subscribe((val) => {
       if (val.fundSize && val.offerPrice) {
-        const issuedShareValue = (val.fundSize / val.offerPrice);
-        this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {emitEvent: false});
-      }  
+        const issuedShareValue = val.fundSize / val.offerPrice;
+        this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
+          emitEvent: false,
+        });
+      }
     });
+  }
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.directors.map((res: any, index: any) => {
+        if (res.name != value) {
+          this.apiService.addDirector(value).subscribe(
+            (result: any) => {
+              if (result.status == 'ok') {
+                this.directors.push(value);
+                this.refresh();
+              } else {
+                this.refresh();
+              }
+            },
+            (err: any) => {
+              this.refresh();
+            }
+          );
+        }
+      });
+    }
+
+
+  
+
+    // Clear the input value
+    // event.chipInput!.clear();
+
+    // this.fruitCtrl.setValue(null);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.directors.push(event.option.viewValue);
+    this.directorInput.nativeElement.value = '';
+  }
+
+  refresh(){
+    return this.directors = [...this.directors];
+  }
+
+  remove(value: string): void {
+    const index = this.directors.indexOf(value);
+
+    if (index >= 0) {
+      this.apiService.deleteDirector(value).subscribe((res:any)=>{
+        if(res.status == "ok"){
+          this.directors.splice(index, 1);
+          this.refresh();
+        }else{
+          this.refresh();
+        }
+      },err=>{
+        this.refresh();
+      })
+    }
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.directors.filter((director: any) =>
+      director.toLowerCase().includes(filterValue)
+    );
   }
 
   createItem(): FormGroup {
@@ -323,15 +407,14 @@ export class CreateFundComponent implements OnInit {
   }
 
   Cancel() {
-    let dialog = this.dialogRef.open(ConfirmationDialogComponent, {
-      data: {
-        text: 'You have unsaved changes, are you sure want to leave this page?',
-        okButtonLabel: 'Yes',
-        cancelButtonLable: 'Cancel',
-      },
-    });
-    dialog.afterClosed().subscribe((res) => {
-      if (res) {
+    Swal.fire({
+      title: 'Confirmation!',
+      text: 'Unsaved changes will be discarded, Do you want to continue?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.router.navigate(['dashboard/funds/list']);
       } else {
         return;
