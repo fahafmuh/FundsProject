@@ -11,13 +11,11 @@ import { FundsPageComponent } from './funds-page/funds-page.component';
 const routes: Routes = [
   {
     path: '',
-    canActivate: [AuthGuard],
     component: DashboardComponent,
 
     children: [
       {
         path: 'funds',
-        canActivate: [AuthGuard],
         component: FundsPageComponent,
         children: [
           { path: '', redirectTo: 'list' },

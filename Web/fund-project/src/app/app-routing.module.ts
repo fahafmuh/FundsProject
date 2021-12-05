@@ -12,7 +12,7 @@ const routes: Routes = [
     component:LoginComponent
   },
   {
-    path: 'dashboard', canActivate: [AuthGuard],
+    path: 'dashboard',
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
