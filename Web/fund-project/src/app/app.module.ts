@@ -31,7 +31,6 @@ import { ConfirmationDialogComponent } from './dialogs/confirmation-dialog/confi
     HttpClientModule,
     NgxSpinnerModule,
     RouterModule,
-    MaterialModule,
     CommonModule,
     AppRoutingModule
   ],

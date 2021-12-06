@@ -209,9 +209,11 @@ export class CreateFundComponent implements OnInit {
       investmentComittee: [[], [Validators.required]],
       directors: [new FormArray([]), [Validators.required]],
       directorSignature: ['', [Validators.required]],
-      subscribers: [new FormArray([]), [Validators.required]],
-      subscribersCommitment: [0.0, [Validators.required]],
-
+      // subscribers: [new FormArray([]), [Validators.required]],
+      // subscribersCommitment: [0.0, [Validators.required]],
+      subscribers: this.formBuilder.array(
+        this.TransformSubscribers()
+      ),
       // Section 3:
       authorizedSignatory: [[], [Validators.required]],
       signature: [null, [Validators.required]],
@@ -309,7 +311,37 @@ export class CreateFundComponent implements OnInit {
   refresh(){
     return this.directors = [...this.directors];
   }
-  
+
+  TransformSubscribers(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        name: ['', [Validators.required]],
+        commitment: [0.00, [Validators.required]],
+      })
+    );
+
+    return fb;
+  }
+
+  GetControls(name: string) {
+    return (this.fundForm.get(name) as FormArray).controls;
+  }
+
+  addDirector() {
+    let fb: FormGroup = this.formBuilder.group({
+      name: ['', [Validators.required]]
+
+		})
+		let subscribers = this.fundForm.get('subscribers') as FormArray;
+		subscribers.push(fb);
+  }
+
+  removeDirector(index: any) {
+    let subs = this.fundForm.get('subscribers') as FormArray;
+    subs.removeAt(index);
+  }
+
   Submit() {
     console.log(this.fundForm.value);
 

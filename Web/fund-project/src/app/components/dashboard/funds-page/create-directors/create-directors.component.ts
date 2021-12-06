@@ -56,8 +56,8 @@ export class CreateDirectorsComponent implements OnInit {
   }
 
   removeDirector(index: any) {
-    let questions = this.directorForm.get('directors') as FormArray;
-    questions.removeAt(index);
+    let dirs = this.directorForm.get('directors') as FormArray;
+    dirs.removeAt(index);
   }
 
   deleteDirector(id:number){
