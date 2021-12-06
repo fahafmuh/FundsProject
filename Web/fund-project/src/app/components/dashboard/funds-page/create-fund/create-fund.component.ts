@@ -330,7 +330,8 @@ export class CreateFundComponent implements OnInit {
 
   addDirector() {
     let fb: FormGroup = this.formBuilder.group({
-      name: ['', [Validators.required]]
+      name: ['', [Validators.required]],
+      commitment:[0.00, [Validators.required]]
 
 		})
 		let subscribers = this.fundForm.get('subscribers') as FormArray;
