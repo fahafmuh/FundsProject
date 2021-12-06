@@ -138,38 +138,39 @@ export class CreateFundComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder
   ) {
-
-
-    
+  
     this.apiService.getDirectors().subscribe(
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
-          console.log(this.directors);
-          this.dropdownSettings = {
-            singleSelection: false,
-            idField: 'id',
-            textField: 'director_name',
-            selectAllText: 'Select All',
-            unSelectAllText: 'UnSelect All',
-            itemsShowLimit: 4,
-            allowSearchFilter: true,
-            enableCheckAll:true
-          };
+          this.setDropdownSettings();
         } else {
           this.directors = [];
+          this.setDropdownSettings();
         }
       },
       (err) => {
         this.directors = [];
+        this.setDropdownSettings();
       }
     );
   }
 
   refreshDirectors(event:any){
     this.directors = event;
-    console.log(this.directors);
-    
+  }
+
+  setDropdownSettings(){
+    return this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'director_name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 4,
+      allowSearchFilter: true,
+      enableCheckAll:true
+    };
   }
 
   ngOnInit(): void {
@@ -309,14 +310,6 @@ export class CreateFundComponent implements OnInit {
     return this.directors = [...this.directors];
   }
   
-  onSelectAll(items: any) {
-    console.log(items);
-  }
-
-  onItemSelect(items: any) {
-    console.log(items);
-  }
-
   Submit() {
     console.log(this.fundForm.value);
 
