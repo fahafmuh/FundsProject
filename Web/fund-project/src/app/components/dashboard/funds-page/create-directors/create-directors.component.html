@@ -23,9 +23,10 @@
       <ng-template ngbPanelContent>
         <form [formGroup]="directorForm">
             <div formArrayName='directors' fxLayout="column" fxLayoutGap="10px">
-              <label>Director's Name</label>
+              
               <ng-template ngFor let-value [ngForOf]="GetControls('directors')" let-index="index">
                 <div [formGroupName]="index">
+                  <label>Name</label>
                   <input type="text" formControlName="name">
                   <button (click)="removeDirector(index,value)">Remove</button>
                 </div>
