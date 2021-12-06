@@ -1,13 +1,7 @@
 <ngb-accordion #a="ngbAccordion" activeIds="custom-panel-1">
     <ngb-panel id="custom-panel-1">
       <ng-template ngbPanelHeader let-opened="opened">
-        <div
-          class="
-            d-flex
-            align-items-center
-            justify-content-between
-          "
-        >
+        <div class="d-flex align-items-center justify-content-between">
           <h4 class="m-0">Add {{headingPerson}}(s)</h4>
           <button ngbPanelToggle class="btn btn-link p-0">
             <mat-icon>
@@ -21,25 +15,57 @@
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
-        
-        <ul *ngIf="_directorsList && _directorsList.length">
-          <li *ngFor="let director of _directorsList"> {{director.director_name}}</li>
-        </ul>
-        <form [formGroup]="directorForm">
-            <div formArrayName='directors' fxLayout="column" fxLayoutGap="10px">
+     
+        <div class="row">
+          <div class="col-md-6">
+            <ul class="list-group">
+              <h5>{{headingPerson}} List</h5>
+              <li
+                class="
+                  list-group-item
+                  d-flex
+                  justify-content-between
+                  align-items-center
+                "
+                *ngFor="let director of _directorsList"
+              >
+                {{director.director_name}}
+                <span  placement="top" [ngbTooltip]="'Delete ' +  headingPerson" class="badge bg-secondary rounded-pill" style="cursor: pointer;"  (click)="deleteDirector(director.id)"
+                  ><i class="fa fa-trash" aria-hidden="true"></i
+                ></span>
+              </li>
               
+            </ul>
+          </div>
+          <div class="col-md-6" [formGroup]="directorForm">
+            <div class="mb-3 row" formArrayName='directors'>
+              <h5>Add new {{headingPerson}}</h5>
               <ng-template ngFor let-value [ngForOf]="GetControls('directors')" let-index="index">
-                <div [formGroupName]="index">
-                  <label>Name</label>
-                  <input type="text" formControlName="name">
-                  <button (click)="removeDirector(index)">Remove</button>
-                </div>
-              </ng-template>
-            </div><br>
-            <button (click)="addDirector()">Add</button>
-            <button (click)="submitData()" [disabled]="!directorForm.valid">Submit</button>
-          </form>
-          
+              <label for="inputName" class="col-sm-2 col-form-label">Name:</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="inputName" />
+              </div>
+              <div class="col-sm-2 p-0">
+                <button (click)="addDirector()" *ngIf="checkAddAvailibility(index)"
+                  type="button"
+                  class="btn btn-sm btn-primary d-inline mr-1"
+                >
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary d-inline" (click)="removeDirector(index)" *ngIf="checkDeleteAvailibility()">
+                  <i class="fa fa-minus" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-success" (click)="submitData()">SUBMIT</button>
+          </div>
+        </div>
+        
       </ng-template>
     </ngb-panel>
-  </ngb-accordion>
+    </ngb-accordion>

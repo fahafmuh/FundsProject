@@ -125,8 +125,6 @@ export class APIService {
 
   addDirector(value: any): Observable<any> {
     return new Observable((observer) => {
-      console.log(value);
-
       let formData = new FormData();
       formData.append('name', value.name);
 
@@ -150,10 +148,10 @@ export class APIService {
 
   deleteDirector(id: number): Observable<any> {
     return new Observable((observer) => {
+      let formData = new FormData();
+      formData.append('id', id.toString());
       this.http
-        .post(this.serverURL + this.DirectorsApi, {
-          id: id,
-        })
+        .post(this.serverURL + this.DirectorsApi, formData,this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);
