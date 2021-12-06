@@ -2,6 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
+from core.models import Director
+
 
 class AuthTokenSerializer(serializers.Serializer):
     username=serializers.CharField()
@@ -20,3 +22,7 @@ class AuthTokenSerializer(serializers.Serializer):
         attrs['user']=user
         return attrs
 
+class DirectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Director
+        fields=('id','director_name')

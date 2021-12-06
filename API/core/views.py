@@ -1,6 +1,8 @@
 from rest_framework import authentication
 from rest_framework.authtoken.views import ObtainAuthToken
-from .serializers import AuthTokenSerializer
+
+from core.models import Director
+from .serializers import AuthTokenSerializer, DirectorSerializer
 from rest_framework.settings import api_settings
 from rest_framework.decorators import api_view, authentication_classes,permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -33,5 +35,25 @@ def Logout(request):
     request.user.auth_token.delete()
     logout(request)
     return Response('User Logged out successfully')
+
+@api_view(["GET","POST","DELETE"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def Director_API(request):
+    if request.method=='GET':
+        Directors=Director.objects.all()
+        return Response(DirectorSerializer(Directors,many=True).data)
+    elif request.method=='POST':
+        name=request.POST.get('name')
+        Director_object=Director(director_name=name)
+        Director_object.save()
+        return Response(DirectorSerializer(Director_object).data)
+    elif request.method=='DELETE':
+        id=request.POST.get('id')
+        Director.objects.get(pk=int(id)).delete()
+        return Response('Director Deleted Successfully')
+
+
+
 
 
