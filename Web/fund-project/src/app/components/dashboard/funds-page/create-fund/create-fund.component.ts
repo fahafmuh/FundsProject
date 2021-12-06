@@ -164,6 +164,10 @@ export class CreateFundComponent implements OnInit {
     );
   }
 
+  refreshDirectors(event:any){
+    this.directors = event;
+  }
+
   ngOnInit(): void {
     // Section 1:
     this.fundForm = this.formBuilder.group({

@@ -566,7 +566,7 @@
                 >
                 </ng-multiselect-dropdown>
                 <br />
-              <app-create-directors></app-create-directors>
+              <app-create-directors [directorsList] = "directors" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">

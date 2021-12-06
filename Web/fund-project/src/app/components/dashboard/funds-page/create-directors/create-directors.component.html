@@ -22,14 +22,17 @@
       </ng-template>
       <ng-template ngbPanelContent>
         <form [formGroup]="directorForm">
-            <div formArrayName='name' fxLayout="column" fxLayoutGap="10px">
-              <label>Username</label>
-              <div *ngFor="let user of GetControls('name'); let i = index">
-                <input type="text" [formControlName]="i">
-                <button (click)="removeDirector(i)">Remove</button>
-              </div>
+            <div formArrayName='directors' fxLayout="column" fxLayoutGap="10px">
+              <label>Director's Name</label>
+              <ng-template ngFor let-value [ngForOf]="GetControls('directors')" let-index="index">
+                <div [formGroupName]="index">
+                  <input type="text" formControlName="name">
+                  <button (click)="removeDirector(index,value)">Remove</button>
+                </div>
+              </ng-template>
             </div><br>
             <button (click)="addDirector()">Add</button>
+            <button (click)="submitData()" [disabled]="!directorForm.valid">Submit</button>
           </form>
           
       </ng-template>

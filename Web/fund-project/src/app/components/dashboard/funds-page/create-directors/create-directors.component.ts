@@ -1,38 +1,84 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { APIService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-create-directors',
   templateUrl: './create-directors.component.html',
-  styleUrls: ['./create-directors.component.scss']
+  styleUrls: ['./create-directors.component.scss'],
 })
 export class CreateDirectorsComponent implements OnInit {
-  directorForm:FormGroup;
-  constructor(private formbuilder: FormBuilder) { }
+  directorForm: FormGroup;
+  _directorsList = [];
+  @Input('directorsList') set directorsList(value: any) {
+    this._directorsList = value;
+  }
+
+  @Output('sendDirectorsData') sendDirectorsData = new EventEmitter();
+
+  constructor(
+    private formbuilder: FormBuilder,
+    private apiService: APIService
+  ) {}
 
   ngOnInit(): void {
-    this.directorForm = new FormGroup({
-      name: new FormArray([])
+    this.directorForm = this.formbuilder.group({
+      directors: this.formbuilder.array(
+        this.TransformActions(),
+        Validators.required
+      )
     });
+
+  }
+
+  TransformActions(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formbuilder.group({
+        name: ['', [Validators.required]],
+      })
+    );
+
+    return fb;
   }
 
   GetControls(name: string) {
     return (this.directorForm.get(name) as FormArray).controls;
   }
 
-  
   addDirector() {
-    let val = this.formbuilder.group({
-      name: ['', []]
-    });
+    let fb: FormGroup = this.formbuilder.group({
+      name: ['', [Validators.required]]
 
-    let form = this.directorForm.get('name') as FormArray
-    form.push(val);
+		})
+		let directors = this.directorForm.get('directors') as FormArray;
+		directors.push(fb);
+    console.log(directors);
+    
   }
 
-  removeDirector(index:any) {
+  removeDirector(index: any,value:any) {
+    console.log(value);
+    
     let questions = this.directorForm.get('name') as FormArray;
     questions.removeAt(index);
+    if (index >= 0) {
+      // this.apiService.deleteDirector(value).subscribe((res:any)=>{
+      //   if(res.status == "ok"){
+      //     this._directorsList.splice(index, 1);
+      //     this.sendDirectorsData.emit(this._directorsList);
+      //     this.refresh();
+      //   }else{
+      //     this.refresh();
+      //   }
+      // },err=>{
+      //   this.refresh();
+      // })
+    }
+  }
+
+  refresh(){
+    return this._directorsList = [...this._directorsList];
   }
 
   // remove(value: string): void {
@@ -82,4 +128,36 @@ export class CreateDirectorsComponent implements OnInit {
 
   // }
 
+  getValidDirectors(directors: any) {
+    let arr: any = [];
+    this._directorsList.map((res) => {
+      directors.map((result: any) => {
+        if (res === result.name) {
+          arr.push(result.name);
+        }
+      });
+    });
+    return arr;
+  }
+
+  submitData() {
+    if (this.directorForm.valid) {
+      let validDirectors = this.getValidDirectors(this.directorForm.value);
+      if (validDirectors && validDirectors.length) {
+        this.apiService.addDirector(validDirectors).subscribe(
+          (result: any) => {
+            if (result.status == 'ok') {
+              this.sendDirectorsData.emit(validDirectors);
+              this._directorsList = this._directorsList.concat(validDirectors);
+            } else {
+              this.refresh();
+            }
+          },
+          (err: any) => {
+            this.refresh();
+          }
+        );
+      }
+    }
+  }
 }

@@ -52,8 +52,7 @@ export class APIService {
     if (!!user) {
       let token = user;
       const headers = new HttpHeaders({
-        // 'Content-Type': 'application/json; charset=utf-8',
-        Authorization: 'token' + token,
+        Authorization: 'token ' + token,
       });
       options = {
         headers: headers
