@@ -1,35 +1,27 @@
 <div class="row">
-  <div class="col-md-12">
-    <form [formGroup]="fundForm">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="sectionNo" class="nav-tabs mt-4">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>Fund details</a>
-          <ng-template ngbNavContent>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Name</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="fundName"
-                  placeholder="Fund Name"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+    <div class="col-md-12">
+        <form [formGroup]="fundForm">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="sectionNo" class="nav-tabs mt-4">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>Fund details</a>
+                    <ng-template ngbNavContent>
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Fund Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" formControlName="fundName" placeholder="Fund Name" />
+                                <div id="emailHelp" class="form-text">
+                                    We'll never share your email with anyone else.
+                                </div>
+                                <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
+                                    <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                        <span>It exceeds maximum length</span>
+                                    </ngb-alert>
+                                </p>
+                            </div>
+                        </div>
 
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Registration No</label
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Registration No</label
               >
               <div class="col-sm-10">
                 <input
@@ -41,17 +33,18 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p
+                *ngIf="
+                  fundForm.controls['registrationNumber'].hasError('maxlength')
+                "
+              >
+                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                  <span>It exceeds maximum length</span>
+                </ngb-alert>
+              </p>
               </div>
             </div>
-            <p
-              *ngIf="
-                fundForm.controls['registrationNumber'].hasError('maxlength')
-              "
-            >
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Fund Description</label
@@ -63,15 +56,17 @@
                   rows="3"
                   placeholder="Fund Description"
                 ></textarea>
+
+                <p
+                *ngIf="fundForm.controls['fundDescription'].hasError('maxlength')"
+              >
+                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                  <span>It exceeds maximum length</span>
+                </ngb-alert>
+              </p>
               </div>
             </div>
-            <p
-              *ngIf="fundForm.controls['fundDescription'].hasError('maxlength')"
-            >
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label">
                 Sub Fund</label
@@ -431,13 +426,14 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p *ngIf="fundForm.controls['legalCounsel'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-            <p *ngIf="fundForm.controls['legalCounsel'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Legal Counsel Representative</label
@@ -452,15 +448,16 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p
+                *ngIf="fundForm.controls['legalCounselRep'].hasError('maxlength')"
+              >
+                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                  <span>It exceeds maximum length</span>
+                </ngb-alert>
+              </p>
               </div>
             </div>
-            <p
-              *ngIf="fundForm.controls['legalCounselRep'].hasError('maxlength')"
-            >
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Auditor</label
@@ -475,13 +472,14 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p *ngIf="fundForm.controls['auditor'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-            <p *ngIf="fundForm.controls['auditor'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+          
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Auditor Representative</label
@@ -496,13 +494,14 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-            <p *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Custodian / Trustee</label
@@ -517,13 +516,14 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p *ngIf="fundForm.controls['trustee'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-            <p *ngIf="fundForm.controls['trustee'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+           
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Custodian / Trustee Representative</label
@@ -538,40 +538,99 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
+                <p *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-            <p *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')">
-              <ngb-alert type="danger" [dismissible]="noNeed">
-                <span>It exceeds maximum length</span>
-              </ngb-alert>
-            </p>
+          
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Directors</label
               >
               <div class="col-sm-10">
-                <!-- <select class="form-select" aria-label="Default select example">
+                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                  <ngb-panel title="Simple">
+                    <ng-template ngbPanelContent>
+                    <div class="row">
+                        <div class="col-md-6">
+                          <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              A list item
+                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              A second list item
+                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              A third list item
+                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                            </li>
+                          </ul>
+                          
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3 row">
+                            <label for="inputName" class="col-sm-2 col-form-label">Name:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputName">
+                            </div>
+                            <div class="col-sm-2 p-0">
+                                <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-success">SUBMIT</button>
+    </div>
+</div>
+</ng-template>
+</ngb-panel>
+
+</ngb-accordion>
+
+<!-- <select class="form-select" aria-label="Default select example">
                   <option selected>Select Director(s)</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select> -->
-                <ng-multiselect-dropdown
-                  [placeholder]="'Select Director(s)'"
-                  [settings]="dropdownSettings"
-                  [data]="directors"
-                  formControlName="directors"
-                  (onSelect)="onItemSelect($event)"
-                  (onSelectAll)="onSelectAll($event)"
-                >
-                </ng-multiselect-dropdown>
-                <br />
-              <app-create-directors [directorsList] = "directors" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Approver</label
+<ng-multiselect-dropdown [placeholder]="'Select Director(s)'" [settings]="dropdownSettings" [data]="directors" formControlName="directors" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+</ng-multiselect-dropdown>
+<br />
+<app-create-directors [directorsList]="directors" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+</div>
+</div>
+
+
+<div class="row g-3 align-items-center">
+    <label for="staticEmail" class="col-sm-2 col-form-label">field</label>
+    <div class="col-auto">
+        <label for="inputPassword6" class="col-form-label">Subscriber</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+    </div>
+    <div class="col-auto">
+        <label for="inputPassword6" class="col-form-label">Commitment</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
+    </div>
+
+</div>
+<div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Approver</label
               >
               <div class="col-sm-10">
                 <select class="form-select" aria-label="Default select example">
@@ -1014,18 +1073,17 @@
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Bank
               </label>
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
+    <div class="col-sm-10">
+        <select class="form-select" aria-label="Default select example">
                   <option selected>Bank</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Account</label
+    </div>
+</div>
+<div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Bank Account</label
               >
               <div class="col-sm-10">
                 <input
@@ -1288,12 +1346,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="d-flex">
-                        <div class="p-2 flex-grow-1"><button type="button" class="btn btn-primary">PREVIOUS</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-danger" (click)="Submit()">CANCEL</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-success">SUBMIT</button></div>
-                    </div> -->
           </ng-template>
         </li>
       </ul>
@@ -1302,7 +1354,7 @@
   </div>
 
   <div class="col-md-12">
-    <div class="d-flex">
+    <div class="d-flex align-item-center justify-content-end">
       <div class="p-2" *ngIf="sectionNo > 1">
         <button
           type="button"
