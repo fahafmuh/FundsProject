@@ -8,7 +8,7 @@
             justify-content-between
           "
         >
-          <h4 class="m-0">Add Director(s)</h4>
+          <h4 class="m-0">Add {{headingPerson}}(s)</h4>
           <button ngbPanelToggle class="btn btn-link p-0">
             <mat-icon>
               {{
@@ -21,6 +21,10 @@
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
+        
+        <ul *ngIf="_directorsList && _directorsList.length">
+          <li *ngFor="let director of _directorsList"> {{director.director_name}}</li>
+        </ul>
         <form [formGroup]="directorForm">
             <div formArrayName='directors' fxLayout="column" fxLayoutGap="10px">
               
@@ -28,7 +32,7 @@
                 <div [formGroupName]="index">
                   <label>Name</label>
                   <input type="text" formControlName="name">
-                  <button (click)="removeDirector(index,value)">Remove</button>
+                  <button (click)="removeDirector(index)">Remove</button>
                 </div>
               </ng-template>
             </div><br>

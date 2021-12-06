@@ -139,21 +139,23 @@ export class CreateFundComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {
 
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'name',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 4,
-      allowSearchFilter: true,
-      enableCheckAll:true
-    };
+
     
     this.apiService.getDirectors().subscribe(
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
+          console.log(this.directors);
+          this.dropdownSettings = {
+            singleSelection: false,
+            idField: 'id',
+            textField: 'director_name',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            itemsShowLimit: 4,
+            allowSearchFilter: true,
+            enableCheckAll:true
+          };
         } else {
           this.directors = [];
         }
@@ -166,6 +168,8 @@ export class CreateFundComponent implements OnInit {
 
   refreshDirectors(event:any){
     this.directors = event;
+    console.log(this.directors);
+    
   }
 
   ngOnInit(): void {
@@ -201,7 +205,7 @@ export class CreateFundComponent implements OnInit {
       auditorRep: ['', []],
       trustee: ['', []],
       trusteeRep: ['', []],
-      investmentComittee: [new FormArray([]), [Validators.required]],
+      investmentComittee: [[], [Validators.required]],
       directors: [new FormArray([]), [Validators.required]],
       directorSignature: ['', [Validators.required]],
       subscribers: [new FormArray([]), [Validators.required]],

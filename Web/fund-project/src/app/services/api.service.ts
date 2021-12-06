@@ -12,9 +12,7 @@ export class APIService {
   private loginApi = 'api/login/';
   private logoutApi = 'api/logout/';
   private fundCreateApi = 'api/createFund';
-  private getDirectorsApi = 'api/getDirectors';
-  private addDirectorApi = 'api/addDirector';
-  private deleteDirectorApi = 'api/deleteDirector';
+  private DirectorsApi = 'api/Directors/';
 
   constructor(private http: HttpClient) {}
 
@@ -55,7 +53,7 @@ export class APIService {
         Authorization: 'token ' + token,
       });
       options = {
-        headers: headers
+        headers: headers,
       };
     }
     return options;
@@ -106,17 +104,14 @@ export class APIService {
   getDirectors() {
     return new Observable((observer) => {
       this.http
-        .get(this.serverURL + this.getDirectorsApi, this.setHeaders())
+        .get(this.serverURL + this.DirectorsApi, this.setHeaders())
         .subscribe(
           (res) => {
             let response: any = res;
             console.log(response);
             observer.next({
               status: 'ok',
-              directors:
-                response.directors && response.directors.length
-                  ? response.directors
-                  : [],
+              directors: response
             });
             observer.complete();
           },
@@ -130,10 +125,13 @@ export class APIService {
 
   addDirector(value: any): Observable<any> {
     return new Observable((observer) => {
+      console.log(value);
+
+      let formData = new FormData();
+      formData.append('name', value.name);
+
       this.http
-        .post(this.serverURL + this.addDirectorApi, {
-          director: value,
-        })
+        .post(this.serverURL + this.DirectorsApi, formData, this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);
@@ -150,11 +148,11 @@ export class APIService {
     });
   }
 
-  deleteDirector(value: string): Observable<any>{
+  deleteDirector(id: number): Observable<any> {
     return new Observable((observer) => {
       this.http
-        .post(this.serverURL + this.deleteDirectorApi, {
-          director: value,
+        .post(this.serverURL + this.DirectorsApi, {
+          id: id,
         })
         .subscribe(
           (response: any) => {
