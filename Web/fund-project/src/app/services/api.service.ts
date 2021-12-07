@@ -149,9 +149,14 @@ export class APIService {
   deleteDirector(id: number): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
-      formData.append('id', id.toString());
+      formData.append('id', "4");
+      const options = {
+        ...this.setHeaders(),
+        "mimeType":"multipart/form-data",
+          data: formData,
+      };
       this.http
-        .post(this.serverURL + this.DirectorsApi, formData,this.setHeaders())
+        .delete(this.serverURL + this.DirectorsApi,options)
         .subscribe(
           (response: any) => {
             console.log(response);

@@ -40,10 +40,10 @@
           <div class="col-md-6" [formGroup]="directorForm">
             <div class="mb-3 row" formArrayName='directors'>
               <h5>Add new {{headingPerson}}</h5>
-              <ng-template ngFor let-value [ngForOf]="GetControls('directors')" let-index="index">
+              <ng-template ngFor let-value [ngForOf]="GetControls()" let-index="index">
               <label for="inputName" class="col-sm-2 col-form-label">Name:</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control" id="inputName" />
+              <div class="col-sm-8" [formGroupName]="index">
+                <input type="text" class="form-control" formControlName="name" />
               </div>
               <div class="col-sm-2 p-0">
                 <button (click)="addDirector()" *ngIf="checkAddAvailibility(index)"

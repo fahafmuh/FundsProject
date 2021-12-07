@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 import { APIService } from 'src/app/services/api.service';
 
 @Component({
@@ -21,35 +25,24 @@ export class CreateDirectorsComponent implements OnInit {
   constructor(
     private formbuilder: FormBuilder,
     private apiService: APIService,
-    private _snackBar: MatSnackBar,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.directorForm = this.formbuilder.group({
-      directors: this.formbuilder.array(
-        this.TransformActions()
-      ),
+      directors: this.formbuilder.array([]),
     });
+    this.addDirector();
+    console.log(this.directorForm.value);
   }
 
-  TransformActions(): FormGroup[] {
-    let fb: FormGroup[] = [];
-    fb.push(
-      this.formbuilder.group({
-        name: ['', [Validators.required]],
-      })
-    );
-
-    return fb;
-  }
-
-  GetControls(name: string) {
-    return (this.directorForm.get(name) as FormArray).controls;
+  GetControls() {
+    return (this.directorForm.get('directors') as FormArray).controls;
   }
 
   addDirector() {
     let fb: FormGroup = this.formbuilder.group({
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required]]
     });
     let directors = this.directorForm.get('directors') as FormArray;
     directors.push(fb);
@@ -58,6 +51,7 @@ export class CreateDirectorsComponent implements OnInit {
   removeDirector(index: any) {
     let dirs = this.directorForm.get('directors') as FormArray;
     dirs.removeAt(index);
+    if (dirs.length === 0) this.addDirector();
   }
 
   checkDeleteAvailibility() {
@@ -77,10 +71,14 @@ export class CreateDirectorsComponent implements OnInit {
         (res: any) => {
           if (res.status == 'ok') {
             this._directorsList.splice(index, 1);
-            this._snackBar.open(this.headingPerson + ' deleted successfully!', '', {
-              horizontalPosition: this.horizontalPosition,
-              verticalPosition: this.verticalPosition,
-            });
+            this._snackBar.open(
+              this.headingPerson + ' deleted successfully!',
+              '',
+              {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+              }
+            );
             this.sendDirectorsData.emit(this._directorsList);
             this.refresh();
           } else {
@@ -111,10 +109,15 @@ export class CreateDirectorsComponent implements OnInit {
                 director_name: this.directorForm.value.directors[0].name,
               };
               this._directorsList.push(obj);
-              this._snackBar.open(this.headingPerson + ' added successfully!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-              });
+              this._snackBar.open(
+                this.headingPerson + ' added successfully!',
+                '',
+                {
+                  horizontalPosition: this.horizontalPosition,
+                  verticalPosition: this.verticalPosition,
+                  duration: 4000,
+                }
+              );
               this.refresh();
               this.sendDirectorsData.emit(this._directorsList);
               this.directorForm.reset();

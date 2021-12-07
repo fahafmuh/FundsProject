@@ -25,6 +25,7 @@ export class CreateFundComponent implements OnInit {
   noNeed = false;
   disable = true;
   dropdownSettings = {};
+  dropdownSingleSettings = {};
 
   // Data for dropdowns
   domicileData = [
@@ -131,6 +132,7 @@ export class CreateFundComponent implements OnInit {
   ];
 
   directors: any = [];
+  file: File | null = null;
 
   constructor(
     private apiService: APIService,
@@ -138,30 +140,40 @@ export class CreateFundComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder
   ) {
-  
     this.apiService.getDirectors().subscribe(
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
-          this.setDropdownSettings();
+          this.setMultiDropdownSettings();
+          this.setSingleDS();
         } else {
           this.directors = [];
-          this.setDropdownSettings();
+          this.setMultiDropdownSettings();
+          this.setSingleDS();
         }
       },
       (err) => {
         this.directors = [];
-        this.setDropdownSettings();
+        this.setMultiDropdownSettings();
+        this.setSingleDS();
       }
     );
   }
 
-  refreshDirectors(event:any){
+  refreshDirectors(event: any) {
     this.directors = event;
   }
 
-  setDropdownSettings(){
-    return this.dropdownSettings = {
+  checkDeleteAvailibility(name: string) {
+    return this.fundForm.get(name)?.value.length > 1;
+  }
+
+  checkAddAvailibility(name: string, index: number) {
+    return index == this.fundForm.get(name)?.value.length - 1 ? true : false;
+  }
+
+  setMultiDropdownSettings() {
+    return (this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
       textField: 'director_name',
@@ -169,8 +181,29 @@ export class CreateFundComponent implements OnInit {
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 4,
       allowSearchFilter: true,
-      enableCheckAll:true
-    };
+      enableCheckAll: true,
+    });
+  }
+
+  isNumberOnly(event:any) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
+  setSingleDS() {
+    return (this.dropdownSingleSettings = {
+      singleSelection: true,
+      idField: 'id',
+      textField: 'director_name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 4,
+      allowSearchFilter: true,
+      enableCheckAll: true,
+    });
   }
 
   ngOnInit(): void {
@@ -207,19 +240,14 @@ export class CreateFundComponent implements OnInit {
       trustee: ['', []],
       trusteeRep: ['', []],
       investmentComittee: [[], [Validators.required]],
-      directors: [new FormArray([]), [Validators.required]],
-      directorSignature: ['', [Validators.required]],
-      // subscribers: [new FormArray([]), [Validators.required]],
-      // subscribersCommitment: [0.0, [Validators.required]],
-      subscribers: this.formBuilder.array(
-        this.TransformSubscribers()
-      ),
+      directorsList: [this.TransformDirectors(), [Validators.required]],
+      subscribers: this.formBuilder.array(this.TransformSubscribers()),
       // Section 3:
       authorizedSignatory: [[], [Validators.required]],
       signature: [null, [Validators.required]],
       boardResolutions: [null, [Validators.required]],
       fundAdmin: ['', [Validators.required]],
-      GIIN: ['', [Validators.required]],
+      GIIN: ['', [Validators.required,Validators.maxLength(50)]],
       preparer: ['', []],
       closingPeriod: [[], [Validators.required]],
       reclassificationFreq: ['month', []],
@@ -229,12 +257,12 @@ export class CreateFundComponent implements OnInit {
       PPM: [null, [Validators.required]],
       directorFee: [0.0, []],
       managementFee: [0.0, []],
-      hurdleRate: [0.0, []],
-      CTC: [0.0, []],
-      bank: ['ocbc', []],
-      bankAccount: ['', [Validators.required]],
-      bankAccessId: ['', [Validators.required]],
-      bankAccessPassword: ['', [Validators.required]],
+      hurdleRate: [0.0000, []],
+      CTC: [0.00, []],
+      bank: ['OCBC', []],
+      bankAccount: ['', [Validators.required,Validators.maxLength(50)]],
+      bankAccessId: ['', [Validators.required,Validators.maxLength(50)]],
+      bankAccessPassword: ['', [Validators.required,Validators.maxLength(50)]],
 
       // Section 4:
       freeze: ['', []],
@@ -308,8 +336,15 @@ export class CreateFundComponent implements OnInit {
     });
   }
 
-  refresh(){
-    return this.directors = [...this.directors];
+  refresh() {
+    return (this.directors = [...this.directors]);
+  }
+
+  handleFileInput(field:string,event: any) {
+    const formData: FormData = new FormData();
+    let files = event.target.files[0];
+    formData.append('file', files, files['name']);
+    this.fundForm.get(field)?.setValue(formData);
   }
 
   TransformSubscribers(): FormGroup[] {
@@ -317,28 +352,53 @@ export class CreateFundComponent implements OnInit {
     fb.push(
       this.formBuilder.group({
         name: ['', [Validators.required]],
-        commitment: [0.00, [Validators.required]],
+        commitment: [0.0, [Validators.required]],
       })
     );
 
     return fb;
   }
 
-  GetControls(name: string) {
-    return (this.fundForm.get(name) as FormArray).controls;
+  TransformDirectors(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        name: ['', [Validators.required]],
+        signature: [null, [Validators.required]],
+      })
+    );
+
+    return fb;
   }
 
   addDirector() {
     let fb: FormGroup = this.formBuilder.group({
       name: ['', [Validators.required]],
-      commitment:[0.00, [Validators.required]]
-
-		})
-		let subscribers = this.fundForm.get('subscribers') as FormArray;
-		subscribers.push(fb);
+      signature: [null, [Validators.required]],
+    });
+    let directors = this.fundForm.get('directors') as FormArray;
+    directors.push(fb);
   }
 
   removeDirector(index: any) {
+    let dirs = this.fundForm.get('directors') as FormArray;
+    dirs.removeAt(index);
+  }
+
+  GetControls(name: string) {
+    return (this.fundForm.get(name) as FormArray).controls;
+  }
+
+  addSubscriber() {
+    let fb: FormGroup = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      commitment: [0.0, [Validators.required]],
+    });
+    let subscribers = this.fundForm.get('subscribers') as FormArray;
+    subscribers.push(fb);
+  }
+
+  removeSubscriber(index: any) {
     let subs = this.fundForm.get('subscribers') as FormArray;
     subs.removeAt(index);
   }
@@ -355,6 +415,7 @@ export class CreateFundComponent implements OnInit {
             this._snackBar.open('Fund created successfully!', '', {
               horizontalPosition: this.horizontalPosition,
               verticalPosition: this.verticalPosition,
+              duration: 4000,
             });
             this.router.navigate(['dashboard/funds/list']);
           }

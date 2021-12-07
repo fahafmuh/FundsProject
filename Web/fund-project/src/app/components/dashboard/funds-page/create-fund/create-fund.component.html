@@ -1,27 +1,35 @@
 <div class="row">
-    <div class="col-md-12">
-        <form [formGroup]="fundForm">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="sectionNo" class="nav-tabs mt-4">
-                <li [ngbNavItem]="1">
-                    <a ngbNavLink>Fund details</a>
-                    <ng-template ngbNavContent>
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Fund Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" formControlName="fundName" placeholder="Fund Name" />
-                                <div id="emailHelp" class="form-text">
-                                    We'll never share your email with anyone else.
-                                </div>
-                                <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
-                                    <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                                        <span>It exceeds maximum length</span>
-                                    </ngb-alert>
-                                </p>
-                            </div>
-                        </div>
+  <div class="col-md-12">
+    <form [formGroup]="fundForm">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="sectionNo" class="nav-tabs mt-4">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>Fund details</a>
+          <ng-template ngbNavContent>
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label"
+                >Fund Name</label
+              >
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="fundName"
+                  placeholder="Fund Name"
+                />
+                <div id="emailHelp" class="form-text">
+                  We'll never share your email with anyone else.
+                </div>
+                <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
+              </div>
+            </div>
 
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Registration No</label
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label"
+                >Registration No</label
               >
               <div class="col-sm-10">
                 <input
@@ -34,17 +42,19 @@
                   We'll never share your email with anyone else.
                 </div>
                 <p
-                *ngIf="
-                  fundForm.controls['registrationNumber'].hasError('maxlength')
-                "
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
+                  *ngIf="
+                    fundForm.controls['registrationNumber'].hasError(
+                      'maxlength'
+                    )
+                  "
+                >
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Fund Description</label
@@ -58,15 +68,17 @@
                 ></textarea>
 
                 <p
-                *ngIf="fundForm.controls['fundDescription'].hasError('maxlength')"
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
+                  *ngIf="
+                    fundForm.controls['fundDescription'].hasError('maxlength')
+                  "
+                >
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label">
                 Sub Fund</label
@@ -122,15 +134,22 @@
             </div>
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Manager EnIty</label
+                >Fund Manager Entity</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Fund Manager(s)'"
+                  [settings]="dropdownSettings"
+                  [data]="directors"
                   formControlName="fundManagerEntity"
-                  placeholder="Fund Manager EnIty"
-                />
+                >
+                </ng-multiselect-dropdown>
+                <br />
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Fund Manager'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -138,19 +157,22 @@
             </div>
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Manager Rep</label
+                >Fund Manager Representative</label
               >
               <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  ormControlName="fundManagerRep"
-                  aria-label="Default select example"
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Fund Manager Representative(s)'"
+                  [settings]="dropdownSettings"
+                  [data]="directors"
+                  formControlName="fundManagerRep"
                 >
-                  <option disabled>Select Fund Manager Rep</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                </ng-multiselect-dropdown>
+                <br />
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Fund Manager Representative'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">
@@ -355,6 +377,7 @@
                     class="form-control"
                     placeholder="yyyy-mm-dd"
                     name="dp"
+                    formControlName="fundEndDate"
                     ngbDatepicker
                     #d="ngbDatepicker"
                   />
@@ -371,7 +394,7 @@
 
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Catchup</label
+                >Catchup (in %)</label
               >
               <div class="col-sm-10">
                 <input
@@ -426,14 +449,18 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
-                <p *ngIf="fundForm.controls['legalCounsel'].hasError('maxlength')">
+                <p
+                  *ngIf="
+                    fundForm.controls['legalCounsel'].hasError('maxlength')
+                  "
+                >
                   <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
                     <span>It exceeds maximum length</span>
                   </ngb-alert>
                 </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Legal Counsel Representative</label
@@ -449,15 +476,17 @@
                   We'll never share your email with anyone else.
                 </div>
                 <p
-                *ngIf="fundForm.controls['legalCounselRep'].hasError('maxlength')"
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
+                  *ngIf="
+                    fundForm.controls['legalCounselRep'].hasError('maxlength')
+                  "
+                >
+                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                    <span>It exceeds maximum length</span>
+                  </ngb-alert>
+                </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Auditor</label
@@ -479,7 +508,7 @@
                 </p>
               </div>
             </div>
-          
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Auditor Representative</label
@@ -494,14 +523,16 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
-                <p *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')">
+                <p
+                  *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')"
+                >
                   <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
                     <span>It exceeds maximum length</span>
                   </ngb-alert>
                 </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Custodian / Trustee</label
@@ -523,7 +554,7 @@
                 </p>
               </div>
             </div>
-           
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Enter Custodian / Trustee Representative</label
@@ -538,14 +569,16 @@
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
-                <p *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')">
+                <p
+                  *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')"
+                >
                   <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
                     <span>It exceeds maximum length</span>
                   </ngb-alert>
                 </p>
               </div>
             </div>
-          
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Investment Committee</label
@@ -559,47 +592,139 @@
                 >
                 </ng-multiselect-dropdown>
                 <br />
-              <app-create-directors [directorsList] = "directors" [headingPerson]="'Investment Committee Member'" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Investment Committee Member'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
               </div>
             </div>
 
-            <div class="mb-3 row g-3 align-items-center">
-              <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)</label>
-              <div class="col-auto">
-                  <label for="inputPassword6" class="col-form-label">Name</label>
-              </div>
-              <div class="col-auto">
-                  <input type="text" style="width:266px" class="form-control" aria-describedby="passwordHelpInline">
-              </div>
-              <div class="col-auto">
-                  <label for="inputPassword6" class="col-form-label">Commitment</label>
-              </div>
-              <div class="col-auto">
-                  <input type="text" style="width:266px" class="form-control" aria-describedby="passwordHelpInline">
-              </div>
-              <div class="col-auto">
-                  <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                  <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
-              </div>
-          
-          </div>
-
-            <div class="mb-3 row">
+            <div
+              class="mb-3 row g-3 align-items-center"
+              formArrayName="subscribers"
+            >
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Directors</label
+                >Subscriber(s)</label
               >
-              <div class="col-sm-10">
-                <ng-multiselect-dropdown
-                  [placeholder]="'Select Director(s)'"
-                  [settings]="dropdownSettings"
-                  [data]="directors"
-                  formControlName="directors"
-                >
-                </ng-multiselect-dropdown>
-                <br />
-              <app-create-directors [directorsList] = "directors" [headingPerson]="'Director(s)'" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-              </div>
+              <ng-template
+                ngFor
+                let-value
+                [ngForOf]="GetControls('subscribers')"
+                let-index="index"
+              >
+                <ng-container [formGroupName]="index">
+                  <div class="col-auto">
+                    <label class="col-form-label">Name</label>
+                  </div>
+                  <div class="col-auto" style="width: 29%">
+                    <ng-multiselect-dropdown
+                      [placeholder]="'Select Subscriber'"
+                      [settings]="dropdownSingleSettings"
+                      [data]="directors"
+                      formControlName="name"
+                    >
+                    </ng-multiselect-dropdown>
+                  </div>
+                  <div class="col-auto">
+                    <label class="col-form-label">Commitment</label>
+                  </div>
+                  <div class="col-auto">
+                    <input
+                      type="number"
+                      min="0.00"
+                      step="0.01"
+                      style="width: 266px"
+                      class="form-control"
+                      formControlName="commitment"
+                      placeholder="Subscriber commitment"
+                    />
+                  </div>
+                  <div class="col-auto">
+                    <button
+                      (click)="addSubscriber()"
+                      *ngIf="checkAddAvailibility('subscribers', index)"
+                      type="button"
+                      class="btn btn-sm btn-primary d-inline mr-1"
+                    >
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <button
+                      type="button"
+                      *ngIf="checkDeleteAvailibility('subscribers')"
+                      class="btn btn-sm btn-secondary d-inline"
+                      (click)="removeSubscriber(index)"
+                    >
+                      <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-template>
+              <br />
+              <app-create-directors
+                [directorsList]="directors"
+                [headingPerson]="'Subscriber'"
+                (sendDirectorsData)="refreshDirectors($event)"
+              ></app-create-directors>
             </div>
+
+            <!-- <div class="mb-3 row" formArrayName="directorsList">
+              <label for="staticEmail" class="col-sm-2 col-form-label"
+                >Directors</label>
+              <ng-template
+                ngFor
+                let-value
+                [ngForOf]="GetControls('directorsList')"
+                let-index="index"
+              >
+                <ng-container>
+                  <div class="col-auto">
+                    <label class="col-form-label">Name</label>
+                  </div>
+                  <div class="col-auto" style="width: 29%">
+                    <ng-multiselect-dropdown
+                      [placeholder]="'Select Director(s)'"
+                      [settings]="dropdownSingleSettings"
+                      [data]="directors"
+                      formControlName="name"
+                    >
+                    </ng-multiselect-dropdown>
+                  </div>
+                   <div class="col-auto">
+                <label class="col-form-label">Commitment</label>
+              </div>
+              <div class="col-auto">
+                <input
+                  type="number"
+                  min="0.00"
+                  step="0.01"
+                  style="width: 266px"
+                  class="form-control"
+                  formControlName="signature"
+                  placeholder="Subscriber commitment"
+                />
+              </div> -->
+            <!-- <div class="col-auto">
+                    <button
+                      (click)="addDirector()"
+                      *ngIf="checkAddAvailibility('directorsList', index)"
+                      type="button"
+                      class="btn btn-sm btn-primary d-inline mr-1"
+                    >
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <button
+                      type="button"
+                      *ngIf="checkDeleteAvailibility('directorsList')"
+                      class="btn btn-sm btn-secondary d-inline"
+                      (click)="removeDirector(index)"
+                    >
+                      <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-template> 
+            </div> -->
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
@@ -610,12 +735,19 @@
                 Authorized Signatory</label
               >
               <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Authorized Signatory</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Authorized Signatory'"
+                  [settings]="dropdownSettings"
+                  [data]="directors"
+                  formControlName="authorizedSignatory"
+                >
+                </ng-multiselect-dropdown>
+                <br />
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Authorized Signatory'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">
@@ -623,12 +755,11 @@
                 >Signature</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Signature"
-                />
+                <label for="file">Choose File</label>
+                <input type="file"
+                       id="file"
+                       (change)="handleFileInput('signature',$event)">
+            
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -655,12 +786,19 @@
                 >Fund Administrator</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Fund Administrator"
-                />
+                <ng-multiselect-dropdown
+                [placeholder]="'Select Fund Administrator'"
+                [settings]="dropdownSingleSettings"
+                [data]="directors"
+                formControlName="fundAdmin"
+              >
+              </ng-multiselect-dropdown>
+              <br />
+              <app-create-directors
+                [directorsList]="directors"
+                [headingPerson]="'Fund Admin'"
+                (sendDirectorsData)="refreshDirectors($event)"
+              ></app-create-directors>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -674,7 +812,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  formControlName="GIIN"
                   placeholder="GIIN"
                 />
                 <div id="emailHelp" class="form-text">
@@ -687,44 +825,83 @@
                 >Preparer</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Preparer"
-                />
+                <ng-multiselect-dropdown
+                [placeholder]="'Select Preparer'"
+                [settings]="dropdownSingleSettings"
+                [data]="directors"
+                formControlName="preparer"
+              >
+              </ng-multiselect-dropdown>
+              <br />
+              <app-create-directors
+                [directorsList]="directors"
+                [headingPerson]="'Preparer'"
+                (sendDirectorsData)="refreshDirectors($event)"
+              ></app-create-directors>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
               </div>
             </div>
+            
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Closing Period</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Closing Period"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    formControlName="closingPeriod"
+                    ngbDatepicker
+                    #d="ngbDatepicker"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary calendar fa fa-calendar"
+                      (click)="d.toggle()"
+                      type="button"
+                    ></button>
+                    &nbsp;
+                    <button
+                    (click)="addSubscriber()"
+                    type="button"
+                    class="btn btn-sm btn-primary d-inline mr-1"
+                  >
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-secondary d-inline"
+                  >
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </button>
+                  </div>
                 </div>
               </div>
             </div>
+
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Reclassification Frequency</label
               >
               <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Reclassification Frequency</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                <select
+                class="form-select"
+                aria-label="Default select example"
+                formControlName="reclassificationFreq"
+              >
+                <option disabled>Select Reclassification Frequency</option>
+                <option
+                  *ngFor="let data of reportingFrequencyData"
+                  [value]="data.value"
+                >
+                  {{ data.viewValue }}
+                </option>
+              </select>
               </div>
             </div>
             <div class="mb-3 row">
@@ -732,12 +909,19 @@
                 >Approver</label
               >
               <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Approver</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                <ng-multiselect-dropdown
+                [placeholder]="'Select Approver'"
+                [settings]="dropdownSingleSettings"
+                [data]="directors"
+                formControlName="approver"
+              >
+              </ng-multiselect-dropdown>
+              <br />
+              <app-create-directors
+                [directorsList]="directors"
+                [headingPerson]="'Approver'"
+                (sendDirectorsData)="refreshDirectors($event)"
+              ></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">
@@ -745,12 +929,10 @@
                 >Subscription Agreement</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Subscription Agreement"
-                />
+                <label for="file">Choose File</label>
+                <input type="file"
+                       id="file"
+                       (change)="handleFileInput('subscriptionAgreement',$event)">
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -761,12 +943,10 @@
                 >Investment Agreement</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Investment Agreement"
-                />
+                <label for="file">Choose File</label>
+                <input type="file"
+                       id="file"
+                       (change)="handleFileInput('investmentAgreement',$event)">
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -778,12 +958,10 @@
                 >Private Placement Memorandum (PPM)</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Private Placement Memorandum (PPM)"
-                />
+                <label for="file">Choose File</label>
+                <input type="file"
+                       id="file"
+                       (change)="handleFileInput('PPM',$event)">
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -795,11 +973,13 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Director’s Fees"
-                />
+                type="number"
+                min="0.00"
+                step="0.01"
+                class="form-control"
+                formControlName="directorFee"
+                placeholder="Enter Director's Fee"
+              />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -811,11 +991,13 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Management Fee"
-                />
+                type="number"
+                min="0.00"
+                step="0.01"
+                class="form-control"
+                formControlName="managementFee"
+                placeholder="Enter Management Fee"
+              />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -827,11 +1009,13 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Hurdle Rate"
-                />
+                type="number"
+                min="0.0000"
+                step="0.0001"
+                class="form-control"
+                formControlName="hurdleRate"
+                placeholder="Enter Hurdle Rate"
+              />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -843,11 +1027,13 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Cost to Company (CTC)"
-                />
+                type="number"
+                min="0.00"
+                step="0.01"
+                class="form-control"
+                formControlName="CTC"
+                placeholder="Enter CTC"
+              />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -857,24 +1043,32 @@
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Bank
               </label>
-    <div class="col-sm-10">
-        <select class="form-select" aria-label="Default select example">
-                  <option selected>Bank</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-    </div>
-</div>
-<div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Bank Account</label
+              <div class="col-sm-10">
+                <select
+                class="form-select"
+                formControlName="bank"
+              >
+                <option selected disabled>Select Bank</option>
+                <option
+                  *ngFor="let data of bankData"
+                  [value]="data.value"
+                >
+                  {{ data.viewValue }}
+                </option>
+              </select>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label"
+                >Bank Account</label
               >
               <div class="col-sm-10">
                 <input
                   type="text"
+                  (keypress)="isNumberOnly($event)"
                   class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Account"
+                  formControlName="bankAccount"
+                  placeholder="Enter Bank Account"
                 />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
@@ -887,10 +1081,10 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access ID"
+                  formControlName="bankAccessId"
+                  placeholder="Enter Bank Access ID"
                 />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
@@ -903,21 +1097,16 @@
               >
               <div class="col-sm-10">
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access Password"
+                  formControlName="bankAccessPassword"
+                  placeholder="Enter Bank Access Password"
                 />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
               </div>
             </div>
-            <!-- <div class="d-flex">
-                        <div class="p-2 flex-grow-1"><button type="button" class="btn btn-primary">PREVIOUS</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-danger">CANCEL</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-success">NEXT</button></div>
-                    </div> -->
           </ng-template>
         </li>
         <li [ngbNavItem]="4">
@@ -1071,12 +1260,22 @@
                 >Redeem</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Redeem"
-                />
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    ngbDatepicker
+                    #d="ngbDatepicker"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary calendar fa fa-calendar"
+                      (click)="d.toggle()"
+                      type="button"
+                    ></button>
+                  </div>
+                </div>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -1175,6 +1374,3 @@
     </div>
   </div>
 </div>
-
-<!-- <button (click)="Submit()">Save</button>
-<button (click)="Cancel()">Cancel</button> -->

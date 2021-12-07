@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition, MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-bootstrap-spinner';
 import { APIService } from 'src/app/services/api.service';
@@ -12,10 +13,13 @@ import { APIService } from 'src/app/services/api.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   userRole = 'fund-admin';
+  horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
   mappingBoolean = true;
   constructor(
     private formBuilder: FormBuilder,
     private apiService: APIService,
+    private _snackBar: MatSnackBar,
     private spinner: NgxSpinnerService,
     private router: Router
   ) {
@@ -26,20 +30,28 @@ export class LoginComponent implements OnInit {
   }
 
   Login() {
-    console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       this.spinner.show('loginLoading');
       this.apiService.login(this.loginForm.value).subscribe(
         (result: any) => {
-          console.log(result);
           if(result.status == "ok"){
             sessionStorage.setItem('token', result.value);
             this.setRoleAndRedirect();
+          }else{
+            this._snackBar.open('Error in log in, Try again!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+              duration:4000
+            });
           }
           this.spinner.hide('loginLoading');
         },
         (err) => {
           this.spinner.hide('loginLoading');
+          this._snackBar.open('Error in log in, Try again!', '', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+          });
           return;
         }
       );
