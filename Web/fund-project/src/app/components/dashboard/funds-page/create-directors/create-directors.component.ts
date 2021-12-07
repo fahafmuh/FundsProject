@@ -33,7 +33,6 @@ export class CreateDirectorsComponent implements OnInit {
       directors: this.formbuilder.array([]),
     });
     this.addDirector();
-    console.log(this.directorForm.value);
   }
 
   GetControls() {

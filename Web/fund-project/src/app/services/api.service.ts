@@ -108,7 +108,6 @@ export class APIService {
         .subscribe(
           (res) => {
             let response: any = res;
-            console.log(response);
             observer.next({
               status: 'ok',
               directors: response

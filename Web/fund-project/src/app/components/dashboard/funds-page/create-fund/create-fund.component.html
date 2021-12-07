@@ -64,7 +64,7 @@
                   class="form-control"
                   formControlName="fundDescription"
                   rows="3"
-                  placeholder="Fund Description"
+                  placeholder="Enter Fund Description"
                 ></textarea>
 
                 <p
@@ -1112,7 +1112,7 @@
         <li [ngbNavItem]="4">
           <a ngbNavLink>Reasonings</a>
           <ng-template ngbNavContent>
-            <div class="mb-3 row">
+            <!-- <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Freeze</label
               >
@@ -1143,8 +1143,8 @@
                   We'll never share your email with anyone else.
                 </div>
               </div>
-            </div>
-            <div class="mb-3 row">
+            </div> -->
+            <!-- <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Unfreeze</label
               >
@@ -1223,17 +1223,16 @@
                   We'll never share your email with anyone else.
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Liquidate</label
               >
               <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Liquidate</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                <select  class="form-select" aria-label="Default select example" formControlName="liquidate">
+                  <option value="" disabled>Select Option</option>
+                  <option value="voluntary">Voluntary</option>
+                  <option value="involuntary">Involuntary</option>
                 </select>
               </div>
             </div>
@@ -1243,12 +1242,12 @@
                 >Reasons</label
               >
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
+                <textarea
+                class="form-control"
+                formControlName="liquidateReason"
+                rows="3"
+                placeholder="Enter Reason to liquidate"
+              ></textarea>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
@@ -1297,7 +1296,7 @@
                 </div>
               </div>
             </div>
-            <div class="mb-3 row">
+            <!-- <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Extend</label
               >
@@ -1328,7 +1327,7 @@
                   We'll never share your email with anyone else.
                 </div>
               </div>
-            </div>
+            </div> -->
           </ng-template>
         </li>
       </ul>
