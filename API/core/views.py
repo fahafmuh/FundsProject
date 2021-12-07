@@ -1,6 +1,5 @@
 from rest_framework import authentication
 from rest_framework.authtoken.views import ObtainAuthToken
-
 from core.models import Director
 from .serializers import AuthTokenSerializer, DirectorSerializer
 from rest_framework.settings import api_settings
@@ -44,15 +43,14 @@ def Director_API(request):
         Directors=Director.objects.all()
         return Response(DirectorSerializer(Directors,many=True).data)
     elif request.method=='POST':
-        name=request.POST.get('name')
-        Director_object=Director(director_name=name)
-        Director_object.save()
+        for directors in request.POST.getlist('name'):
+            Director_object=Director(director_name=directors)
+            Director_object.save()
         return Response(DirectorSerializer(Director_object).data)
     elif request.method=='DELETE':
         id=request.POST.get('id')
         Director.objects.get(pk=int(id)).delete()
         return Response('Director Deleted Successfully')
-
 
 
 

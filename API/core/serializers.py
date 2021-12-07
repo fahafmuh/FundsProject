@@ -26,3 +26,4 @@ class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Director
         fields=('id','director_name')
+    
