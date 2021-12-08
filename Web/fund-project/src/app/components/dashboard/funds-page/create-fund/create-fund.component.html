@@ -1,1396 +1,1238 @@
 <div class="row">
     <div class="col-md-12">
-        <form [formGroup]="fundForm">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="sectionNo" class="nav-tabs mt-4">
-                <li [ngbNavItem]="1">
-                    <a ngbNavLink>Fund details</a>
-                    <ng-template ngbNavContent>
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Fund Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" formControlName="fundName" placeholder="Fund Name" />
-                                <div id="emailHelp" class="form-text">
-                                    We'll never share your email with anyone else.
+        <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+            <ngb-panel title="Simple">
+                <ng-template ngbPanelContent>
+                    <div class="container-fluid p-0">
+                        <div class="row g-3">
+
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label for="staticEmail" class="form-label">Fund Name</label>
+                                    <input type="text" class="form-control" formControlName="fundName" placeholder="Fund Name" />
+                                    <div id="emailHelp" class="form-text">
+                                        We'll never share your email with anyone else.
+                                    </div>
+                                    <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
+                                        <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                            <span>It exceeds maximum length</span>
+                                        </ngb-alert>
+                                    </p>
                                 </div>
-                                <p *ngIf="fundForm.controls['fundName'].hasError('maxlength')">
-                                    <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                                        <span>It exceeds maximum length</span>
-                                    </ngb-alert>
-                                </p>
+                                <div class="mb-3">
+                                    <label for="staticEmail" class="form-label">Registration No</label >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="registrationNumber"
+                             placeholder="Registration No."
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p
+                             *ngIf="
+                             fundForm.controls['registrationNumber'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Description</label
+                             >
+                          <textarea
+                             class="form-control"
+                             formControlName="fundDescription"
+                             rows="3"
+                             placeholder="Fund Description"
+                             ></textarea>
+                          <p
+                             *ngIf="fundForm.controls['fundDescription'].hasError('maxlength')"
+                             >
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label">
+                          Sub Fund</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="subFund"
+                             >
+                             <option disabled>Select Sub Fund</option>
+                             <option value="Y">Yes</option>
+                             <option value="N">No</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Domicile</label
+                             >
+                          <select
+                             class="form-select"
+                             formControlName="domicile"
+                             aria-label="Default select example"
+                             >
+                             <option selected disabled>Select Domicile</option>
+                             <option
+                             *ngFor="let data of domicileData"
+                             [value]="data.value"
+                             >
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Type</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="fundType"
+                             >
+                             <option disabled>Select Fund Type</option>
+                             <option value="regulated">Regulated</option>
+                             <option value="un-regulated">Un regulated</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Manager EnIty</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="fundManagerEntity"
+                             placeholder="Fund Manager EnIty"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Manager Rep</label
+                             >
+                          <select
+                             class="form-select"
+                             ormControlName="fundManagerRep"
+                             aria-label="Default select example"
+                             >
+                             <option disabled>Select Fund Manager Rep</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Structure</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option disabled>Select Fund Structure</option>
+                             <option value="open-end">Open-End</option>
+                             <option value="close-end">Close-End</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Offer Price</label
+                             >
+                          <input
+                             type="number"
+                             min="0.00"
+                             step="0.01"
+                             class="form-control"
+                             formControlName="offerPrice"
+                             placeholder="Offer Price"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Size</label
+                             >
+                          <input
+                             type="number"
+                             min="0.00"
+                             step="0.01"
+                             class="form-control"
+                             formControlName="fundSize"
+                             placeholder="Fund Size"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Issued Shares</label
+                             >
+                          <input
+                             type="number"
+                             [disabled]="disable"
+                             class="form-control"
+                             placeholder="Issued Shares"
+                             formControlName="issuedShares"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Ordinary Share</label
+                             >
+                          <input
+                             type="number"
+                             min="0"
+                             step="1"
+                             class="form-control"
+                             formControlName="ordinaryShare"
+                             placeholder="Ordinary Share"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Status</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="fundStatus"
+                             >
+                             <option disabled>Select Fund Status</option>
+                             <option
+                             *ngFor="let data of fundStatusData"
+                             [value]="data.value"
+                             >
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Reporting Currency</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="reportingCurrency"
+                             >
+                             <option disabled>Select Reporting Currency</option>
+                             <option
+                             *ngFor="let data of currencyData"
+                             [value]="data.value"
+                             >
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Lock up Period (in years)</label
+                             >
+                          <input
+                             type="number"
+                             min="0"
+                             step="1"
+                             class="form-control"
+                             formControlName="lockupPeriod"
+                             placeholder="Lock up Period (in years)"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Lock up Period (in years)</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="fundYearEnd"
+                             >
+                             <option disabled>Select Fund Year-end</option>
+                             <option *ngFor="let data of monthsData" [value]="data.value">
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Product Type</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="productType"
+                             >
+                             <option disabled>Select Product Type</option>
+                             <option
+                             *ngFor="let data of productTypeData"
+                             [value]="data.value"
+                             >
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Life</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Fund Life</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund End Date</label
+                             >
+                          <div class="input-group">
+                             <input
+                                class="form-control"
+                                placeholder="yyyy-mm-dd"
+                                name="dp"
+                                ngbDatepicker
+                                #d="ngbDatepicker"
+                                />
+                             <div class="input-group-append">
+                                <button
+                                   class="btn btn-outline-secondary calendar fa fa-calendar"
+                                   (click)="d.toggle()"
+                                   type="button"
+                                   ></button>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Catchup</label
+                             >
+                          <input
+                             type="number"
+                             min="0.00"
+                             step="0.01"
+                             class="form-control"
+                             formControlName="catchup"
+                             placeholder="Catchup"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-6">
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Reporting Frequency</label
+                             >
+                          <select
+                             class="form-select"
+                             aria-label="Default select example"
+                             formControlName="reportingFrequency"
+                             >
+                             <option disabled>Select Reporting Frequency</option>
+                             <option
+                             *ngFor="let data of reportingFrequencyData"
+                             [value]="data.value"
+                             >
+                             {{ data.viewValue }}
+                             </option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Legal Counsel</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="legalCounsel"
+                             placeholder="Enter Legal Counsel"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p *ngIf="fundForm.controls['legalCounsel'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Legal Counsel Representative</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="legalCounselRep"
+                             placeholder="Enter Legal Counsel Representative"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p
+                             *ngIf="fundForm.controls['legalCounselRep'].hasError('maxlength')"
+                             >
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Auditor</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="auditor"
+                             placeholder="Enter Auditor"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p *ngIf="fundForm.controls['auditor'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Auditor Representative</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="auditorRep"
+                             placeholder="Enter Auditor Representative"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Custodian / Trustee</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="trustee"
+                             placeholder="Enter Custodian / Trustee"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p *ngIf="fundForm.controls['trustee'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Enter Custodian / Trustee Representative</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             formControlName="trusteeRep"
+                             placeholder="Enter Custodian / Trustee Representative"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                          <p *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')">
+                             <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                                <span>It exceeds maximum length</span>
+                             </ngb-alert>
+                          </p>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Directors</label
+                             >
+                          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                             <ngb-panel title="Simple">
+                                <ng-template ngbPanelContent>
+                                   <div class="row">
+                                      <div class="col-md-6">
+                                         <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                               A list item
+                                               <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                               A second list item
+                                               <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                               A third list item
+                                               <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                            </li>
+                                         </ul>
+                                      </div>
+                                      <div class="col-md-6">
+                                         <div class="mb-3">
+                                            <label for="inputName" class="form-label">Name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="inputName">
+                                    </div>
+                                    <div class="col-sm-2 p-0">
+                                        <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                        <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Registration No</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="registrationNumber"
-                  placeholder="Registration No."
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p
-                *ngIf="
-                  fundForm.controls['registrationNumber'].hasError('maxlength')
-                "
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Description</label
-              >
-              <div class="col-sm-10">
-                <textarea
-                  class="form-control"
-                  formControlName="fundDescription"
-                  rows="3"
-                  placeholder="Fund Description"
-                ></textarea>
-
-                <p
-                *ngIf="fundForm.controls['fundDescription'].hasError('maxlength')"
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">
-                Sub Fund</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="subFund"
-                >
-                  <option disabled>Select Sub Fund</option>
-                  <option value="Y">Yes</option>
-                  <option value="N">No</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Domicile</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  formControlName="domicile"
-                  aria-label="Default select example"
-                >
-                  <option selected disabled>Select Domicile</option>
-                  <option
-                    *ngFor="let data of domicileData"
-                    [value]="data.value"
-                  >
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Type</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="fundType"
-                >
-                  <option disabled>Select Fund Type</option>
-                  <option value="regulated">Regulated</option>
-                  <option value="un-regulated">Un regulated</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Manager EnIty</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="fundManagerEntity"
-                  placeholder="Fund Manager EnIty"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Manager Rep</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  ormControlName="fundManagerRep"
-                  aria-label="Default select example"
-                >
-                  <option disabled>Select Fund Manager Rep</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Structure</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option disabled>Select Fund Structure</option>
-                  <option value="open-end">Open-End</option>
-                  <option value="close-end">Close-End</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Offer Price</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  min="0.00"
-                  step="0.01"
-                  class="form-control"
-                  formControlName="offerPrice"
-                  placeholder="Offer Price"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Size</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  min="0.00"
-                  step="0.01"
-                  class="form-control"
-                  formControlName="fundSize"
-                  placeholder="Fund Size"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Issued Shares</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  [disabled]="disable"
-                  class="form-control"
-                  placeholder="Issued Shares"
-                  formControlName="issuedShares"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Ordinary Share</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  class="form-control"
-                  formControlName="ordinaryShare"
-                  placeholder="Ordinary Share"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Status</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="fundStatus"
-                >
-                  <option disabled>Select Fund Status</option>
-                  <option
-                    *ngFor="let data of fundStatusData"
-                    [value]="data.value"
-                  >
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reporting Currency</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="reportingCurrency"
-                >
-                  <option disabled>Select Reporting Currency</option>
-                  <option
-                    *ngFor="let data of currencyData"
-                    [value]="data.value"
-                  >
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Lock up Period (in years)</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  class="form-control"
-                  formControlName="lockupPeriod"
-                  placeholder="Lock up Period (in years)"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Lock up Period (in years)</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="fundYearEnd"
-                >
-                  <option disabled>Select Fund Year-end</option>
-                  <option *ngFor="let data of monthsData" [value]="data.value">
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Product Type</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="productType"
-                >
-                  <option disabled>Select Product Type</option>
-                  <option
-                    *ngFor="let data of productTypeData"
-                    [value]="data.value"
-                  >
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Life</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Fund Life</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund End Date</label
-              >
-              <div class="col-sm-10">
-                <div class="input-group">
-                  <input
-                    class="form-control"
-                    placeholder="yyyy-mm-dd"
-                    name="dp"
-                    ngbDatepicker
-                    #d="ngbDatepicker"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-outline-secondary calendar fa fa-calendar"
-                      (click)="d.toggle()"
-                      type="button"
-                    ></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Catchup</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="number"
-                  min="0.00"
-                  step="0.01"
-                  class="form-control"
-                  formControlName="catchup"
-                  placeholder="Catchup"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-          <a ngbNavLink>Fund Configurations</a>
-          <ng-template ngbNavContent>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reporting Frequency</label
-              >
-              <div class="col-sm-10">
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
-                  formControlName="reportingFrequency"
-                >
-                  <option disabled>Select Reporting Frequency</option>
-                  <option
-                    *ngFor="let data of reportingFrequencyData"
-                    [value]="data.value"
-                  >
-                    {{ data.viewValue }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Legal Counsel</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="legalCounsel"
-                  placeholder="Enter Legal Counsel"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p *ngIf="fundForm.controls['legalCounsel'].hasError('maxlength')">
-                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                    <span>It exceeds maximum length</span>
-                  </ngb-alert>
-                </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Legal Counsel Representative</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="legalCounselRep"
-                  placeholder="Enter Legal Counsel Representative"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p
-                *ngIf="fundForm.controls['legalCounselRep'].hasError('maxlength')"
-              >
-                <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                  <span>It exceeds maximum length</span>
-                </ngb-alert>
-              </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Auditor</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="auditor"
-                  placeholder="Enter Auditor"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p *ngIf="fundForm.controls['auditor'].hasError('maxlength')">
-                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                    <span>It exceeds maximum length</span>
-                  </ngb-alert>
-                </p>
-              </div>
-            </div>
-          
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Auditor Representative</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="auditorRep"
-                  placeholder="Enter Auditor Representative"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p *ngIf="fundForm.controls['auditorRep'].hasError('maxlength')">
-                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                    <span>It exceeds maximum length</span>
-                  </ngb-alert>
-                </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Custodian / Trustee</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="trustee"
-                  placeholder="Enter Custodian / Trustee"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p *ngIf="fundForm.controls['trustee'].hasError('maxlength')">
-                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                    <span>It exceeds maximum length</span>
-                  </ngb-alert>
-                </p>
-              </div>
-            </div>
-           
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Enter Custodian / Trustee Representative</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="trusteeRep"
-                  placeholder="Enter Custodian / Trustee Representative"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                <p *ngIf="fundForm.controls['trusteeRep'].hasError('maxlength')">
-                  <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-                    <span>It exceeds maximum length</span>
-                  </ngb-alert>
-                </p>
-              </div>
-            </div>
-          
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Directors</label
-              >
-              <div class="col-sm-10">
-                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-                  <ngb-panel title="Simple">
-                    <ng-template ngbPanelContent>
-                    <div class="row">
-                        <div class="col-md-6">
-                          <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                              A list item
-                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                              A second list item
-                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                              A third list item
-                              <span class="badge bg-secondary rounded-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                            </li>
-                          </ul>
-                          
-                        </div>
-                        <div class="col-md-6">
-                          <div class="mb-3 row">
-                            <label for="inputName" class="col-sm-2 col-form-label">Name:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="inputName">
-                            </div>
-                            <div class="col-sm-2 p-0">
-                                <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                                <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                        <div class="row">
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-success">SUBMIT</button>
                             </div>
                         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-success">SUBMIT</button>
-    </div>
-</div>
-</ng-template>
-</ngb-panel>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+        <!-- <select class="form-select" aria-label="Default select example">
+                             <option selected>Select Director(s)</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                             </select> -->
+        <ng-multiselect-dropdown [placeholder]="'Select Director(s)'" [settings]="dropdownSettings" [data]="directors" formControlName="directors" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+        </ng-multiselect-dropdown>
+        <br />
+        <app-create-directors [directorsList]="directors" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+        </div>
+        <div class="row g-3 align-items-center">
+            <label for="staticEmail" class="form-label">field</label>
+            <div class="col-auto">
+                <label for="inputPassword6" class="col-form-label">Subscriber</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+            </div>
+            <div class="col-auto">
+                <label for="inputPassword6" class="col-form-label">Commitment</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="staticEmail" class="form-label">Approver</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Approver</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Subscription Agreement</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Subscription Agreement"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Investment Agreement</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Investment Agreement"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Private Placement Memorandum (PPM)</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Private Placement Memorandum (PPM)"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Director’s Fees</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Director’s Fees"
+                             />
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Management Fee</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Management Fee"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Hurdle Rate</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Hurdle Rate"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Cost to Company (CTC)</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Cost to Company (CTC)"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Bank</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank Account</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Account"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank Access ID</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Access ID"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank Access Password</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Access Password"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-6">
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label">
+                          Authorized Signatory</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Authorized Signatory</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Signature</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Signature"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Board Resolutions</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Board Resolutions"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Fund Administrator</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Fund Administrator"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >GIIN</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="GIIN"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Preparer</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Preparer"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Closing Period</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Closing Period"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Reclassification Frequency</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Reclassification Frequency</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Approver</label
+                             >
+                          <select class="form-select" aria-label="Default select example">
+                             <option selected>Approver</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Subscription Agreement</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Subscription Agreement"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Investment Agreement</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Investment Agreement"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Private Placement Memorandum (PPM)</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Private Placement Memorandum (PPM)"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Director’s Fees</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Director’s Fees"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Management Fee</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Management Fee"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Hurdle Rate</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Hurdle Rate"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Cost to Company (CTC)</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Cost to Company (CTC)"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank
+                          </label>
+            <select class="form-select" aria-label="Default select example">
+                             <option selected>Bank</option>
+                             <option value="1">One</option>
+                             <option value="2">Two</option>
+                             <option value="3">Three</option>
+                          </select>
+        </div>
+        <div class="mb-3">
+            <label for="staticEmail" class="form-label">Bank Account</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Account"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank Access ID</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Access ID"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                       <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                             >Bank Access Password</label
+                             >
+                          <input
+                             type="text"
+                             class="form-control"
+                             id="exampleFormControlInput1"
+                             placeholder="Bank Access Password"
+                             />
+                          <div id="emailHelp" class="form-text">
+                             We'll never share your email with anyone else.
+                          </div>
+                       </div>
+                    </div>
 
-</ngb-accordion>
-
-<!-- <select class="form-select" aria-label="Default select example">
-                  <option selected>Select Director(s)</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select> -->
-<ng-multiselect-dropdown [placeholder]="'Select Director(s)'" [settings]="dropdownSettings" [data]="directors" formControlName="directors" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
-</ng-multiselect-dropdown>
-<br />
-<app-create-directors [directorsList]="directors" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-</div>
-</div>
-
-
-<div class="row g-3 align-items-center">
-    <label for="staticEmail" class="col-sm-2 col-form-label">field</label>
-    <div class="col-auto">
-        <label for="inputPassword6" class="col-form-label">Subscriber</label>
-    </div>
-    <div class="col-auto">
-        <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-    </div>
-    <div class="col-auto">
-        <label for="inputPassword6" class="col-form-label">Commitment</label>
-    </div>
-    <div class="col-auto">
-        <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-    </div>
-    <div class="col-auto">
-        <button type="button" class="btn btn-sm btn-primary d-inline mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-sm btn-secondary d-inline"><i class="fa fa-minus" aria-hidden="true"></i></button>
-    </div>
-
-</div>
-<div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Approver</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Approver</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                    <div class="col-6">
+               
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Freeze</label
+                          >
+                         
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Freeze"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                   
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                       
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                  
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Unfreeze</label
+                          >
+                      
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Unfreeze"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                         
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                    
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                      
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Onboarding, Open, Funded, End</label
+                          >
+                
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Onboarding, Open, Funded, End"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                       
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Re-fund</label
+                          >
+                    
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Re-fund"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                          </div>
+                    
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                        
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                   
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Liquidate</label
+                          >
+                     
+                            <select class="form-select" aria-label="Default select example">
+                              <option selected>Liquidate</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                            </select>
+                          </div>
+                  
+                    
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                        
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                      
+                        </div>
+                    
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Redeem</label
+                          >
+                       
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Redeem"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                       
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                     
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                     
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Extend</label
+                          >
+                       
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Extend"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                      
+                        </div>
+                          <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                         
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="exampleFormControlInput1"
+                              placeholder="Reasons"
+                            />
+                            <div id="emailHelp" class="form-text">
+                              We'll never share your email with anyone else.
+                            </div>
+                        
+                        </div>
+                  
+                    </div>
+                 </div>
               </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Subscription Agreement</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Subscription Agreement"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Investment Agreement</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Investment Agreement"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Private Placement Memorandum (PPM)</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Private Placement Memorandum (PPM)"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Director’s Fees</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Director’s Fees"
-                />
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Management Fee</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Management Fee"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Hurdle Rate</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Hurdle Rate"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Cost to Company (CTC)</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Cost to Company (CTC)"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Bank</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Account</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Account"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Access ID</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access ID"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Access Password</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access Password"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <!-- <div class="d-flex">
-                        <div class="p-2 flex-grow-1"><button type="button" class="btn btn-primary">PREVIOUS</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-danger">CANCEL</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-success">NEXT</button></div>
-                    </div> -->
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="3">
-          <a ngbNavLink>Internal details</a>
-          <ng-template ngbNavContent>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">
-                Authorized Signatory</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Authorized Signatory</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Signature</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Signature"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Board Resolutions</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Board Resolutions"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Fund Administrator</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Fund Administrator"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >GIIN</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="GIIN"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Preparer</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Preparer"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Closing Period</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Closing Period"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reclassification Frequency</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Reclassification Frequency</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Approver</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Approver</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Subscription Agreement</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Subscription Agreement"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Investment Agreement</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Investment Agreement"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Private Placement Memorandum (PPM)</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Private Placement Memorandum (PPM)"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Director’s Fees</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Director’s Fees"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Management Fee</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Management Fee"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Hurdle Rate</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Hurdle Rate"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Cost to Company (CTC)</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Cost to Company (CTC)"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank
-              </label>
-    <div class="col-sm-10">
-        <select class="form-select" aria-label="Default select example">
-                  <option selected>Bank</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-    </div>
-</div>
-<div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Bank Account</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Account"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Access ID</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access ID"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Bank Access Password</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Bank Access Password"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <!-- <div class="d-flex">
-                        <div class="p-2 flex-grow-1"><button type="button" class="btn btn-primary">PREVIOUS</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-danger">CANCEL</button></div>
-                        <div class="p-2"><button type="button" class="btn btn-success">NEXT</button></div>
-                    </div> -->
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="4">
-          <a ngbNavLink>Reasonings</a>
-          <ng-template ngbNavContent>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Freeze</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Freeze"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Unfreeze</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Unfreeze"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Onboarding, Open, Funded, End</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Onboarding, Open, Funded, End"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Re-fund</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Re-fund"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Liquidate</label
-              >
-              <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example">
-                  <option selected>Liquidate</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Redeem</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Redeem"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Extend</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Extend"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-          </ng-template>
-        </li>
-      </ul>
-    </form>
-    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+           </ng-template>
+        </ngb-panel>
+     </ngb-accordion>
+     <!-- <div [ngbNavOutlet]="nav" class="mt-2"></div> -->
   </div>
-
   <div class="col-md-12">
-    <div class="d-flex align-item-center justify-content-end">
-      <div class="p-2" *ngIf="sectionNo > 1">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="sectionNo = sectionNo - 1"
-        >
-          PREVIOUS
-        </button>
-      </div>
-      <div class="p-2" *ngIf="sectionNo < 4">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="sectionNo = sectionNo + 1"
-        >
-          NEXT
-        </button>
-      </div>
-      <div class="p-2">
-        <button type="button" class="btn btn-danger" (click)="Cancel()">
-          CANCEL
-        </button>
-      </div>
-      <div class="p-2">
-        <button
-          type="button"
-          class="btn btn-success"
-          [disabled]="!fundForm.valid"
-          (click)="Submit()"
-        >
-          SUBMIT
-        </button>
-      </div>
-    </div>
+     <div class="d-flex align-item-center justify-content-end">
+        <div class="p-2" *ngIf="sectionNo > 1">
+           <button
+              type="button"
+              class="btn btn-primary"
+              (click)="sectionNo = sectionNo - 1"
+              >
+           PREVIOUS
+           </button>
+        </div>
+        <div class="p-2" *ngIf="sectionNo < 4">
+           <button
+              type="button"
+              class="btn btn-primary"
+              (click)="sectionNo = sectionNo + 1"
+              >
+           NEXT
+           </button>
+        </div>
+        <div class="p-2">
+           <button type="button" class="btn btn-danger" (click)="Cancel()">
+           CANCEL
+           </button>
+        </div>
+        <div class="p-2">
+           <button
+           type="button"
+           class="btn btn-success"
+           [disabled]="!fundForm.valid"
+           (click)="Submit()"
+           >
+           SUBMIT
+           </button>
+        </div>
+     </div>
   </div>
 </div>
-
 <!-- <button (click)="Submit()">Save</button>
-<button (click)="Cancel()">Cancel</button> -->
+  <button (click)="Cancel()">Cancel</button> -->
