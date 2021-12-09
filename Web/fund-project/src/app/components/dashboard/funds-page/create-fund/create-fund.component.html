@@ -419,7 +419,7 @@
                     type="file"
                     multiple="true"
                     accept=".pdf,.doc"
-                    (change)="handleFileInput('fundLifedocuments', $event)"
+                    (change)="handleFilMultipleInput('fundLifedocuments', $event)"
                     id="formFileMultiple"
                     multiple
                   />
@@ -437,7 +437,7 @@
                 <div class="input-group">
                   <input
                     class="form-control"
-                    placeholder="DD-MM-YYYY"
+                    placeholder="YYYY-MM-DD"
                     name="dp"
                     formControlName="fundEndDate"
                     ngbDatepicker
@@ -867,7 +867,7 @@
                   type="file"
                   accept=".pdf,.doc"
                   multiple="true"
-                  (change)="handleFilMultipleInput($event)"
+                  (change)="handleFilMultipleInput('boardResolutions',$event)"
                   id="formFileMultiple"
                   multiple
                 />
@@ -961,7 +961,7 @@
                   <div class="col-auto" style="width: 60%">
                     <input
                       class="form-control"
-                      placeholder="DD-MM-YYYY"
+                      placeholder="YYYY-MM-DD"
                       name="dp"
                       [max]="today"
                       formControlName="date"
@@ -1393,7 +1393,7 @@
                 <div class="input-group">
                   <input
                     class="form-control"
-                    placeholder="DD-MM-YYYY"
+                    placeholder="YYYY-MM-DD"
                     name="d"
                     ngbDatepicker
                     formControlName="redeem"
@@ -1480,6 +1480,13 @@
           PREVIOUS
         </button>
       </div>
+      
+      <p *ngIf="globalDisable">
+        <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+          <span>Sum of subscribers commitment should be less or equal to Fund Size</span>
+        </ngb-alert>
+      </p>
+
       <div class="p-2" *ngIf="sectionNo < 4">
         <button
           type="button"
@@ -1494,9 +1501,11 @@
           CANCEL
         </button>
       </div>
+     
+
       <div class="p-2">
         <button type="button" class="btn btn-success" (click)="Submit()">
-          <!-- [disabled]="!fundForm.valid" -->
+          <!-- [disabled]="!fundForm.valid && globalDisable" -->
           SUBMIT
         </button>
       </div>

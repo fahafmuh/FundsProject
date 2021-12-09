@@ -9,7 +9,10 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { NgbDateParserFormatter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDateParserFormatter,
+  NgbDatepickerConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create-fund',
@@ -135,6 +138,8 @@ export class CreateFundComponent implements OnInit {
     { value: 'UOB', viewValue: 'UOB' },
   ];
 
+  globalDisable = false;
+
   directors: any = [];
 
   constructor(
@@ -177,8 +182,8 @@ export class CreateFundComponent implements OnInit {
     return index == this.fundForm.get(name)?.value.length - 1 ? true : false;
   }
 
-  getFundStatusHeading(value:string){
-    if(value == 'extendterm') return 'Extend Term';
+  getFundStatusHeading(value: string) {
+    if (value == 'extendterm') return 'Extend Term';
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
@@ -289,8 +294,11 @@ export class CreateFundComponent implements OnInit {
     });
 
     const current = new Date();
-    this.config.minDate = { year: current.getFullYear(), month: 
-    current.getMonth() + 1, day: current.getDate() };
+    this.config.minDate = {
+      year: current.getFullYear(),
+      month: current.getMonth() + 1,
+      day: current.getDate(),
+    };
     this.config.outsideDays = 'hidden';
 
     this.fundForm.get('fundType')!.valueChanges.subscribe((value) => {
@@ -305,11 +313,35 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
     });
 
+    this.fundForm.get('redeem')!.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fundForm
+          .get('redeemReason')!
+          .setValidators([Validators.required, Validators.maxLength(256)]);
+      } else {
+        this.fundForm.get('fundManagerEntity')!.setValidators(null);
+      }
+
+      this.fundForm.get('redeemReason')!.updateValueAndValidity();
+    });
+
     this.fundForm.valueChanges.subscribe((val) => {
       if (val.fundSize && val.offerPrice) {
         const issuedShareValue = val.fundSize / val.offerPrice;
         this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
           emitEvent: false,
+        });
+      }
+
+      if (val.subscribers && val.subscribers.length) {
+        let sum: number = 0;
+        val.subscribers.map((amount: any) => {
+          sum = sum + amount.commitment;
+          if(sum <= this.fundForm.get('fundSize')?.value){
+            this.globalDisable = true;
+          }else{
+            this.globalDisable = false; 
+          }
         });
       }
     });
@@ -321,7 +353,7 @@ export class CreateFundComponent implements OnInit {
 
   StatusChange(event: any) {
     let value = event.target.value;
-    if (value == 'funded' || value == 'frozen' || value == 'close') {      
+    if (value == 'funded' || value == 'frozen' || value == 'close') {
       this.fundForm.disable();
       this.fundForm.get('fundStatus')?.enable();
       this.isDropdownDisabled = true;
@@ -329,6 +361,19 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.enable();
       this.fundForm.get('fundStatus')?.enable();
       this.isDropdownDisabled = false;
+    }
+
+    if (
+      this.fundForm.get('fundStatus')?.value == 'freeze' ||
+      this.fundForm.get('fundStatus')?.value == 'unfreeze' ||
+      this.fundForm.get('fundStatus')?.value == 'refund' ||
+      this.fundForm.get('fundStatus')?.value == 'extendterm'
+    ) {
+      this.fundForm
+        .get('fundStatusReason')
+        ?.setValidators([Validators.required, Validators.maxLength(2048)]);
+    } else {
+      this.fundForm.get('fundStatusReason')!.setValidators(null);
     }
 
     if (value != 'onboarding') {
@@ -362,24 +407,24 @@ export class CreateFundComponent implements OnInit {
     this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
   }
 
-  StructureChange(event:any){
+  StructureChange(event: any) {
     let value = event.target.value;
-    if(value == 'close-ended'){
+    if (value == 'close-ended') {
       this.isSimpleOption = true;
-    }else{
+    } else {
       this.isSimpleOption = false;
     }
   }
 
   handleFileInput(name: string, event: any) {
     const formData: FormData = new FormData();
-    let files = event.target.files;
-    formData.append('file', files, files['name']);
+    let file = event.target.files[0];
+    formData.append('file', file, file['name']);
     this.fundForm.get(name)?.setValue(formData);
-    files = [];
+    file = undefined;
   }
 
-  handleFilMultipleInput(event: any) {
+  handleFilMultipleInput(name: string, event: any) {
     let selectedFiles: any = undefined;
     selectedFiles = event.target.files;
     for (let i = 0; i < event.target.files; i++) {
@@ -387,10 +432,14 @@ export class CreateFundComponent implements OnInit {
     }
     const formData = new FormData();
     if (selectedFiles.length > 0) {
+      console.log(selectedFiles.length);
+
       for (let i = 0; i <= selectedFiles.length; i++) {
         formData.append('files', selectedFiles[i]);
+        console.log(selectedFiles[i]);
         if (i == selectedFiles.length) {
-          this.fundForm.get('boardResolutions')?.setValue(formData);
+          this.fundForm.get(name)?.setValue(formData);
+          console.log(formData.get('files'));
         }
       }
     }
@@ -476,32 +525,83 @@ export class CreateFundComponent implements OnInit {
     subs.removeAt(index);
   }
 
-  ParseDateFormat(arr:any){
-    let retArr:any = [];
-    console.log(arr);
-    
-    arr.map((result:any)=>{
-      retArr.push(this.ngbDateParserFormatter.format(result)) 
-       });
+  ParseDateFormat(arr: any) {
+    let retArr: any = [];
+    retArr.push(
+      arr.year.toString() +
+        '-' +
+        arr.month.toString() +
+        '-' +
+        arr.day.toString()
+    );
+    arr.map((result: any) => {
+      console.log(result);
+
+      // if(result.date && result.date != '') retArr.push(this.ngbDateParserFormatter.format(result.date))
+      // else retArr.push(result.year.toString() + '-' + result.month.toString() + '-' + result.day.toString())
+    });
+    console.log(retArr);
+
     return retArr;
   }
 
-  
-  ParseDirectors(arr:any){
-    let retArr:any = [];
-    arr.map((result:any)=>{
-      retArr.push(result.id);
+  ParseDirectors(arr: any) {
+    let retArr: any = [];
+    arr.map((result: any) => {
+      retArr.push(result.id.toString());
     });
+    if (retArr.length == 1) retArr = retArr[0];
     return retArr;
   }
 
   Submit() {
-    
-    this.fundForm.value.fundEndDate = this.ParseDateFormat([this.fundForm.get('fundEndDate')?.value])[0];
-    this.fundForm.value.closingPeriods = this.ParseDateFormat(this.fundForm.get('closingPeriods')?.value);
-    this.fundForm.value.redeem = this.ParseDateFormat([this.fundForm.get('redeem')?.value])[0];
-    console.log(this.fundForm.value);
+    console.log(this.fundForm.get('approver')?.value);
+    console.log(this.fundForm.get('redeem')?.value);
 
+    if (this.fundForm.get('closingPeriods')?.value != null) {
+      console.log(this.fundForm.get('closingPeriods')?.value);
+      this.fundForm
+        .get('closingPeriods')
+        ?.setValue(
+          this.ParseDateFormat([this.fundForm.get('closingPeriods')?.value])
+        );
+    }
+
+    if (this.fundForm.get('fundStatusReason')?.value != '') {
+      let obj = {
+        fundStatus: this.fundForm.get('fundStatusReason')?.value,
+        reason: this.fundForm.get('fundStatusReason')?.value,
+      };
+      this.fundForm.get('fundStatus')?.setValue(obj);
+    }
+
+    if (this.fundForm.get('redeem')?.value != null) {
+      this.fundForm
+        .get('redeem')
+        ?.setValue(this.ParseDateFormat(this.fundForm.get('redeem')?.value));
+    }
+
+    if (this.fundForm.get('fundEndDate')?.value != null) {
+      console.log(this.fundForm.get('fundEndDate')?.value);
+      this.fundForm
+        .get('fundEndDate')
+        ?.setValue(
+          this.ParseDateFormat([this.fundForm.get('fundEndDate')?.value])[0]
+        );
+    }
+
+    if (
+      this.fundForm.get('approver')?.value &&
+      this.fundForm.get('approver')?.value.length
+    ) {
+      this.fundForm
+        .get('approver')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('approver')?.value));
+    }
+
+    // this.fundForm.get('approver')?.setValue(this.ParseDirectors(this.fundForm.get('approver')?.value));
+
+    console.log(this.fundForm.value);
     // if (this.fundForm && this.fundForm.valid) {
     //   this.fundForm.value.created_at = new Date().toISOString();
     //   this.fundForm.value.updated_at = null;
