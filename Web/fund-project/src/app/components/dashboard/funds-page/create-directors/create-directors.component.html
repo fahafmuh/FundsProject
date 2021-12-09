@@ -1,10 +1,10 @@
-<ngb-accordion #a="ngbAccordion" activeIds="custom-panel-1">
+<ngb-accordion #a="ngbAccordion" animation="true">
     <ngb-panel id="custom-panel-1">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
           <h4 class="m-0">Add {{headingPerson}}(s)</h4>
           <button ngbPanelToggle class="btn btn-link p-0">
-            <mat-icon>
+            <mat-icon style="color: gray; margin-left: 25%;">
               {{
                 !opened
                   ? "keyboard_arrow_up"

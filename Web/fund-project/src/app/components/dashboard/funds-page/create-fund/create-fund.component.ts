@@ -9,6 +9,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { NgbDateParserFormatter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create-fund',
@@ -18,6 +19,8 @@ import { Router } from '@angular/router';
 export class CreateFundComponent implements OnInit {
   fundForm: FormGroup;
   sectionNo = 1;
+  isDropdownDisabled = false;
+  isSimpleOption = false;
   items: any;
   today = new Date();
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
@@ -40,7 +43,8 @@ export class CreateFundComponent implements OnInit {
     { value: 'open', viewValue: 'Open' },
     { value: 'funded', viewValue: 'Funded' },
     { value: 'refund', viewValue: 'Re fund' },
-    { value: 'frozen', viewValue: 'Frozen/Unfrozen' },
+    { value: 'freeze', viewValue: 'Freeze' },
+    { value: 'unfreeze', viewValue: 'Unfreeze' },
     { value: 'close', viewValue: 'Close' },
     { value: 'extendterm', viewValue: 'Extend term' },
   ];
@@ -132,10 +136,11 @@ export class CreateFundComponent implements OnInit {
   ];
 
   directors: any = [];
-  file: File | null = null;
 
   constructor(
+    private config: NgbDatepickerConfig,
     private apiService: APIService,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
     private _snackBar: MatSnackBar,
     private router: Router,
     private formBuilder: FormBuilder
@@ -172,6 +177,11 @@ export class CreateFundComponent implements OnInit {
     return index == this.fundForm.get(name)?.value.length - 1 ? true : false;
   }
 
+  getFundStatusHeading(value:string){
+    if(value == 'extendterm') return 'Extend Term';
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
   setMultiDropdownSettings() {
     return (this.dropdownSettings = {
       singleSelection: false,
@@ -185,7 +195,7 @@ export class CreateFundComponent implements OnInit {
     });
   }
 
-  isNumberOnly(event:any) {
+  isNumberOnly(event: any) {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
@@ -217,17 +227,21 @@ export class CreateFundComponent implements OnInit {
       fundType: ['regulated', []],
       fundManagerEntity: ['', []],
       fundManagerRep: ['', [Validators.required]],
-      fundStructure: ['open-end', []],
+      fundStructure: ['open-ended', []],
       offerPrice: [1.0, []],
       fundSize: [0.0, []],
       issuedShares: [1, []],
       ordinaryShare: [1, []],
       fundStatus: ['onboarding', []],
+      fundStatusReason: ['', []],
       reportingCurrency: ['USD', []],
       lockupPeriod: [0, []],
       fundYearEnd: ['Dec', []],
       productType: ['private-equity', []],
-      fundLife: [null, [Validators.required]],
+      fundLifeYears: [null, []],
+      boardExtension: ['', []],
+      investorExtension: ['', []],
+      fundLifedocuments: [null, []],
       fundEndDate: [null, []],
       catchup: [0.0, []],
 
@@ -240,16 +254,16 @@ export class CreateFundComponent implements OnInit {
       trustee: ['', []],
       trusteeRep: ['', []],
       investmentComittee: [[], [Validators.required]],
-      directorsList: [this.TransformDirectors(), [Validators.required]],
+      directorsList: this.formBuilder.array(this.TransformDirectors()),
       subscribers: this.formBuilder.array(this.TransformSubscribers()),
       // Section 3:
       authorizedSignatory: [[], [Validators.required]],
       signature: [null, [Validators.required]],
       boardResolutions: [null, [Validators.required]],
       fundAdmin: ['', [Validators.required]],
-      GIIN: ['', [Validators.required,Validators.maxLength(50)]],
+      GIIN: ['', [Validators.required, Validators.maxLength(50)]],
       preparer: ['', []],
-      closingPeriod: [[], [Validators.required]],
+      closingPeriods: this.formBuilder.array(this.TransformClosingPeriods()),
       reclassificationFreq: ['month', []],
       approver: ['', [Validators.required]],
       subscriptionAgreement: [null, [Validators.required]],
@@ -257,24 +271,16 @@ export class CreateFundComponent implements OnInit {
       PPM: [null, [Validators.required]],
       directorFee: [0.0, []],
       managementFee: [0.0, []],
-      hurdleRate: [0.0000, []],
-      CTC: [0.00, []],
+      hurdleRate: [0.0, []],
+      CTC: [0.0, []],
       bank: ['OCBC', []],
-      bankAccount: ['', [Validators.required,Validators.maxLength(50)]],
-      bankAccessId: ['', [Validators.required,Validators.maxLength(50)]],
-      bankAccessPassword: ['', [Validators.required,Validators.maxLength(50)]],
+      bankAccount: ['', [Validators.required, Validators.maxLength(50)]],
+      bankAccessId: ['', [Validators.required, Validators.maxLength(50)]],
+      bankAccessPassword: ['', [Validators.required, Validators.maxLength(50)]],
 
       // Section 4:
-      freeze: ['', []],
-      freezeReason: ['', []],
-      unfreeze: ['', []],
-      unfreezeReason: ['', []],
-      refund: [0.0, []],
-      refundReason: ['', []],
       redeem: ['', []],
       redeemReason: ['', []],
-      extend: ['', []],
-      extendReason: ['', []],
       liquidate: ['', []],
       liquidateReason: ['', []],
 
@@ -282,42 +288,15 @@ export class CreateFundComponent implements OnInit {
       updated_at: ['', []],
     });
 
+    const current = new Date();
+    this.config.minDate = { year: current.getFullYear(), month: 
+    current.getMonth() + 1, day: current.getDate() };
+    this.config.outsideDays = 'hidden';
+
     this.fundForm.get('fundType')!.valueChanges.subscribe((value) => {
       if (value === 'regulated') {
         this.fundForm
           .get('fundManagerEntity')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-      } else {
-        this.fundForm.get('fundManagerEntity')!.setValidators(null);
-      }
-
-      this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
-    });
-
-    this.fundForm.get('fundStatus')!.valueChanges.subscribe((value) => {
-      if (value != 'onboarding') {
-        this.fundForm
-          .get('legalCounsel')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-
-        this.fundForm
-          .get('legalCounselRep')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-
-        this.fundForm
-          .get('auditor')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-
-        this.fundForm
-          .get('auditorRep')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-
-        this.fundForm
-          .get('trustee')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-
-        this.fundForm
-          .get('trusteeRep')!
           .setValidators([Validators.required, Validators.maxLength(256)]);
       } else {
         this.fundForm.get('fundManagerEntity')!.setValidators(null);
@@ -340,11 +319,81 @@ export class CreateFundComponent implements OnInit {
     return (this.directors = [...this.directors]);
   }
 
-  handleFileInput(field:string,event: any) {
+  StatusChange(event: any) {
+    let value = event.target.value;
+    if (value == 'funded' || value == 'frozen' || value == 'close') {      
+      this.fundForm.disable();
+      this.fundForm.get('fundStatus')?.enable();
+      this.isDropdownDisabled = true;
+    } else {
+      this.fundForm.enable();
+      this.fundForm.get('fundStatus')?.enable();
+      this.isDropdownDisabled = false;
+    }
+
+    if (value != 'onboarding') {
+      this.fundForm
+        .get('legalCounsel')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('legalCounselRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('auditor')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('auditorRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('trustee')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('trusteeRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+    } else {
+      this.fundForm.get('fundManagerEntity')!.setValidators(null);
+    }
+
+    this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
+  }
+
+  StructureChange(event:any){
+    let value = event.target.value;
+    if(value == 'close-ended'){
+      this.isSimpleOption = true;
+    }else{
+      this.isSimpleOption = false;
+    }
+  }
+
+  handleFileInput(name: string, event: any) {
     const formData: FormData = new FormData();
-    let files = event.target.files[0];
+    let files = event.target.files;
     formData.append('file', files, files['name']);
-    this.fundForm.get(field)?.setValue(formData);
+    this.fundForm.get(name)?.setValue(formData);
+    files = [];
+  }
+
+  handleFilMultipleInput(event: any) {
+    let selectedFiles: any = undefined;
+    selectedFiles = event.target.files;
+    for (let i = 0; i < event.target.files; i++) {
+      selectedFiles.push(event.target.files[i]);
+    }
+    const formData = new FormData();
+    if (selectedFiles.length > 0) {
+      for (let i = 0; i <= selectedFiles.length; i++) {
+        formData.append('files', selectedFiles[i]);
+        if (i == selectedFiles.length) {
+          this.fundForm.get('boardResolutions')?.setValue(formData);
+        }
+      }
+    }
   }
 
   TransformSubscribers(): FormGroup[] {
@@ -353,6 +402,17 @@ export class CreateFundComponent implements OnInit {
       this.formBuilder.group({
         name: ['', [Validators.required]],
         commitment: [0.0, [Validators.required]],
+      })
+    );
+
+    return fb;
+  }
+
+  TransformClosingPeriods(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        date: ['', [Validators.required]],
       })
     );
 
@@ -371,17 +431,30 @@ export class CreateFundComponent implements OnInit {
     return fb;
   }
 
+  addClosingPeriod() {
+    let fb: FormGroup = this.formBuilder.group({
+      date: ['', [Validators.required]],
+    });
+    let dates = this.fundForm.get('closingPeriods') as FormArray;
+    dates.push(fb);
+  }
+
+  removeClosingPeriod(index: any) {
+    let dirs = this.fundForm.get('closingPeriods') as FormArray;
+    dirs.removeAt(index);
+  }
+
   addDirector() {
     let fb: FormGroup = this.formBuilder.group({
       name: ['', [Validators.required]],
       signature: [null, [Validators.required]],
     });
-    let directors = this.fundForm.get('directors') as FormArray;
+    let directors = this.fundForm.get('directorsList') as FormArray;
     directors.push(fb);
   }
 
   removeDirector(index: any) {
-    let dirs = this.fundForm.get('directors') as FormArray;
+    let dirs = this.fundForm.get('directorsList') as FormArray;
     dirs.removeAt(index);
   }
 
@@ -403,26 +476,51 @@ export class CreateFundComponent implements OnInit {
     subs.removeAt(index);
   }
 
+  ParseDateFormat(arr:any){
+    let retArr:any = [];
+    console.log(arr);
+    
+    arr.map((result:any)=>{
+      retArr.push(this.ngbDateParserFormatter.format(result)) 
+       });
+    return retArr;
+  }
+
+  
+  ParseDirectors(arr:any){
+    let retArr:any = [];
+    arr.map((result:any)=>{
+      retArr.push(result.id);
+    });
+    return retArr;
+  }
+
   Submit() {
+    
+    this.fundForm.value.fundEndDate = this.ParseDateFormat([this.fundForm.get('fundEndDate')?.value])[0];
+    this.fundForm.value.closingPeriods = this.ParseDateFormat(this.fundForm.get('closingPeriods')?.value);
+    this.fundForm.value.redeem = this.ParseDateFormat([this.fundForm.get('redeem')?.value])[0];
     console.log(this.fundForm.value);
 
-    if (this.fundForm && this.fundForm.valid) {
-      this.fundForm.value.created_at = new Date().toISOString();
-      this.fundForm.value.updated_at = null;
-      this.apiService.onSave(this.fundForm.value).subscribe(
-        (result: any) => {
-          if (result.status == 'ok') {
-            this._snackBar.open('Fund created successfully!', '', {
-              horizontalPosition: this.horizontalPosition,
-              verticalPosition: this.verticalPosition,
-              duration: 4000,
-            });
-            this.router.navigate(['dashboard/funds/list']);
-          }
-        },
-        (err: any) => {}
-      );
-    }
+    // if (this.fundForm && this.fundForm.valid) {
+    //   this.fundForm.value.created_at = new Date().toISOString();
+    //   this.fundForm.value.updated_at = null;
+    //   this.fundForm.value.closingPeriods = this.ParseClosingPeriods(this.fundForm.get('closingPeriods')?.value)
+    //   this.apiService.onSave(this.fundForm.value).subscribe(
+    //     (result: any) => {
+    //       if (result.status == 'ok') {
+    //         this._snackBar.open('Fund created successfully!', '', {
+    //           horizontalPosition: this.horizontalPosition,
+    //           verticalPosition: this.verticalPosition,
+    //           duration: 4000,
+    //         });
+    //        this.fundForm.reset();
+    //         this.router.navigate(['dashboard/funds/list']);
+    //       }
+    //     },
+    //     (err: any) => {}
+    //   );
+    // }
   }
 
   Cancel() {
