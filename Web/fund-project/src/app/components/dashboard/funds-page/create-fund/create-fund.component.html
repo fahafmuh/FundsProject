@@ -95,6 +95,1123 @@
                 </select>
               </div>
             </div>
+            
+             <!-- SUB FUND -->
+            <ngb-accordion class="mb-3" #a="ngbAccordion" animation="true" *ngIf="fundForm.get('subFund')?.value == 'Y'">
+              <br />
+              <ngb-panel>
+                <ng-template ngbPanelHeader let-opened="opened">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <h4 class="m-0">Add SubFund</h4>
+                    <button ngbPanelToggle class="btn btn-link p-0">
+                      <mat-icon style="color: gray; margin-left: 25%">
+                        {{
+                          !opened ? "keyboard_arrow_down" : "keyboard_arrow_up"
+                        }}
+                      </mat-icon>
+                    </button>
+                  </div>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                  <div class="container-fluid p-0">
+                    <div class="row g-3" formGroupName="subFundData">
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Name</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_fundName"
+                            placeholder="Fund Name"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Registration No</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_registrationNumber"
+                            placeholder="Registration No."
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Description</label
+                          >
+                          <textarea
+                            class="form-control"
+                            formControlName="S_fundDescription"
+                            rows="3"
+                            placeholder="Fund Description"
+                          ></textarea>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Domicile</label
+                          >
+                          <select
+                            class="form-select"
+                            formControlName="S_domicile"
+                            aria-label="Default select example"
+                          >
+                            <option selected disabled>Select Domicile</option>
+                            <option
+                              *ngFor="let data of domicileData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Type</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_fundType"
+                          >
+                            <option disabled>Select Fund Type</option>
+                            <option value="regulated">Regulated</option>
+                            <option value="un-regulated">Un regulated</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Manager Entity</label
+                          >
+                          <ng-multiselect-dropdown
+                          [placeholder]="'Select Fund Manager(s)'"
+                          [settings]="dropdownSettings"
+                          [data]="directors"
+                          [disabled]="isDropdownDisabled"
+                          formControlName="S_fundManagerEntity"
+                        >
+                        </ng-multiselect-dropdown>
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Fund Manager Entity'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Manager Rep</label
+                          >
+
+                          <ng-multiselect-dropdown
+                          [placeholder]="'Select Fund Manager Rep(s)'"
+                          [settings]="dropdownSettings"
+                          [data]="directors"
+                          [disabled]="isDropdownDisabled"
+                          formControlName="S_fundManagerRep"
+                        >
+                        </ng-multiselect-dropdown>
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Fund Manager Rep'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Structure</label
+                          >
+                          <select
+                            class="form-select"
+                            formControlName="S_fundStructure"
+                            (change)="StructureChangeSubFund($event)"
+                            aria-label="Default select example"
+                          >
+                            <option disabled>Select Fund Structure</option>
+                            <option value="open-ended">Open-End</option>
+                            <option value="close-ended">Close-End</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Offer Price</label
+                          >
+                          <input
+                            type="number"
+                            min="0.00"
+                            step="0.01"
+                            class="form-control"
+                            formControlName="S_offerPrice"
+                            placeholder="Offer Price"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Size</label
+                          >
+                          <input
+                            type="number"
+                            min="0.00"
+                            step="0.01"
+                            class="form-control"
+                            formControlName="S_fundSize"
+                            placeholder="Fund Size"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Issued Shares</label
+                          >
+                          <input
+                            type="number"
+                            [disabled]="disable"
+                            class="form-control"
+                            placeholder="Issued Shares"
+                            formControlName="S_issuedShares"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Ordinary Share</label
+                          >
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            class="form-control"
+                            formControlName="S_ordinaryShare"
+                            placeholder="Ordinary Share"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Status</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_fundStatus"
+                          >
+                            <option disabled>Select Fund Status</option>
+                            <option
+                              *ngFor="let data of fundStatusData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reporting Currency</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_reportingCurrency"
+                          >
+                            <option disabled>Select Reporting Currency</option>
+                            <option
+                              *ngFor="let data of currencyData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Lock up Period (in years)</label
+                          >
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            class="form-control"
+                            formControlName="S_lockupPeriod"
+                            placeholder="Lock up Period (in years)"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Year End</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_fundYearEnd"
+                          >
+                            <option disabled>Select Fund Year-end</option>
+                            <option
+                              *ngFor="let data of monthsData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Product Type</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_productType"
+                          >
+                            <option disabled>Select Product Type</option>
+                            <option
+                              *ngFor="let data of productTypeData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Life</label
+                          >
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            class="form-control"
+                            formControlName="S_fundLifeYears"
+                            placeholder="Enter Fund Life (in years)"
+                          /><br />
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            *ngIf="!isSimpleOptionSF"
+                            class="form-control"
+                            formControlName="S_investorExtension"
+                            placeholder="Enter Fund Investor Extension"
+                          />
+                          <br />
+                          <input
+                            type="number"
+                            min="0"
+                            *ngIf="!isSimpleOptionSF"
+                            step="1"
+                            class="form-control"
+                            formControlName="S_boardExtension"
+                            placeholder="Enter Fund board Extension"
+                          />
+                          <br />
+
+                          <input
+                            class="form-control"
+                            type="file"
+                            *ngIf="!isSimpleOptionSF"
+                            multiple="true"
+                            accept=".pdf,.doc"
+                            (change)="
+                            handleFileMultipleInput(
+                                'S_fundLifedocuments',
+                                $event,true
+                              )
+                            "
+                            id="formFileMultiple"
+                            multiple
+                          />
+                        </div>
+                    
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reporting Frequency</label
+                          >
+                          <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            formControlName="S_reportingFrequency"
+                          >
+                            <option disabled>Select Reporting Frequency</option>
+                            <option
+                              *ngFor="let data of reportingFrequencyData"
+                              [value]="data.value"
+                            >
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Legal Counsel</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_legalCounsel"
+                            placeholder="Enter Legal Counsel"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Legal Counsel Representative</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_legalCounselRep"
+                            placeholder="Enter Legal Counsel Representative"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Auditor</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_auditor"
+                            placeholder="Enter Auditor"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Auditor Representative</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_auditorRep"
+                            placeholder="Enter Auditor Representative"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Custodian / Trustee</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_trustee"
+                            placeholder="Enter Custodian / Trustee"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                       
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Enter Custodian / Trustee Representative</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_trusteeRep"
+                            placeholder="Enter Custodian / Trustee Representative"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                          
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Approver</label
+                          >
+                          <ng-multiselect-dropdown
+                            [placeholder]="'Select Approver'"
+                            [settings]="dropdownSingleSettings"
+                            [data]="directors"
+                            [disabled]="isDropdownDisabled"
+                            formControlName="S_approver"
+                          >
+                          </ng-multiselect-dropdown>
+                          <br />
+                          <app-create-directors
+                            [directorsList]="directors"
+                            [headingPerson]="'Approver'"
+                            (sendDirectorsData)="refreshDirectors($event)"
+                          ></app-create-directors>
+                        </div>
+                          <div class="mb-3">
+                            <label for="staticEmail" class="form-label"
+                              >Subscription Agreement</label
+                            >
+                            <input
+                              class="form-control"
+                              type="file"
+                              accept=".pdf,.doc"
+                              (change)="
+                                handleFileInput('S_subscriptionAgreement', $event)
+                              "
+                              id="formFileMultiple"
+                              multiple
+                            />
+  
+                            <div id="emailHelp" class="form-text">
+                              Single file upload only.
+                            </div>
+                          </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Investment Agreement</label
+                          >
+                          <div class="col-sm-10 mb-3">
+                            <input
+                              class="form-control"
+                              type="file"
+                              accept=".pdf,.doc"
+                              (change)="
+                                handleFileInput('S_investmentAgreement', $event)
+                              "
+                              id="formFileMultiple"
+                              multiple
+                            />
+
+                            <div id="emailHelp" class="form-text">
+                              Single file upload only.
+                            </div>
+                          </div>
+                        </div>
+                    
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Director’s Fees</label
+                          >
+                          <input
+                            type="number"
+                            min="0.00"
+                            step="0.01"
+                            class="form-control"
+                            formControlName="S_directorFee"
+                            placeholder="Enter Director's Fee"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Management Fee</label
+                          >
+                          <input
+                  type="number"
+                  min="0.00"
+                  step="0.01"
+                  class="form-control"
+                  formControlName="S_managementFee"
+                  placeholder="Enter Management Fee"
+                />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Hurdle Rate</label
+                          >
+                          <input
+                            type="number"
+                            min="0.0000"
+                            step="0.0001"
+                            class="form-control"
+                            formControlName="S_hurdleRate"
+                            placeholder="Enter Hurdle Rate"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+            
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Bank
+                          </label>
+                          <select class="form-select" formControlName="S_bank">
+                            <option selected disabled>Select Bank</option>
+                            <option *ngFor="let data of bankData" [value]="data.value">
+                              {{ data.viewValue }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Bank Account</label
+                          >
+                          <input
+                          type="text"
+                          (keypress)="isNumberOnly($event)"
+                          class="form-control"
+                          formControlName="S_bankAccount"
+                          placeholder="Enter Bank Account"
+                        />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Bank Access ID</label
+                          >
+                          <input
+                          type="password"
+                          class="form-control"
+                          formControlName="S_bankAccessId"
+                          placeholder="Enter Bank Access ID"
+                        />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Bank Access Password</label
+                          >
+                          <input
+                          type="password"
+                          class="form-control"
+                          formControlName="S_bankAccessPassword"
+                          placeholder="Enter Bank Access Password"
+                        />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Catchup</label
+                          >
+                          <input
+                            type="number"
+                            min="0.00"
+                            step="0.01"
+                            class="form-control"
+                            formControlName="S_catchup"
+                            placeholder="Catchup"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund End Date</label
+                          >
+                          <div class="input-group">
+                            <input
+                              class="form-control"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              formControlName="S_fundEndDate"
+                              ngbDatepicker
+                              #d="ngbDatepicker"
+                            />
+                            <div class="input-group-append">
+                              <button
+                                class="
+                                  btn btn-outline-secondary
+                                  calendar
+                                  fa fa-calendar
+                                "
+                                (click)="d.toggle()"
+                                type="button"
+                              ></button>
+                            </div>
+                          </div>
+                        </div>
+                     
+
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label">
+                            Authorized Signatory</label
+                          >
+                          <ng-multiselect-dropdown
+                          [placeholder]="'Select Authorized Signatory'"
+                          [settings]="dropdownSettings"
+                          [data]="directors"
+                          [disabled]="isDropdownDisabled"
+                          formControlName="S_authorizedSignatory"
+                        >
+                        </ng-multiselect-dropdown>
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Authorized Signatory'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Signature</label
+                          >
+                          <input
+                          class="form-control"
+                          type="file"
+                          accept=".pdf,.doc"
+                          (change)="handleFileInput('S_signature', $event)"
+                          id="formFileMultiple"
+                        />
+        
+                        <div id="emailHelp" class="form-text">
+                          Single file upload only.
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Board Resolutions</label
+                          >
+                          <input
+                          class="form-control"
+                          type="file"
+                          accept=".pdf,.doc"
+                          multiple="true"
+                          (change)="handleFileMultipleInput('S_boardResolutions', $event,true)"
+                          id="formFileMultiple"
+                          multiple
+                        />
+        
+                        <div id="emailHelp" class="form-text">
+                          Multiple file upload allowed.
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Fund Administrator</label
+                          >
+                          <ng-multiselect-dropdown
+                          [placeholder]="'Select Fund Administrator'"
+                          [settings]="dropdownSingleSettings"
+                          [data]="directors"
+                          [disabled]="isDropdownDisabled"
+                          formControlName="S_fundAdmin"
+                        >
+                        </ng-multiselect-dropdown>
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Fund Admin'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >GIIN</label
+                          >
+                          <input
+                          type="text"
+                          class="form-control"
+                          formControlName="S_GIIN"
+                          placeholder="Enter GIIN"
+                        />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Preparer</label
+                          >
+                          <ng-multiselect-dropdown
+                          [placeholder]="'Select Preparer'"
+                          [settings]="dropdownSingleSettings"
+                          [data]="directors"
+                          [disabled]="isDropdownDisabled"
+                          formControlName="S_preparer"
+                        >
+                        </ng-multiselect-dropdown>
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Preparer'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3" formArrayName="S_closingPeriods">
+                          <label for="staticEmail" class="form-label"
+                            >Closing Period</label
+                          >
+                          <ng-template
+                          ngFor
+                          [ngForOf]="GetControlsSubFund('S_closingPeriods')"
+                          let-value
+                          let-index="index"
+                          >
+                          <ng-container [formGroupName]="index">
+                            <div class="col-auto">
+                              <label class="col-form-label"
+                                >Period {{ index + 1 }} :
+                              </label>
+                            </div>
+                            <div class="col-auto" style="width: 60%">
+                              <input
+                                class="form-control"
+                                placeholder="YYYY-MM-DD"
+                                name="dp"
+                                [max]="today"
+                                formControlName="date"
+                                ngbDatepicker
+                                #d="ngbDatepicker"
+                              />
+                            </div>
+                            <div class="col-auto">
+                              <button
+                                class="btn btn-outline-secondary calendar fa fa-calendar"
+                                (click)="d.toggle()"
+                                type="button"
+                              ></button>
+                              &nbsp;
+                              <button
+                                (click)="addClosingPeriod(true)"
+                                *ngIf="checkAddAvailibility('S_closingPeriods', index,true)"
+                                type="button"
+                                class="btn btn-sm btn-primary d-inline mr-1"
+                              >
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                              </button>
+                              <button
+                                type="button"
+                                *ngIf="checkDeleteAvailibility('S_closingPeriods',true)"
+                                class="btn btn-sm btn-secondary d-inline"
+                                (click)="removeClosingPeriod(index,true)"
+                              >
+                                <i class="fa fa-minus" aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          </ng-container>
+                        </ng-template>
+                        </div>
+
+                        <div
+                        class="mb-3 row g-3 align-items-center"
+                        formArrayName="S_subscribers"
+                      >
+                        <label for="staticEmail" class="col-sm-2 col-form-label"
+                          >Subscriber(s)</label
+                        >
+                        <ng-template
+                          ngFor
+                          let-value
+                          [ngForOf]="GetControlsSubFund('S_subscribers')"
+                          let-index="index"
+                        >
+                          <ng-container [formGroupName]="index">
+                            <div class="col-auto">
+                              <label class="col-form-label">Name</label>
+                            </div>
+                            <div class="col-auto" style="width: 29%">
+                              <ng-multiselect-dropdown
+                                [placeholder]="'Select Subscriber'"
+                                [settings]="dropdownSingleSettings"
+                                [data]="directors"
+                                [disabled]="isDropdownDisabled"
+                                formControlName="name"
+                              >
+                              </ng-multiselect-dropdown>
+                            </div>
+                            <div class="col-auto">
+                              <div class="col-auto">
+                                <label class="col-form-label">Commitment</label>
+                              </div>
+                              <input
+                                type="number"
+                                min="0.00"
+                                step="0.01"
+                                style="width: 266px"
+                                class="form-control"
+                                formControlName="commitment"
+                                placeholder="Subscriber commitment"
+                              />
+                            </div>
+                            <div class="col-auto">
+                              <button
+                                (click)="addSubscriber(true)"
+                                *ngIf="checkAddAvailibility('S_subscribers', index,true)"
+                                type="button"
+                                class="btn btn-sm btn-primary d-inline mr-1"
+                              >
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                              </button>
+                              <button
+                                type="button"
+                                *ngIf="checkDeleteAvailibility('S_subscribers',true)"
+                                class="btn btn-sm btn-secondary d-inline"
+                                (click)="removeSubscriber(index,true)"
+                              >
+                                <i class="fa fa-minus" aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          </ng-container>
+                        </ng-template>
+          
+                        <br />
+                        <app-create-directors
+                          [directorsList]="directors"
+                          [headingPerson]="'Subscriber'"
+                          (sendDirectorsData)="refreshDirectors($event)"
+                        ></app-create-directors>
+                      </div>
+              
+
+                     
+                      </div>
+                      <div class="col-6">
+                
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Liquidate</label
+                          >
+                          <select
+                          class="form-select"
+                          aria-label="Default select example"
+                          formControlName="S_liquidate"
+                        >
+                          <option value="" disabled>Select Option</option>
+                          <option value="voluntary">Voluntary</option>
+                          <option value="involuntary">Involuntary</option>
+                        </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                          <textarea
+                          class="form-control"
+                          formControlName="S_liquidateReason"
+                          rows="3"
+                          placeholder="Enter Reason to liquidate"
+                        ></textarea>
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Redeem</label
+                          >
+                          <div class="input-group">
+                            <input
+                              class="form-control"
+                              placeholder="YYYY-MM-DD"
+                              name="d"
+                              ngbDatepicker
+                              formControlName="S_redeem"
+                              #d="ngbDatepicker"
+                            />
+                            <div class="input-group-append">
+                              <button
+                                class="btn btn-outline-secondary calendar fa fa-calendar"
+                                (click)="d.toggle()"
+                                type="button"
+                              ></button>
+                            </div>
+                          </div>
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reasons</label
+                          >
+                          <textarea
+                          class="form-control"
+                          formControlName="S_redeemReason"
+                          rows="3"
+                          placeholder="Enter Reason to redeem"
+                        ></textarea>
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Cost to Company (CTC)</label
+                          >
+                          <input
+                            type="number"
+                            min="0.00"
+                            step="0.01"
+                            class="form-control"
+                            formControlName="S_CTC"
+                            placeholder="Enter CTC"
+                          />
+                          <div id="emailHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Private Placement Memorandum (PPM)</label
+                          >
+                          <input
+                            class="form-control"
+                            type="file"
+                            accept=".pdf,.doc"
+                            (change)="handleFileInput('S_PPM', $event)"
+                            id="formFileMultiple"
+                            multiple
+                          />
+
+                          <div id="emailHelp" class="form-text">
+                            Single file upload only.
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="staticEmail" class="form-label"
+                            >Reclassification Frequency</label
+                          >
+                          <select
+                          class="form-select"
+                          aria-label="Default select example"
+                          formControlName="S_reclassificationFreq"
+                        >
+                          <option disabled>Select Reclassification Frequency</option>
+                          <option
+                            *ngFor="let data of reportingFrequencyData"
+                            [value]="data.value"
+                          >
+                            {{ data.viewValue }}
+                          </option>
+                        </select>
+                        </div>
+
+                        <div class="mb-3 row" formArrayName="S_directorsList">
+                          <label for="staticEmail" class="col-sm-2 col-form-label"
+                            >Directors</label
+                          >
+                          <ng-template
+                            ngFor
+                            let-value
+                            [ngForOf]="GetControlsSubFund('S_directorsList')"
+                            let-index="index"
+                          >
+                            <ng-container [formGroupName]="index">
+                              <div class="col-auto">
+                                <label class="col-form-label">Name</label>
+                              </div>
+                              <div class="col-auto" style="width: 72%">
+                                <ng-multiselect-dropdown
+                                  [placeholder]="'Select Director(s)'"
+                                  [settings]="dropdownSingleSettings"
+                                  [data]="directors"
+                                  [disabled]="isDropdownDisabled"
+                                  formControlName="name"
+                                >
+                                </ng-multiselect-dropdown>
+                              </div>
+            
+                              <div class="col-auto">
+                                  <label for="staticEmail" class="col-sm-2 col-form-label"
+                            >Signature</label
+                          >
+                                <input
+                                  class="form-control"
+                                  type="file"
+                                  accept=".pdf,.doc"
+                                  (change)="handleFileInputDirector(index, $event,true)"
+                                  id="formFileMultiple"
+                                />
+            
+                                <div id="emailHelp" class="form-text">
+                                  Single file upload only.
+                                </div>
+                              </div>
+                              <div class="col-auto">
+                                <button
+                                  (click)="addDirector(true)"
+                                  *ngIf="checkAddAvailibility('S_directorsList', index,true)"
+                                  type="button"
+                                  class="btn btn-sm btn-primary d-inline mr-1"
+                                >
+                                  <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  *ngIf="checkDeleteAvailibility('S_directorsList',true)"
+                                  class="btn btn-sm btn-secondary d-inline"
+                                  (click)="removeDirector(index,true)"
+                                >
+                                  <i class="fa fa-minus" aria-hidden="true"></i>
+                                </button>
+                              </div>
+                            </ng-container>
+                          </ng-template>
+            
+                          <br />
+                          <app-create-directors
+                            [directorsList]="directors"
+                            [headingPerson]="'Director'"
+                            (sendDirectorsData)="refreshDirectors($event)"
+                          ></app-create-directors>
+                        </div>
+
+                    
+                      </div>
+                  </div>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+            <br *ngIf="fundForm.get('subFund')?.value == 'Y'">
+
+
+            <!-- END OF SUB FUND -->
+
 
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
@@ -169,12 +1286,6 @@
                   formControlName="fundManagerRep"
                 >
                 </ng-multiselect-dropdown>
-                <br />
-                <app-create-directors
-                  [directorsList]="directors"
-                  [headingPerson]="'Fund Manager Representative'"
-                  (sendDirectorsData)="refreshDirectors($event)"
-                ></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">
@@ -287,16 +1398,31 @@
               </div>
             </div>
 
-            <div class="mb-3 row" *ngIf="fundForm.get('fundStatus')?.value == 'freeze' || fundForm.get('fundStatus')?.value == 'unfreeze' || fundForm.get('fundStatus')?.value == 'refund' || fundForm.get('fundStatus')?.value == 'extendterm'">
+            <div
+              class="mb-3 row"
+              *ngIf="
+                fundForm.get('fundStatus')?.value == 'freeze' ||
+                fundForm.get('fundStatus')?.value == 'unfreeze' ||
+                fundForm.get('fundStatus')?.value == 'refund' ||
+                fundForm.get('fundStatus')?.value == 'extendterm'
+              "
+            >
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >{{getFundStatusHeading(fundForm.get('fundStatus')?.value)}} Reason</label
+                >{{
+                  getFundStatusHeading(fundForm.get("fundStatus")?.value)
+                }}
+                Reason</label
               >
               <div class="col-sm-10">
                 <textarea
                   class="form-control"
                   formControlName="fundStatusReason"
                   rows="3"
-                  [placeholder]="'Enter ' + getFundStatusHeading(fundForm.get('fundStatus')?.value) + ' Reason'"
+                  [placeholder]="
+                    'Enter ' +
+                    getFundStatusHeading(fundForm.get('fundStatus')?.value) +
+                    ' Reason'
+                  "
                 ></textarea>
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
@@ -345,7 +1471,7 @@
             </div>
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Lock up Period (in years)</label
+                >Fund year end</label
               >
               <div class="col-sm-10">
                 <select
@@ -413,20 +1539,20 @@
                   placeholder="Enter Fund board Extension"
                 />
                 <br />
-                
-                  <input
-                    class="form-control"
-                    type="file"
-                    multiple="true"
-                    accept=".pdf,.doc"
-                    (change)="handleFilMultipleInput('fundLifedocuments', $event)"
-                    id="formFileMultiple"
-                    multiple
-                  />
-  
-                  <div id="emailHelp" class="form-text">
-                    Multiple file upload allowed.
-                  </div>
+
+                <input
+                  class="form-control"
+                  type="file"
+                  multiple="true"
+                  accept=".pdf,.doc"
+                  (change)="handleFileMultipleInput('fundLifedocuments', $event)"
+                  id="formFileMultiple"
+                  multiple
+                />
+
+                <div id="emailHelp" class="form-text">
+                  Multiple file upload allowed.
+                </div>
               </div>
             </div>
             <div class="mb-3 row">
@@ -759,6 +1885,9 @@
                   </div>
 
                   <div class="col-auto">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"
+                    >Director's Signature</label
+                  >
                     <input
                       class="form-control"
                       type="file"
@@ -766,7 +1895,7 @@
                       (change)="handleFileInputDirector(index, $event)"
                       id="formFileMultiple"
                     />
-    
+
                     <div id="emailHelp" class="form-text">
                       Single file upload only.
                     </div>
@@ -829,19 +1958,19 @@
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Signature</label
               >
-                <div class="col-sm-10 mb-3">
-                  <input
-                    class="form-control"
-                    type="file"
-                    accept=".pdf,.doc"
-                    (change)="handleFileInput('signature', $event)"
-                    id="formFileMultiple"
-                  />
-  
-                  <div id="emailHelp" class="form-text">
-                    Single file upload only.
-                  </div>
+              <div class="col-sm-10 mb-3">
+                <input
+                  class="form-control"
+                  type="file"
+                  accept=".pdf,.doc"
+                  (change)="handleFileInput('signature', $event)"
+                  id="formFileMultiple"
+                />
+
+                <div id="emailHelp" class="form-text">
+                  Single file upload only.
                 </div>
+              </div>
             </div>
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
@@ -853,7 +1982,7 @@
                   type="file"
                   accept=".pdf,.doc"
                   multiple="true"
-                  (change)="handleFilMultipleInput('boardResolutions',$event)"
+                  (change)="handleFileMultipleInput('boardResolutions', $event)"
                   id="formFileMultiple"
                   multiple
                 />
@@ -1042,15 +2171,13 @@
                   Single file upload only.
                 </div>
               </div>
-
-
             </div>
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Investment Agreement</label
               >
 
-              <div class="col-sm-10 mb-3">
+              <div class="col-sm-10">
                 <input
                   class="form-control"
                   type="file"
@@ -1070,7 +2197,7 @@
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Private Placement Memorandum (PPM)</label
               >
-              
+
               <div class="col-sm-10 mb-3">
                 <input
                   class="form-control"
@@ -1225,118 +2352,7 @@
         <li [ngbNavItem]="4">
           <a ngbNavLink>Reasonings</a>
           <ng-template ngbNavContent>
-            <!-- <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Freeze</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Freeze"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div> -->
-            <!-- <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Unfreeze</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Unfreeze"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Onboarding, Open, Funded, End</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Onboarding, Open, Funded, End"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Re-fund</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Re-fund"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div> -->
+            
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label"
                 >Liquidate</label
@@ -1424,7 +2440,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  
                   placeholder="Extend"
                 />
                 <div id="emailHelp" class="form-text">
@@ -1440,7 +2456,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  
                   placeholder="Reasons"
                 />
                 <div id="emailHelp" class="form-text">
@@ -1454,7 +2470,6 @@
     </form>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
   </div>
-
   <div class="col-md-12">
     <div class="d-flex align-item-center justify-content-end">
       <div class="p-2" *ngIf="sectionNo > 1">
@@ -1466,13 +2481,16 @@
           PREVIOUS
         </button>
       </div>
-      
+
       <p *ngIf="globalDisable">
         <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
-          <span>Sum of subscribers commitment should be less or equal to Fund Size</span>
+          <span
+            >Sum of subscribers commitment should be less or equal to Fund
+            Size</span
+          >
         </ngb-alert>
       </p>
-      <br>
+      <br />
 
       <div class="p-2" *ngIf="sectionNo < 4">
         <button
@@ -1488,7 +2506,6 @@
           CANCEL
         </button>
       </div>
-     
 
       <div class="p-2">
         <button type="button" class="btn btn-success" (click)="Submit()">

@@ -24,6 +24,7 @@ export class CreateFundComponent implements OnInit {
   sectionNo = 1;
   isDropdownDisabled = false;
   isSimpleOption = false;
+  isSimpleOptionSF = false;
   items: any;
   today = new Date();
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
@@ -154,6 +155,8 @@ export class CreateFundComponent implements OnInit {
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
+          console.log(this.directors);
+          
           this.setMultiDropdownSettings();
           this.setSingleDS();
         } else {
@@ -174,12 +177,38 @@ export class CreateFundComponent implements OnInit {
     this.directors = event;
   }
 
-  checkDeleteAvailibility(name: string) {
-    return this.fundForm.get(name)?.value.length > 1;
+  checkDeleteAvailibility(name: string, subfund = false) {
+    let bool = false;
+    if (subfund) {
+      bool =
+        (
+          (this.fundForm.get('subFundData') as FormGroup).controls[
+            name
+          ] as FormArray
+        ).value.length > 1;
+    } else {
+      bool = this.fundForm.get(name)?.value.length > 1;
+    }
+    return bool;
   }
 
-  checkAddAvailibility(name: string, index: number) {
-    return index == this.fundForm.get(name)?.value.length - 1 ? true : false;
+  checkAddAvailibility(name: string, index: number, subfund = false) {
+    let bool = false;
+    if (subfund) {
+      bool =
+        index ==
+        (
+          (this.fundForm.get('subFundData') as FormGroup).controls[
+            name
+          ] as FormArray
+        ).value.length -
+          1
+          ? true
+          : false;
+    } else {
+      bool = index == this.fundForm.get(name)?.value.length - 1 ? true : false;
+    }
+    return bool;
   }
 
   getFundStatusHeading(value: string) {
@@ -221,13 +250,83 @@ export class CreateFundComponent implements OnInit {
     });
   }
 
+  TransformSubfundData(): FormGroup {
+    return this.formBuilder.group({
+      S_fundName: ['', []],
+      S_registrationNumber: [null, []],
+      S_fundDescription: [null, []],
+      S_domicile: ['singapore', []],
+      S_fundType: ['regulated', []],
+      S_fundManagerEntity: [null, []],
+      S_fundManagerRep: [null, []],
+      S_fundStructure: ['open-ended', []],
+      S_offerPrice: [1.0, []],
+      S_fundSize: [0.0, []],
+      S_issuedShares: [1, []],
+      S_ordinaryShare: [1, []],
+      S_fundStatus: ['onboarding', []],
+      S_fundStatusReason: ['', []],
+      S_reportingCurrency: ['USD', []],
+      S_lockupPeriod: [0, []],
+      S_fundYearEnd: ['Dec', []],
+      S_productType: ['private-equity', []],
+      S_fundLifeYears: [null, []],
+      S_boardExtension: [null, []],
+      S_investorExtension: [null, []],
+      S_fundLifedocuments: [null, []],
+      S_fundEndDate: [null, []],
+      S_catchup: [0.0, []],
+      S_reportingFrequency: ['month', []],
+      S_legalCounsel: ['', []],
+      S_legalCounselRep: ['', []],
+      S_auditor: ['', []],
+      S_auditorRep: ['', []],
+      S_trustee: ['', []],
+      S_trusteeRep: ['', []],
+      S_investmentComittee: [[], []],
+      S_directorsList: this.formBuilder.array(this.TransformDirectors()),
+      S_subscribers: this.formBuilder.array(this.TransformSubscribers()),
+      S_authorizedSignatory: [[], []],
+      S_signature: [null, []],
+      S_boardResolutions: [null, []],
+      S_fundAdmin: ['', []],
+      S_GIIN: ['', []],
+      S_preparer: ['', []],
+      S_closingPeriods: this.formBuilder.array(this.TransformClosingPeriods()),
+      S_reclassificationFreq: ['month', []],
+      S_approver: ['', []],
+      S_subscriptionAgreement: [null, []],
+      S_investmentAgreement: [null, []],
+      S_PPM: [null, []],
+      S_directorFee: [0.0, []],
+      S_managementFee: [0.0, []],
+      S_hurdleRate: [0.0, []],
+      S_CTC: [0.0, []],
+      S_bank: ['OCBC', []],
+      S_bankAccount: ['', []],
+      S_bankAccessId: ['', []],
+      S_bankAccessPassword: ['', []],
+      S_redeem: ['', []],
+      S_redeemReason: ['', []],
+      S_liquidate: ['', []],
+      S_liquidateReason: ['', []],
+    });
+  }
+
   ngOnInit(): void {
     // Section 1:
     this.fundForm = this.formBuilder.group({
-      fundName: ['', [Validators.required, Validators.maxLength(5)]],
-      registrationNumber: ['', [Validators.required, Validators.maxLength(50)]],
-      fundDescription: ['', [Validators.required, Validators.maxLength(2048)]],
+      fundName: ['', [Validators.required, Validators.maxLength(256)]],
+      registrationNumber: [
+        null,
+        [Validators.required, Validators.maxLength(50)],
+      ],
+      fundDescription: [
+        null,
+        [Validators.required, Validators.maxLength(2048)],
+      ],
       subFund: ['N', []],
+      subFundData: this.TransformSubfundData(),
       domicile: ['singapore', []],
       fundType: ['regulated', []],
       fundManagerEntity: ['', []],
@@ -333,14 +432,18 @@ export class CreateFundComponent implements OnInit {
         });
       }
 
-      if (val.subscribers && val.subscribers.length && this.fundForm.get('fundSize')?.value) {
+      if (
+        val.subscribers &&
+        val.subscribers.length &&
+        this.fundForm.get('fundSize')?.value
+      ) {
         let sum: number = 0;
         val.subscribers.map((amount: any) => {
           sum = sum + amount.commitment;
-          if(sum <= this.fundForm.get('fundSize')?.value){
+          if (sum <= this.fundForm.get('fundSize')?.value) {
             this.globalDisable = true;
-          }else{
-            this.globalDisable = false; 
+          } else {
+            this.globalDisable = false;
           }
         });
       }
@@ -416,37 +519,72 @@ export class CreateFundComponent implements OnInit {
     }
   }
 
-  handleFileInput(name: string, event: any) {
-    const formData: FormData = new FormData();
-    let file = event.target.files[0];
-    formData.append('file', file, file['name']);
-    this.fundForm.get(name)?.setValue(formData);
-    file = undefined;
-  }
-
-  handleFileInputDirector(index:number,event:any){
-    let control = this.fundForm.get('directorsList')?.value[index];
-    const formData: FormData = new FormData();
-    let file = event.target.files[0];
-    formData.append('file', file, file['name']);
-    control.signature = (formData);
-    file = undefined;
-  }
-
-  handleFilMultipleInput(name: string, event: any) {
-    let selectedFiles: any = undefined;
-    selectedFiles = event.target.files;
-    for (let i = 0; i < event.target.files; i++) {
-      selectedFiles.push(event.target.files[i]);
+  StructureChangeSubFund(event: any) {
+    let value = event.target.value;
+    if (value == 'close-ended') {
+      this.isSimpleOptionSF = true;
+    } else {
+      this.isSimpleOptionSF = false;
     }
+  }
+
+  handleFileInput(name: string, event: any,subfund = false) {
+    const formData: FormData = new FormData();
+    let file = event.target.files[0];
+    formData.append(name, file, file['name']);
+    if(subfund){
+      (this.fundForm.get('subFundData') as FormGroup).controls[name].setValue(formData)
+    }
+    else{
+      this.fundForm.get(name)?.setValue(formData);
+    }
+    file = undefined;
+  }
+
+  getIdByDirectorName(name: string) {
+    let id: any;
+    this.directors.map((res: any) => {
+      if (name == res.director_name){
+        id = res.id;
+      } 
+    });
+    return id;
+  }
+
+  handleFileInputDirector(index: number, event: any, subfund = false) {
+    if (subfund) {
+      let control = (
+        (this.fundForm.get('subFundData') as FormGroup).controls[
+          'S_directorsList'
+        ] as FormArray
+      )?.value[index];
+
+      const formData: FormData = new FormData();
+      let file = event.target.files[0];
+      let id = this.getIdByDirectorName(control.value.name);
+      formData.append('director' + id, file);
+      control.signature = formData;
+      file = undefined;
+    } else {
+      let control = this.fundForm.get('directorsList')?.value[index];
+      const formData: FormData = new FormData();
+      let file = event.target.files[0];
+      let id = this.getIdByDirectorName(control.value.name);
+      formData.append('director' + id, file);
+      control.signature = formData;
+      file = undefined;
+    }
+  }
+
+  handleFileMultipleInput(name: string, event: any,subfund = false) {
     const formData = new FormData();
-    if (selectedFiles.length > 0) {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        formData.append('files', selectedFiles[i]);
-        if (i == selectedFiles.length - 1) {
+    for (let i = 0; i < event.target.files.length; i++) {
+      formData.append(name, event.target.files[i]);
+      if (i == event.target.files.length - 1) {
+        if(subfund){
+          (this.fundForm.get('subFundData') as FormGroup).controls[name].setValue(formData)
+        }else{
           this.fundForm.get(name)?.setValue(formData);
-          console.log(formData.getAll('files'));
-          selectedFiles = [];
         }
       }
     }
@@ -487,62 +625,126 @@ export class CreateFundComponent implements OnInit {
     return fb;
   }
 
-  addClosingPeriod() {
+  addClosingPeriod(subfund = false) {
     let fb: FormGroup = this.formBuilder.group({
       date: ['', [Validators.required]],
     });
-    let dates = this.fundForm.get('closingPeriods') as FormArray;
-    dates.push(fb);
+    if (subfund) {
+      let subDates = (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_closingPeriods'
+      ] as FormArray;
+      subDates.push(fb);
+    } else {
+      let dates = this.fundForm.get('closingPeriods') as FormArray;
+      dates.push(fb);
+    }
   }
 
-  removeClosingPeriod(index: any) {
-    let dirs = this.fundForm.get('closingPeriods') as FormArray;
-    dirs.removeAt(index);
+  removeClosingPeriod(index: any, subfund = false) {
+    if (subfund) {
+      let subDates = (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_closingPeriods'
+      ] as FormArray;
+      subDates.removeAt(index);
+    } else {
+      let dirs = this.fundForm.get('closingPeriods') as FormArray;
+      dirs.removeAt(index);
+    }
   }
 
-  addDirector() {
+  addDirector(subfund = false) {
     let fb: FormGroup = this.formBuilder.group({
       name: ['', [Validators.required]],
       signature: [null, [Validators.required]],
     });
-    let directors = this.fundForm.get('directorsList') as FormArray;
-    directors.push(fb);
+    if (subfund) {
+      let subDates = (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_directorsList'
+      ] as FormArray;
+      subDates.push(fb);
+    } else {
+      let directors = this.fundForm.get('directorsList') as FormArray;
+      directors.push(fb);
+    }
   }
 
-  removeDirector(index: any) {
-    let dirs = this.fundForm.get('directorsList') as FormArray;
-    dirs.removeAt(index);
+  removeDirector(index: any, subfund = false) {
+    if (subfund) {
+      (
+        (this.fundForm.get('subFundData') as FormGroup).controls[
+          'S_directorsList'
+        ] as FormArray
+      ).removeAt(index);
+    } else {
+      let dirs = this.fundForm.get('directorsList') as FormArray;
+      dirs.removeAt(index);
+    }
   }
 
   GetControls(name: string) {
     return (this.fundForm.get(name) as FormArray).controls;
   }
 
-  addSubscriber() {
+  GetControlsSubFund(name: string) {
+    return (
+      (this.fundForm.get('subFundData') as FormGroup).controls[
+        name
+      ] as FormArray
+    ).controls;
+  }
+
+  addSubscriber(subfund = false) {
     let fb: FormGroup = this.formBuilder.group({
       name: ['', [Validators.required]],
       commitment: [0.0, [Validators.required]],
     });
-    let subscribers = this.fundForm.get('subscribers') as FormArray;
-    subscribers.push(fb);
+    if(subfund){
+      let subDates = (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_subscribers'
+      ] as FormArray;
+      subDates.push(fb);
+    }
+    else{
+      let subscribers = this.fundForm.get('subscribers') as FormArray;
+      subscribers.push(fb);
+    }
   }
 
-  removeSubscriber(index: any) {
-    let subs = this.fundForm.get('subscribers') as FormArray;
-    subs.removeAt(index);
+  removeSubscriber(index: any,subfund = false) {
+    if(subfund){
+      ((this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_subscribers'
+      ] as FormArray).removeAt(index);
+    }else{
+      let subs = this.fundForm.get('subscribers') as FormArray;
+      subs.removeAt(index);
+    }
   }
 
-  ParseDateFormatSingle(single:any) {
+  ParseDateFormatSingle(single: any) {
     let str = '';
-    str = single.year.toString() + '-' + single.month.toString() + '-' + single.day.toString();
-    return str; 
+    str =
+      single.year.toString() +
+      '-' +
+      single.month.toString() +
+      '-' +
+      single.day.toString();
+    return str;
   }
 
   ParseDateFormatMultiple(arr: any) {
     let retArr: any = [];
     arr.map((result: any) => {
-        if(result.date) retArr.push({date:result.date.year.toString() + '-' + result.date.month.toString() + '-' + result.date.day.toString()});
-      });
+      if (result.date)
+        retArr.push({
+          date:
+            result.date.year.toString() +
+            '-' +
+            result.date.month.toString() +
+            '-' +
+            result.date.day.toString(),
+        });
+    });
     return retArr;
   }
 
@@ -555,33 +757,49 @@ export class CreateFundComponent implements OnInit {
     return retArr;
   }
 
-  MapIdFromName(name:any){
+  MapIdFromName(name: any) {
     return name[0].id.toString();
   }
 
-  ParseSubscribersOrDirectorList(arr:any){
-    arr.map((res:any)=>{
+  ParseSubscribersOrDirectorList(arr: any) {
+    arr.map((res: any) => {
       res.name = this.MapIdFromName(res.name);
     });
     return arr;
   }
 
   Submit() {
-    if (this.fundForm.get('closingPeriods')?.value && this.fundForm.get('closingPeriods')?.value.length && this.fundForm.get('closingPeriods')?.value[0].date != '') {
-      let arr = this.ParseDateFormatMultiple(this.fundForm.get('closingPeriods')?.value);
+    console.log(this.fundForm.value);
+
+    if (this.fundForm.get('subFund')?.value == 'Y') {
+      console.log(this.fundForm.get('subFundData')?.value.value);
       this.fundForm
-        .get('closingPeriods')
-        ?.setValue(
-          arr
-        );
+        .get('subFundData')
+        ?.setValue(this.fundForm.get('subFundData')?.value.value);
+    } else {
+      this.fundForm.get('subFundData')?.setValue(undefined);
+    }
+    console.log(this.fundForm.value);
+
+    if (
+      this.fundForm.get('closingPeriods')?.value &&
+      this.fundForm.get('closingPeriods')?.value.length &&
+      this.fundForm.get('closingPeriods')?.value[0].date != ''
+    ) {
+      let arr = this.ParseDateFormatMultiple(
+        this.fundForm.get('closingPeriods')?.value
+      );
+      this.fundForm.get('closingPeriods')?.setValue(arr);
     }
     if (this.fundForm.get('redeem')?.value) {
       this.fundForm
         .get('redeem')
-        ?.setValue(this.ParseDateFormatSingle(this.fundForm.get('redeem')?.value));
+        ?.setValue(
+          this.ParseDateFormatSingle(this.fundForm.get('redeem')?.value)
+        );
     }
 
-    if (this.fundForm.get('fundEndDate')?.value != null) { 
+    if (this.fundForm.get('fundEndDate')?.value != null) {
       console.log(this.fundForm.get('fundEndDate')?.value);
       this.fundForm
         .get('fundEndDate')
@@ -589,7 +807,6 @@ export class CreateFundComponent implements OnInit {
           this.ParseDateFormatSingle(this.fundForm.get('fundEndDate')?.value)
         );
     }
-
 
     if (
       this.fundForm.get('approver')?.value &&
@@ -606,7 +823,9 @@ export class CreateFundComponent implements OnInit {
     ) {
       this.fundForm
         .get('authorizedSignatory')
-        ?.setValue(this.ParseDirectors(this.fundForm.get('authorizedSignatory')?.value));
+        ?.setValue(
+          this.ParseDirectors(this.fundForm.get('authorizedSignatory')?.value)
+        );
     }
     if (
       this.fundForm.get('fundAdmin')?.value &&
@@ -622,7 +841,9 @@ export class CreateFundComponent implements OnInit {
     ) {
       this.fundForm
         .get('fundManagerRep')
-        ?.setValue(this.ParseDirectors(this.fundForm.get('fundManagerRep')?.value));
+        ?.setValue(
+          this.ParseDirectors(this.fundForm.get('fundManagerRep')?.value)
+        );
     }
 
     if (
@@ -631,7 +852,9 @@ export class CreateFundComponent implements OnInit {
     ) {
       this.fundForm
         .get('fundManagerEntity')
-        ?.setValue(this.ParseDirectors(this.fundForm.get('fundManagerEntity')?.value));
+        ?.setValue(
+          this.ParseDirectors(this.fundForm.get('fundManagerEntity')?.value)
+        );
     }
 
     if (
@@ -640,7 +863,9 @@ export class CreateFundComponent implements OnInit {
     ) {
       this.fundForm
         .get('investmentComittee')
-        ?.setValue(this.ParseDirectors(this.fundForm.get('investmentComittee')?.value));
+        ?.setValue(
+          this.ParseDirectors(this.fundForm.get('investmentComittee')?.value)
+        );
     }
 
     if (
@@ -652,23 +877,33 @@ export class CreateFundComponent implements OnInit {
         ?.setValue(this.ParseDirectors(this.fundForm.get('preparer')?.value));
     }
 
-    if (  
+    if (
       this.fundForm.get('subscribers')?.value &&
       this.fundForm.get('subscribers')?.value.length
     ) {
-      this.fundForm.get('subscribers')?.setValue(this.ParseSubscribersOrDirectorList(this.fundForm.get('subscribers')?.value));
+      this.fundForm
+        .get('subscribers')
+        ?.setValue(
+          this.ParseSubscribersOrDirectorList(
+            this.fundForm.get('subscribers')?.value
+          )
+        );
     }
 
-    if (  
+    if (
       this.fundForm.get('directorsList')?.value &&
       this.fundForm.get('directorsList')?.value.length
     ) {
-      this.fundForm.get('directorsList')?.setValue(this.ParseSubscribersOrDirectorList(this.fundForm.get('directorsList')?.value));
+      this.fundForm
+        .get('directorsList')
+        ?.setValue(
+          this.ParseSubscribersOrDirectorList(
+            this.fundForm.get('directorsList')?.value
+          )
+        );
     }
-    
-    let obj={
-      
-    }
+
+    let obj = {};
 
     // if (this.fundForm && this.fundForm.valid) {
     //   this.fundForm.value.created_at = new Date().toISOString();
