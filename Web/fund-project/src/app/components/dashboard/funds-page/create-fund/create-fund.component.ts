@@ -771,15 +771,21 @@ export class CreateFundComponent implements OnInit {
   Submit() {
     console.log(this.fundForm.value);
 
+    let obj:any = {
+      "fundName":"fahad"
+    };
+    
+    let formData = new FormData();
+    formData.append('json', obj);
+    
+    
     if (this.fundForm.get('subFund')?.value == 'Y') {
-      console.log(this.fundForm.get('subFundData')?.value.value);
       this.fundForm
         .get('subFundData')
         ?.setValue(this.fundForm.get('subFundData')?.value.value);
     } else {
       this.fundForm.get('subFundData')?.setValue(undefined);
     }
-    console.log(this.fundForm.value);
 
     if (
       this.fundForm.get('closingPeriods')?.value &&
@@ -902,8 +908,10 @@ export class CreateFundComponent implements OnInit {
           )
         );
     }
+    
 
-    let obj = {};
+    // formData.append('director')
+  
 
     // if (this.fundForm && this.fundForm.valid) {
     //   this.fundForm.value.created_at = new Date().toISOString();
