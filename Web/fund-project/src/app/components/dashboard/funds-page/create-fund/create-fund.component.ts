@@ -244,8 +244,8 @@ export class CreateFundComponent implements OnInit {
       fundYearEnd: ['Dec', []],
       productType: ['private-equity', []],
       fundLifeYears: [null, []],
-      boardExtension: ['', []],
-      investorExtension: ['', []],
+      boardExtension: [null, []],
+      investorExtension: [null, []],
       fundLifedocuments: [null, []],
       fundEndDate: [null, []],
       catchup: [0.0, []],
@@ -333,7 +333,7 @@ export class CreateFundComponent implements OnInit {
         });
       }
 
-      if (val.subscribers && val.subscribers.length) {
+      if (val.subscribers && val.subscribers.length && this.fundForm.get('fundSize')?.value) {
         let sum: number = 0;
         val.subscribers.map((amount: any) => {
           sum = sum + amount.commitment;
@@ -424,6 +424,15 @@ export class CreateFundComponent implements OnInit {
     file = undefined;
   }
 
+  handleFileInputDirector(index:number,event:any){
+    let control = this.fundForm.get('directorsList')?.value[index];
+    const formData: FormData = new FormData();
+    let file = event.target.files[0];
+    formData.append('file', file, file['name']);
+    control.signature = (formData);
+    file = undefined;
+  }
+
   handleFilMultipleInput(name: string, event: any) {
     let selectedFiles: any = undefined;
     selectedFiles = event.target.files;
@@ -432,14 +441,12 @@ export class CreateFundComponent implements OnInit {
     }
     const formData = new FormData();
     if (selectedFiles.length > 0) {
-      console.log(selectedFiles.length);
-
-      for (let i = 0; i <= selectedFiles.length; i++) {
+      for (let i = 0; i < selectedFiles.length; i++) {
         formData.append('files', selectedFiles[i]);
-        console.log(selectedFiles[i]);
-        if (i == selectedFiles.length) {
+        if (i == selectedFiles.length - 1) {
           this.fundForm.get(name)?.setValue(formData);
-          console.log(formData.get('files'));
+          console.log(formData.getAll('files'));
+          selectedFiles = [];
         }
       }
     }
@@ -525,23 +532,17 @@ export class CreateFundComponent implements OnInit {
     subs.removeAt(index);
   }
 
-  ParseDateFormat(arr: any) {
+  ParseDateFormatSingle(single:any) {
+    let str = '';
+    str = single.year.toString() + '-' + single.month.toString() + '-' + single.day.toString();
+    return str; 
+  }
+
+  ParseDateFormatMultiple(arr: any) {
     let retArr: any = [];
-    retArr.push(
-      arr.year.toString() +
-        '-' +
-        arr.month.toString() +
-        '-' +
-        arr.day.toString()
-    );
     arr.map((result: any) => {
-      console.log(result);
-
-      // if(result.date && result.date != '') retArr.push(this.ngbDateParserFormatter.format(result.date))
-      // else retArr.push(result.year.toString() + '-' + result.month.toString() + '-' + result.day.toString())
-    });
-    console.log(retArr);
-
+        if(result.date) retArr.push({date:result.date.year.toString() + '-' + result.date.month.toString() + '-' + result.date.day.toString()});
+      });
     return retArr;
   }
 
@@ -554,41 +555,41 @@ export class CreateFundComponent implements OnInit {
     return retArr;
   }
 
-  Submit() {
-    console.log(this.fundForm.get('approver')?.value);
-    console.log(this.fundForm.get('redeem')?.value);
+  MapIdFromName(name:any){
+    return name[0].id.toString();
+  }
 
-    if (this.fundForm.get('closingPeriods')?.value != null) {
-      console.log(this.fundForm.get('closingPeriods')?.value);
+  ParseSubscribersOrDirectorList(arr:any){
+    arr.map((res:any)=>{
+      res.name = this.MapIdFromName(res.name);
+    });
+    return arr;
+  }
+
+  Submit() {
+    if (this.fundForm.get('closingPeriods')?.value && this.fundForm.get('closingPeriods')?.value.length && this.fundForm.get('closingPeriods')?.value[0].date != '') {
+      let arr = this.ParseDateFormatMultiple(this.fundForm.get('closingPeriods')?.value);
       this.fundForm
         .get('closingPeriods')
         ?.setValue(
-          this.ParseDateFormat([this.fundForm.get('closingPeriods')?.value])
+          arr
         );
     }
-
-    if (this.fundForm.get('fundStatusReason')?.value != '') {
-      let obj = {
-        fundStatus: this.fundForm.get('fundStatusReason')?.value,
-        reason: this.fundForm.get('fundStatusReason')?.value,
-      };
-      this.fundForm.get('fundStatus')?.setValue(obj);
-    }
-
-    if (this.fundForm.get('redeem')?.value != null) {
+    if (this.fundForm.get('redeem')?.value) {
       this.fundForm
         .get('redeem')
-        ?.setValue(this.ParseDateFormat(this.fundForm.get('redeem')?.value));
+        ?.setValue(this.ParseDateFormatSingle(this.fundForm.get('redeem')?.value));
     }
 
-    if (this.fundForm.get('fundEndDate')?.value != null) {
+    if (this.fundForm.get('fundEndDate')?.value != null) { 
       console.log(this.fundForm.get('fundEndDate')?.value);
       this.fundForm
         .get('fundEndDate')
         ?.setValue(
-          this.ParseDateFormat([this.fundForm.get('fundEndDate')?.value])[0]
+          this.ParseDateFormatSingle(this.fundForm.get('fundEndDate')?.value)
         );
     }
+
 
     if (
       this.fundForm.get('approver')?.value &&
@@ -599,13 +600,79 @@ export class CreateFundComponent implements OnInit {
         ?.setValue(this.ParseDirectors(this.fundForm.get('approver')?.value));
     }
 
-    // this.fundForm.get('approver')?.setValue(this.ParseDirectors(this.fundForm.get('approver')?.value));
+    if (
+      this.fundForm.get('authorizedSignatory')?.value &&
+      this.fundForm.get('authorizedSignatory')?.value.length
+    ) {
+      this.fundForm
+        .get('authorizedSignatory')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('authorizedSignatory')?.value));
+    }
+    if (
+      this.fundForm.get('fundAdmin')?.value &&
+      this.fundForm.get('fundAdmin')?.value.length
+    ) {
+      this.fundForm
+        .get('fundAdmin')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('fundAdmin')?.value));
+    }
+    if (
+      this.fundForm.get('fundManagerRep')?.value &&
+      this.fundForm.get('fundManagerRep')?.value.length
+    ) {
+      this.fundForm
+        .get('fundManagerRep')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('fundManagerRep')?.value));
+    }
 
-    console.log(this.fundForm.value);
+    if (
+      this.fundForm.get('fundManagerEntity')?.value &&
+      this.fundForm.get('fundManagerEntity')?.value.length
+    ) {
+      this.fundForm
+        .get('fundManagerEntity')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('fundManagerEntity')?.value));
+    }
+
+    if (
+      this.fundForm.get('investmentComittee')?.value &&
+      this.fundForm.get('investmentComittee')?.value.length
+    ) {
+      this.fundForm
+        .get('investmentComittee')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('investmentComittee')?.value));
+    }
+
+    if (
+      this.fundForm.get('preparer')?.value &&
+      this.fundForm.get('preparer')?.value.length
+    ) {
+      this.fundForm
+        .get('preparer')
+        ?.setValue(this.ParseDirectors(this.fundForm.get('preparer')?.value));
+    }
+
+    if (  
+      this.fundForm.get('subscribers')?.value &&
+      this.fundForm.get('subscribers')?.value.length
+    ) {
+      this.fundForm.get('subscribers')?.setValue(this.ParseSubscribersOrDirectorList(this.fundForm.get('subscribers')?.value));
+    }
+
+    if (  
+      this.fundForm.get('directorsList')?.value &&
+      this.fundForm.get('directorsList')?.value.length
+    ) {
+      this.fundForm.get('directorsList')?.setValue(this.ParseSubscribersOrDirectorList(this.fundForm.get('directorsList')?.value));
+    }
+    
+    let obj={
+      
+    }
+
     // if (this.fundForm && this.fundForm.valid) {
     //   this.fundForm.value.created_at = new Date().toISOString();
     //   this.fundForm.value.updated_at = null;
-    //   this.fundForm.value.closingPeriods = this.ParseClosingPeriods(this.fundForm.get('closingPeriods')?.value)
     //   this.apiService.onSave(this.fundForm.value).subscribe(
     //     (result: any) => {
     //       if (result.status == 'ok') {
@@ -631,7 +698,7 @@ export class CreateFundComponent implements OnInit {
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) {
         this.router.navigate(['dashboard/funds/list']);
       } else {
         return;

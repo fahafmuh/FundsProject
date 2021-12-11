@@ -758,27 +758,13 @@
                     </ng-multiselect-dropdown>
                   </div>
 
-                  <!-- <div class="col-auto">
-                    <label class="col-form-label">Director's Signature</label>
-                  </div>
-                  <div class="col-auto">
-                    <input
-                      type="file"
-                      accept=".pdf,.doc"
-                      id="file"
-                      (change)="handleFileInput('directorsList', $event)"
-                    />
-                  </div> -->
-
-
                   <div class="col-auto">
                     <input
                       class="form-control"
                       type="file"
                       accept=".pdf,.doc"
-                      (change)="handleFileInput('directorsList', $event)"
+                      (change)="handleFileInputDirector(index, $event)"
                       id="formFileMultiple"
-                      multiple
                     />
     
                     <div id="emailHelp" class="form-text">
@@ -1486,6 +1472,7 @@
           <span>Sum of subscribers commitment should be less or equal to Fund Size</span>
         </ngb-alert>
       </p>
+      <br>
 
       <div class="p-2" *ngIf="sectionNo < 4">
         <button
