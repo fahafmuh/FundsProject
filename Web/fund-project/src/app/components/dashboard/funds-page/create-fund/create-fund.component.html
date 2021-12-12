@@ -201,7 +201,7 @@
                           [placeholder]="'Select Fund Manager(s)'"
                           [settings]="dropdownSettings"
                           [data]="directors"
-                          [disabled]="isDropdownDisabled"
+                          [disabled]="isDropdownDisabledSF"
                           formControlName="S_fundManagerEntity"
                         >
                         </ng-multiselect-dropdown>
@@ -224,7 +224,7 @@
                           [placeholder]="'Select Fund Manager Rep(s)'"
                           [settings]="dropdownSettings"
                           [data]="directors"
-                          [disabled]="isDropdownDisabled"
+                          [disabled]="isDropdownDisabledSF"
                           formControlName="S_fundManagerRep"
                         >
                         </ng-multiselect-dropdown>
@@ -291,6 +291,7 @@
                             type="number"
                             [disabled]="disable"
                             class="form-control"
+                            readonly
                             placeholder="Issued Shares"
                             formControlName="S_issuedShares"
                           />
@@ -321,6 +322,7 @@
                           <select
                             class="form-select"
                             aria-label="Default select example"
+                            (change)="StatusChangeSubFund($event)"
                             formControlName="S_fundStatus"
                           >
                             <option disabled>Select Fund Status</option>
@@ -332,6 +334,31 @@
                             </option>
                           </select>
                         </div>
+
+                        <div
+                        class="mb-3 row"
+                        *ngIf="
+                        fundForm.get('subFundData.S_fundStatus')?.value == 'freeze' ||
+                        fundForm.get('subFundData.S_fundStatus')?.value == 'unfreeze' ||
+                        fundForm.get('subFundData.S_fundStatus')?.value == 'refund' ||
+                        fundForm.get('subFundData.S_fundStatus')?.value == 'extendterm'
+                        "
+                      >
+                        <label for="staticEmail" class="col-sm-2 col-form-label"
+                          >Reason</label>
+                        <div class="col-sm-10">
+                          <textarea
+                            class="form-control"
+                            formControlName="S_fundStatusReason"
+                            rows="3"
+                            placeholder="Enter reason"
+                          ></textarea>
+                          <div id="emailHelp" class="form-text">
+                           Reason for this fund status
+                          </div>
+                        </div>
+                      </div>
+          
                         <div class="mb-3">
                           <label for="staticEmail" class="form-label"
                             >Reporting Currency</label
@@ -450,6 +477,9 @@
                             id="formFileMultiple"
                             multiple
                           />
+                          <div id="emailHelp" class="form-text" *ngIf="!isSimpleOptionSF">
+                            Multiple file upload allowed.
+                          </div>
                         </div>
                     
                       </div>
@@ -570,7 +600,7 @@
                             [placeholder]="'Select Approver'"
                             [settings]="dropdownSingleSettings"
                             [data]="directors"
-                            [disabled]="isDropdownDisabled"
+                            [disabled]="isDropdownDisabledSF"
                             formControlName="S_approver"
                           >
                           </ng-multiselect-dropdown>
@@ -747,10 +777,10 @@
                             <input
                               class="form-control"
                               placeholder="yyyy-mm-dd"
-                              name="dp"
+                              name="dpx"
                               formControlName="S_fundEndDate"
                               ngbDatepicker
-                              #d="ngbDatepicker"
+                              #w="ngbDatepicker"
                             />
                             <div class="input-group-append">
                               <button
@@ -759,7 +789,7 @@
                                   calendar
                                   fa fa-calendar
                                 "
-                                (click)="d.toggle()"
+                                (click)="w.toggle()"
                                 type="button"
                               ></button>
                             </div>
@@ -777,7 +807,7 @@
                           [placeholder]="'Select Authorized Signatory'"
                           [settings]="dropdownSettings"
                           [data]="directors"
-                          [disabled]="isDropdownDisabled"
+                          [disabled]="isDropdownDisabledSF"
                           formControlName="S_authorizedSignatory"
                         >
                         </ng-multiselect-dropdown>
@@ -830,7 +860,7 @@
                           [placeholder]="'Select Fund Administrator'"
                           [settings]="dropdownSingleSettings"
                           [data]="directors"
-                          [disabled]="isDropdownDisabled"
+                          [disabled]="isDropdownDisabledSF"
                           formControlName="S_fundAdmin"
                         >
                         </ng-multiselect-dropdown>
@@ -863,7 +893,7 @@
                           [placeholder]="'Select Preparer'"
                           [settings]="dropdownSingleSettings"
                           [data]="directors"
-                          [disabled]="isDropdownDisabled"
+                          [disabled]="isDropdownDisabledSF"
                           formControlName="S_preparer"
                         >
                         </ng-multiselect-dropdown>
@@ -954,7 +984,7 @@
                                 [placeholder]="'Select Subscriber'"
                                 [settings]="dropdownSingleSettings"
                                 [data]="directors"
-                                [disabled]="isDropdownDisabled"
+                                [disabled]="isDropdownDisabledSF"
                                 formControlName="name"
                               >
                               </ng-multiselect-dropdown>
@@ -1149,7 +1179,7 @@
                                   [placeholder]="'Select Director(s)'"
                                   [settings]="dropdownSingleSettings"
                                   [data]="directors"
-                                  [disabled]="isDropdownDisabled"
+                                  [disabled]="isDropdownDisabledSF"
                                   formControlName="name"
                                 >
                                 </ng-multiselect-dropdown>
@@ -1197,6 +1227,15 @@
                           ></app-create-directors>
                         </div>
 
+                        <p *ngIf="globalDisableSF">
+                          <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+                            <span
+                              >Sum of subscribers commitment should be less or equal to Fund
+                              Size</span
+                            >
+                          </ngb-alert>
+                        </p>
+                  
                     
                       </div>
                   </div>
@@ -1283,6 +1322,12 @@
                   formControlName="fundManagerRep"
                 >
                 </ng-multiselect-dropdown>
+                <br />
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Fund Manager Representative'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
               </div>
             </div>
             <div class="mb-3 row">
@@ -1347,6 +1392,7 @@
                   type="number"
                   [disabled]="disable"
                   class="form-control"
+                  readonly
                   placeholder="Issued Shares"
                   formControlName="issuedShares"
                 />
@@ -1540,6 +1586,7 @@
                 <input
                   class="form-control"
                   type="file"
+                  *ngIf="!isSimpleOption"
                   multiple="true"
                   accept=".pdf,.doc"
                   (change)="handleFileMultipleInput('fundLifedocuments', $event)"
@@ -1547,7 +1594,7 @@
                   multiple
                 />
 
-                <div id="emailHelp" class="form-text">
+                <div id="emailHelp" class="form-text" *ngIf="!isSimpleOption">
                   Multiple file upload allowed.
                 </div>
               </div>
@@ -1561,15 +1608,15 @@
                   <input
                     class="form-control"
                     placeholder="YYYY-MM-DD"
-                    name="dp"
+                    name="dpww"
                     formControlName="fundEndDate"
                     ngbDatepicker
-                    #d="ngbDatepicker"
+                    #dw="ngbDatepicker"
                   />
                   <div class="input-group-append">
                     <button
                       class="btn btn-outline-secondary calendar fa fa-calendar"
-                      (click)="d.toggle()"
+                      (click)="dw.toggle()"
                       type="button"
                     ></button>
                   </div>
@@ -2426,38 +2473,7 @@
               </div>
             </div>
 
-            <!-- <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Extend</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  
-                  placeholder="Extend"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label"
-                >Reasons</label
-              >
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  
-                  placeholder="Reasons"
-                />
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-              </div>
-            </div> -->
+       
           </ng-template>
         </li>
       </ul>
@@ -2484,6 +2500,7 @@
           >
         </ngb-alert>
       </p>
+
       <br />
 
       <div class="p-2" *ngIf="sectionNo < 4">

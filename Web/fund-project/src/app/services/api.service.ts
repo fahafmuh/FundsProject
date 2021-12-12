@@ -79,12 +79,10 @@ export class APIService {
     });
   }
 
-  onSave(formValues: any): Observable<any> {
+  onSave(formData: any): Observable<any> {
     return new Observable((observer) => {
       this.http
-        .post(this.serverURL + this.fundCreateApi, {
-          formValues: formValues,
-        })
+        .post(this.serverURL + this.fundCreateApi, formData, this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);
