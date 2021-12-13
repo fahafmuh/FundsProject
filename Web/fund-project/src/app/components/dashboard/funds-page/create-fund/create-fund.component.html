@@ -2546,7 +2546,7 @@
 
       <br />
 
-      <div class="p-2" *ngIf="sectionNo < 4">
+      <div class="p-2" *ngIf="sectionNo < 4" ngbButton>
         <button
           type="button"
           class="btn btn-primary"
@@ -2556,14 +2556,13 @@
         </button>
       </div>
       <div class="p-2">
-        <button type="button" class="btn btn-danger" (click)="Cancel()">
+        <button type="button" class="btn btn-danger" (click)="Cancel()" ngbButton>
           CANCEL
         </button>
       </div>
 
       <div class="p-2">
-        <button type="button" class="btn btn-success" (click)="Submit()" [disabled]="!fundForm.valid && globalDisable && globalDisableSF">
-
+        <button type="button" class="btn btn-success" (click)="Submit()" ngbButton [disabled]="(!fundForm.valid || globalDisable || globalDisableSF)">
           SUBMIT
         </button>
       </div>

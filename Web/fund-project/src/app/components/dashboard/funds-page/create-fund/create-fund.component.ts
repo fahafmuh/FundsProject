@@ -429,6 +429,36 @@ export class CreateFundComponent implements OnInit {
       }
 
       if (val.subFund && val.subFund == 'Y') {
+        this.fundForm.get('subFundData.S_fundName')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_registrationNumber')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_fundDescription')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_authorizedSignatory')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_signature')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_fundAdmin')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_GIIN')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_closingPeriods')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_approver')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_subscriptionAgreement')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_investmentAgreement')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_PPM')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_bankAccount')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_bankAccessId')!.setValidators([Validators.required]);
+        this.fundForm.get('subFundData.S_bankAccessPassword')!.setValidators([Validators.required]);
+        
+        if(val.subFundData.S_fundType == 'regulated'){
+          this.fundForm
+          .get('subFundData.S_fundManagerEntity')!
+          .setValidators([Validators.required]);
+        }
+        
+          this.fundForm
+          .get('subFundData.S_fundLife')!
+          .setValidators([Validators.required]);
+
+          this.fundForm
+          .get('subFundData.S_investmentComittee')!
+          .setValidators([Validators.required]);
+
         if (val.subFundData && val.subFundData.S_fundSize) {
           const issuedShareValueSF =
             val.subFundData.S_fundSize / val.subFundData.S_offerPrice;
@@ -499,8 +529,7 @@ export class CreateFundComponent implements OnInit {
     }
 
     if (
-      (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
-        .value == 'freeze' ||
+      this.fundForm.get('subFundData.S_fundStatus')?.value == 'freeze' ||
       (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
         .value == 'unfreeze' ||
       (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
@@ -514,6 +543,34 @@ export class CreateFundComponent implements OnInit {
     } else {
       this.fundForm.get('S_fundStatusReason')!.setValidators(null);
     }
+
+    if (value == 'onboarding') {
+      this.fundForm
+        .get('subFundData.S_legalCounsel')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('subFundData.S_legalCounselRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('subFundData.S_auditor')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('subFundData.S_auditorRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('subFundData.S_trustee')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+
+      this.fundForm
+        .get('subFundData.S_trusteeRep')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+    }
+
+
   }
 
   StatusChange(event: any) {
@@ -541,7 +598,7 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('fundStatusReason')!.setValidators(null);
     }
 
-    if (value != 'onboarding') {
+    if (value == 'onboarding') {
       this.fundForm
         .get('legalCounsel')!
         .setValidators([Validators.required, Validators.maxLength(256)]);
@@ -565,11 +622,8 @@ export class CreateFundComponent implements OnInit {
       this.fundForm
         .get('trusteeRep')!
         .setValidators([Validators.required, Validators.maxLength(256)]);
-    } else {
-      this.fundForm.get('fundManagerEntity')!.setValidators(null);
     }
 
-    this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
   }
 
   StructureChange(event: any) {
@@ -1091,6 +1145,12 @@ export class CreateFundComponent implements OnInit {
           )?.value,
           S_fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
             ?.value,
+            S_boardExtension:this.fundForm.get('subFundData.S_boardExtension')
+            ?.value,
+            S_investorExtension:this.fundForm.get('subFundData.S_investorExtension')
+            ?.value,
+            S_fundLifeYears:this.fundForm.get('subFundData.S_fundLifeYears')
+            ?.value,
           S_fundStructure: this.fundForm.get('subFundData.S_fundStructure')
             ?.value,
           S_offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
@@ -1256,8 +1316,7 @@ export class CreateFundComponent implements OnInit {
             )
           );
       }
-      console.log(this.fundForm.get('authorizedSignatory')?.value);
-
+      
       if (
         this.fundForm.get('authorizedSignatory')?.value &&
         this.fundForm.get('authorizedSignatory')?.value.length
@@ -1271,7 +1330,6 @@ export class CreateFundComponent implements OnInit {
                 : [this.fundForm.get('authorizedSignatory')?.value]
             )
           );
-        console.log(this.fundForm.get('authorizedSignatory')?.value);
       }
       if (
         this.fundForm.get('fundAdmin')?.value &&
@@ -1361,6 +1419,12 @@ export class CreateFundComponent implements OnInit {
         fundStructure: this.fundForm.get('fundStructure')?.value,
         offerPrice: this.fundForm.get('offerPrice')?.value,
         fundSize: this.fundForm.get('fundSize')?.value,
+        boardExtension:this.fundForm.get('boardExtension')
+        ?.value,
+        investorExtension:this.fundForm.get('investorExtension')
+        ?.value,
+        fundLifeYears:this.fundForm.get('fundLifeYears')
+        ?.value,
         issuedShares: this.fundForm.get('issuedShares')?.value,
         ordinaryShare: this.fundForm.get('ordinaryShare')?.value,
         fundEndDate: this.fundForm.get('fundEndDate')?.value,
