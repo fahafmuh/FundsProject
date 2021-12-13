@@ -123,12 +123,12 @@ def create_fund_object(data,request,sub_fund=False):
 
     #open close table creation
     if data['fundStructure']=='open-ended':
-        obj=FundLifeOpen(fund=fund_obj,fundlife=int(data['fundLife']),
+        obj=FundLifeOpen(fund=fund_obj,fundlife=int(data['fundLifeYears']),
                         #below fields not given from frontend assumed!
                         Board_Extension=int(data['boardExtension']),Investor_Extension=int(data['investorExtension']))
         obj.save()
     else:
-        obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLife']))
+        obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLifeYears']))
         obj.save()
     #end
     
@@ -141,7 +141,7 @@ def create_fund_object(data,request,sub_fund=False):
     #subscriber creation
     if(len(data['subscribers'])!=0):
         for obj in data['subscribers']:
-            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['amount']))
+            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['commitment']))
             obj.save()
     #end
 
