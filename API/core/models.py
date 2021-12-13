@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.base import Model
 from django.utils.translation import ugettext_lazy as _
 # Create your models here.
 
@@ -12,24 +11,24 @@ USER_DESIGNATION=(
 )
 
 FUND_TYPE=(
-    (0,'Regulated'),
-    (1,'Unregulated')
+    (0,'regulated'),
+    (1,'unregulated')
 )
 
 FUND_STRUCTURE=(
-    (0,'Open-End'),
-    (1,'Closed-End')
+    (0,'open-ended'),
+    (1,'close-ended')
 )
 
 FUND_STATUS=(
-    (0,'Onboarding'),
-    (1,'Open'),
-    (2,'Funded'),
-    (3,'Re-fund'),
-    (4,'Frozen'),
-    (5,'Unfrozen'),
-    (6,'Close'),
-    (7,'Extend Term')
+    (0,'onboarding'),
+    (1,'open'),
+    (2,'funded'),
+    (3,'refund'),
+    (4,'frozen'),
+    (5,'unfrozen'),
+    (6,'close'),
+    (7,'extendterm')
 )
 
 FUND_YEAR_END_MONTH=(
@@ -45,6 +44,12 @@ FUND_YEAR_END_MONTH=(
     (9,'Oct'),
     (10,'Nov'),
     (11,'Dec'),
+)
+
+FUND_APPROVAL_STATUS=(
+    (1,'Pending'),
+    (2,'Approved'),
+    (3,'Rejected')
 )
 
 class User(AbstractUser):
@@ -100,16 +105,19 @@ class Bank(models.Model):
 
 
 class Fund(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     fund_name=models.CharField(max_length=256,blank=False,null=False)
     registration_no=models.CharField(max_length=50,blank=False,null=False)
     fund_description=models.TextField(blank=False,null=False)
-    supervisor_approval=models.BooleanField(default=False)
-    manager_approval=models.BooleanField(default=False)
+    supervisor_approval=models.IntegerField(choices=FUND_APPROVAL_STATUS,default=1)
+    supervisor_reason=models.TextField(blank=True)
+    manager_approval=models.IntegerField(choices=FUND_APPROVAL_STATUS,default=1)
+    manager_reason=models.TextField(blank=True)
     sub_fund=models.ForeignKey('self',null=True,on_delete=models.SET_NULL,related_name='subfund',blank=True)
     domicile=models.ForeignKey(FundCountry,null=True,on_delete=models.SET_NULL)
     fund_type=models.IntegerField(choices=FUND_TYPE,default=0)
-    fund_manager_entity=models.CharField(max_length=256,null=True,blank=True)
-    fund_manager_rep=models.ForeignKey(Director,null=True,blank=True,on_delete=models.SET_NULL,related_name='fund_manager_representator')
+    fund_manager_entity=models.CharField(max_length=256,blank=True)
+    fund_manager_rep=models.ForeignKey(Director,related_name='fund_manager_representator',null=True,on_delete=models.SET_NULL)
     fund_structure=models.IntegerField(choices=FUND_STRUCTURE,default=0)
     offer_price=models.DecimalField(max_digits=6,decimal_places=2,default=1.00)
     issued_shares=models.IntegerField(default=1)
@@ -132,7 +140,7 @@ class Fund(models.Model):
     Auditor_rep=models.CharField(max_length=256,blank=True)
     Custodian=models.CharField(max_length=256,blank=True)
     Custodian_rep=models.CharField(max_length=256,blank=True)
-    investment_committee=models.ForeignKey(Director,null=True,blank=True,on_delete=models.SET_NULL,related_name='investment_committ')
+    investment_committee=models.ManyToManyField(Director,related_name='investment_committ')
     asset_under_management=models.DecimalField(max_digits=6,decimal_places=2,default=0.00)
     directors=models.ManyToManyField(Director,related_name='directors_all')
     AuthorizedSignatory=models.ForeignKey(Director,null=True,on_delete=models.SET_NULL,related_name='authorized_sign')
@@ -153,6 +161,10 @@ class Fund(models.Model):
     BankAccount=models.PositiveIntegerField(null=False,blank=False)
     BankAccessID=models.CharField(max_length=50,blank=False,null=False)
     BankAccessPassword=models.CharField(max_length=50,null=False,blank=False)
+    redeem=models.CharField(max_length=256,blank=True)
+    redeemReason=models.TextField(blank=True)
+    liquidate=models.CharField(max_length=256,blank=True)
+    liquidateReason=models.TextField(blank=True)
 
     
 class FundLifeClose(models.Model):
@@ -164,7 +176,14 @@ class FundLifeOpen(models.Model):
     fundlife=models.PositiveIntegerField()
     Board_Extension=models.PositiveIntegerField()
     Investor_Extension=models.PositiveIntegerField()
-    # Documents=''
+    # Documents='done'
+
+# class FundLifeOpenDocument(models.Model):
+#     fundlifeopen=models.ForeignKey(FundLifeOpen,on_delete=models.CASCADE)
+#     document_name=models.CharField(max_length=256)
+#     upload_date=models.DateField(auto_now_add=True)
+#     description=models.TextField(blank=True)
+#     document=models.FileField(upload_to='fundlife_opendocument/',null=True,blank=True)
 
 class closingperiod(models.Model):
     fund=models.ForeignKey(Fund,on_delete=models.CASCADE)

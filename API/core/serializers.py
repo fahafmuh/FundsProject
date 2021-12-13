@@ -1,8 +1,9 @@
+from django.db.models import fields
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Director
+from core.models import Director,Fund
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -26,4 +27,9 @@ class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Director
         fields=('id','director_name')
+
+class FundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Fund
+        fields='__all__'
     
