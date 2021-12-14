@@ -11,7 +11,7 @@ export class APIService {
 
   private loginApi = 'api/login/';
   private logoutApi = 'api/logout/';
-  private fundCreateApi = 'api/createFund';
+  private fundCreateApi = 'api/create-fund';
   private DirectorsApi = 'api/Directors/';
 
   constructor(private http: HttpClient) {}
