@@ -39,12 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'core.apps.CoreConfig',
-    'corsheaders',
+    'core.apps.CoreConfig'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,8 +53,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'FundsApi.urls'
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
@@ -87,14 +83,7 @@ DATABASES = {
     }
 }
 
-REST_FRAMEWORK = {
-   'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework.authentication.TokenAuthentication',
-   ),
-   'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser'
-   ),
-}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -134,7 +123,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL='/media/'
-# MEDIA_ROOT=os.path.join(BASE_DIR,"media")
-
+MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
 AUTH_USER_MODEL='core.User'

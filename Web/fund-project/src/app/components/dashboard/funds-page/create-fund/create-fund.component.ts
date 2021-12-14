@@ -1499,20 +1499,20 @@ export class CreateFundComponent implements OnInit {
 
       this.fundForm.value.created_at = new Date().toISOString();
       this.fundForm.value.updated_at = null;
-      this.apiService.onSave(formData).subscribe(
-        (result: any) => {
-          if (result.status == 'ok') {
-            this._snackBar.open('Fund created successfully!', '', {
-              horizontalPosition: this.horizontalPosition,
-              verticalPosition: this.verticalPosition,
-              duration: 4000,
-            });
-            this.fundForm.reset();
-            this.router.navigate(['dashboard/funds/list']);
-          }
-        },
-        (err: any) => {}
-      );
+      // this.apiService.onSave(formData).subscribe(
+      //   (result: any) => {
+      //     if (result.status == 'ok') {
+      //       this._snackBar.open('Fund created successfully!', '', {
+      //         horizontalPosition: this.horizontalPosition,
+      //         verticalPosition: this.verticalPosition,
+      //         duration: 4000,
+      //       });
+      //       this.fundForm.reset();
+      //       this.router.navigate(['dashboard/funds/list']);
+      //     }
+      //   },
+      //   (err: any) => {}
+      // );
     }
   }
 
