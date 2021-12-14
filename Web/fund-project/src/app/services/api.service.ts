@@ -11,7 +11,7 @@ export class APIService {
 
   private loginApi = 'api/login/';
   private logoutApi = 'api/logout/';
-  private fundCreateApi = 'api/create-fund';
+  private fundCreateApi = 'api/create-fund/';
   private DirectorsApi = 'api/Directors/';
 
   constructor(private http: HttpClient) {}
@@ -146,11 +146,10 @@ export class APIService {
   deleteDirector(id: number): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
-      formData.append('id', "4");
+      formData.append('id', id.toString());
       const options = {
         ...this.setHeaders(),
-        "mimeType":"multipart/form-data",
-          data: formData,
+          formData,
       };
       this.http
         .delete(this.serverURL + this.DirectorsApi,options)
