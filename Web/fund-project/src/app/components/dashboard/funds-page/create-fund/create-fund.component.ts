@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2';
 import {
@@ -152,7 +152,8 @@ export class CreateFundComponent implements OnInit {
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
-
+          console.log(this.directors);
+          
           this.setMultiDropdownSettings();
           this.setSingleDS();
         } else {
@@ -171,6 +172,11 @@ export class CreateFundComponent implements OnInit {
 
   refreshDirectors(event: any) {
     this.directors = event;
+    this.apiService.getDirectors().subscribe((result:any)=>{
+      if (result.status == 'ok') {
+        this.directors = result.directors;
+      }
+    });
   }
 
   checkDeleteAvailibility(name: string, subfund = false) {
@@ -280,15 +286,15 @@ export class CreateFundComponent implements OnInit {
       S_trustee: ['', []],
       S_trusteeRep: ['', []],
       S_investmentComittee: [[], []],
-      S_directorsList: this.formBuilder.array(this.TransformDirectors()),
-      S_subscribers: this.formBuilder.array(this.TransformSubscribers()),
+      S_directorsList: this.formBuilder.array(this.TransformDirectorsSF()),
+      S_subscribers: this.formBuilder.array(this.TransformSubscribersSF()),
       S_authorizedSignatory: [[], []],
       S_signature: [null, []],
       S_boardResolutions: [null, []],
       S_fundAdmin: ['', []],
       S_GIIN: ['', []],
       S_preparer: ['', []],
-      S_closingPeriods: this.formBuilder.array(this.TransformClosingPeriods()),
+      S_closingPeriods: this.formBuilder.array(this.TransformClosingPeriodsSF()),
       S_reclassificationFreq: ['month', []],
       S_approver: ['', []],
       S_subscriptionAgreement: [null, []],
@@ -421,6 +427,8 @@ export class CreateFundComponent implements OnInit {
     });
 
     this.fundForm.valueChanges.subscribe((val) => {
+      console.log(val);
+      
       if (val.fundSize && val.offerPrice) {
         const issuedShareValue = val.fundSize / val.offerPrice;
         this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
@@ -450,10 +458,6 @@ export class CreateFundComponent implements OnInit {
           .get('subFundData.S_fundManagerEntity')!
           .setValidators([Validators.required]);
         }
-        
-          this.fundForm
-          .get('subFundData.S_fundLife')!
-          .setValidators([Validators.required]);
 
           this.fundForm
           .get('subFundData.S_investmentComittee')!
@@ -530,12 +534,9 @@ export class CreateFundComponent implements OnInit {
 
     if (
       this.fundForm.get('subFundData.S_fundStatus')?.value == 'freeze' ||
-      (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
-        .value == 'unfreeze' ||
-      (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
-        .value == 'refund' ||
-      (this.fundForm.get('subFundData') as FormGroup).controls['S_fundStatus']
-        .value == 'extendterm'
+      this.fundForm.get('subFundData.S_fundStatus')?.value == 'unfreeze' ||
+      this.fundForm.get('subFundData.S_fundStatus')?.value == 'refund' ||
+      this.fundForm.get('subFundData.S_fundStatus')?.value == 'extendterm'
     ) {
       this.fundForm
         .get('S_fundStatusReason')
@@ -585,44 +586,44 @@ export class CreateFundComponent implements OnInit {
       this.isDropdownDisabled = false;
     }
 
-    if (
-      this.fundForm.get('fundStatus')?.value == 'freeze' ||
-      this.fundForm.get('fundStatus')?.value == 'unfreeze' ||
-      this.fundForm.get('fundStatus')?.value == 'refund' ||
-      this.fundForm.get('fundStatus')?.value == 'extendterm'
-    ) {
-      this.fundForm
-        .get('fundStatusReason')
-        ?.setValidators([Validators.required, Validators.maxLength(2048)]);
-    } else {
-      this.fundForm.get('fundStatusReason')!.setValidators(null);
-    }
+    // if (
+    //   this.fundForm.get('fundStatus')?.value == 'freeze' ||
+    //   this.fundForm.get('fundStatus')?.value == 'unfreeze' ||
+    //   this.fundForm.get('fundStatus')?.value == 'refund' ||
+    //   this.fundForm.get('fundStatus')?.value == 'extendterm'
+    // ) {
+    //   this.fundForm
+    //     .get('fundStatusReason')
+    //     ?.setValidators([Validators.required, Validators.maxLength(2048)]);
+    // } else {
+    //   this.fundForm.get('fundStatusReason')!.setValidators(null);
+    // }
 
-    if (value == 'onboarding') {
-      this.fundForm
-        .get('legalCounsel')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
+    // if (value == 'onboarding') {
+    //   this.fundForm
+    //     .get('legalCounsel')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
 
-      this.fundForm
-        .get('legalCounselRep')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
+    //   this.fundForm
+    //     .get('legalCounselRep')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
 
-      this.fundForm
-        .get('auditor')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
+    //   this.fundForm
+    //     .get('auditor')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
 
-      this.fundForm
-        .get('auditorRep')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
+    //   this.fundForm
+    //     .get('auditorRep')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
 
-      this.fundForm
-        .get('trustee')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
+    //   this.fundForm
+    //     .get('trustee')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
 
-      this.fundForm
-        .get('trusteeRep')!
-        .setValidators([Validators.required, Validators.maxLength(256)]);
-    }
+    //   this.fundForm
+    //     .get('trusteeRep')!
+    //     .setValidators([Validators.required, Validators.maxLength(256)]);
+    // }
 
   }
 
@@ -669,17 +670,19 @@ export class CreateFundComponent implements OnInit {
       const formData: FormData = new FormData();
       let file = event.target.files[0];
       formData.append('director' + control.name[0].id, file);
-      control.signature = formData;
+      ((this.fundForm.get('subFundData.directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
       file = undefined;
     } else {
-      let control = this.fundForm.get('directorsList')?.value[index];
-
+      let controlForName = this.fundForm.get('directorsList')?.value[index];
+      
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      formData.append('director' + control.name[0].id, file);
-      control.signature = formData;
+      formData.append('director' + controlForName.name[0].id, file);
+      
+      ((this.fundForm.get('directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
 
       file = undefined;
+      
     }
   }
 
@@ -711,11 +714,36 @@ export class CreateFundComponent implements OnInit {
     return fb;
   }
 
+  TransformSubscribersSF(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        name: ['', []],
+        commitment: [0.0, []],
+      })
+    );
+
+    return fb;
+  }
+
+  
+
   TransformClosingPeriods(): FormGroup[] {
     let fb: FormGroup[] = [];
     fb.push(
       this.formBuilder.group({
         date: ['', [Validators.required]],
+      })
+    );
+
+    return fb;
+  }
+
+  TransformClosingPeriodsSF(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        date: ['', []],
       })
     );
 
@@ -733,6 +761,19 @@ export class CreateFundComponent implements OnInit {
 
     return fb;
   }
+
+  TransformDirectorsSF(): FormGroup[] {
+    let fb: FormGroup[] = [];
+    fb.push(
+      this.formBuilder.group({
+        name: ['', []],
+        signature: [null, []],
+      })
+    );
+    return fb;
+  }
+
+
 
   addClosingPeriod(subfund = false) {
     let fb: FormGroup = this.formBuilder.group({
@@ -881,6 +922,19 @@ export class CreateFundComponent implements OnInit {
     return arr;
   }
 
+  findInvalidControls() {
+    const invalid = [];
+    const controls = this.fundForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            invalid.push(name);
+        }
+    }
+    console.log(invalid);
+    
+    return invalid;
+}
+
   Submit() {
     /**
      * file controls:
@@ -892,6 +946,7 @@ export class CreateFundComponent implements OnInit {
      * fund life docs -> multiple
      * signature -> single
      */
+    let arr = this.findInvalidControls();
     if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
