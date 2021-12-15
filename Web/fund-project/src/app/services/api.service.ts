@@ -147,12 +147,8 @@ export class APIService {
     return new Observable((observer) => {
       let formData = new FormData();
       formData.append('id', id.toString());
-      const options = {
-        ...this.setHeaders(),
-          formData,
-      };
       this.http
-        .delete(this.serverURL + this.DirectorsApi,options)
+        .post(this.serverURL + this.DirectorsApi,formData,this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);

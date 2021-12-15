@@ -255,12 +255,12 @@ export class CreateFundComponent implements OnInit {
   TransformSubfundData(): FormGroup {
     return this.formBuilder.group({
       S_fundName: ['', []],
-      S_registrationNumber: [null, []],
-      S_fundDescription: [null, []],
+      S_registrationNumber: ['', []],
+      S_fundDescription: ['', []],
       S_domicile: ['singapore', []],
       S_fundType: ['regulated', []],
-      S_fundManagerEntity: [null, []],
-      S_fundManagerRep: [null, []],
+      S_fundManagerEntity: ['', []],
+      S_fundManagerRep: ['', []],
       S_fundStructure: ['open-ended', []],
       S_offerPrice: [1.0, []],
       S_fundSize: [0.0, []],
@@ -272,11 +272,11 @@ export class CreateFundComponent implements OnInit {
       S_lockupPeriod: [0, []],
       S_fundYearEnd: ['Dec', []],
       S_productType: ['private-equity', []],
-      S_fundLifeYears: [null, []],
-      S_boardExtension: [null, []],
-      S_investorExtension: [null, []],
-      S_fundLifedocuments: [null, []],
-      S_fundEndDate: [null, []],
+      S_fundLifeYears: ['', []],
+      S_boardExtension: ['', []],
+      S_investorExtension: ['', []],
+      S_fundLifedocuments: ['', []],
+      S_fundEndDate: ['', []],
       S_catchup: [0.0, []],
       S_reportingFrequency: ['month', []],
       S_legalCounsel: ['', []],
@@ -289,17 +289,17 @@ export class CreateFundComponent implements OnInit {
       S_directorsList: this.formBuilder.array(this.TransformDirectorsSF()),
       S_subscribers: this.formBuilder.array(this.TransformSubscribersSF()),
       S_authorizedSignatory: [[], []],
-      S_signature: [null, []],
-      S_boardResolutions: [null, []],
+      S_signature: ['', []],
+      S_boardResolutions: ['', []],
       S_fundAdmin: ['', []],
       S_GIIN: ['', []],
       S_preparer: ['', []],
       S_closingPeriods: this.formBuilder.array(this.TransformClosingPeriodsSF()),
       S_reclassificationFreq: ['month', []],
       S_approver: ['', []],
-      S_subscriptionAgreement: [null, []],
-      S_investmentAgreement: [null, []],
-      S_PPM: [null, []],
+      S_subscriptionAgreement: ['', []],
+      S_investmentAgreement: ['', []],
+      S_PPM: ['', []],
       S_directorFee: [0.0, []],
       S_managementFee: [0.0, []],
       S_hurdleRate: [0.0, []],
@@ -427,8 +427,6 @@ export class CreateFundComponent implements OnInit {
     });
 
     this.fundForm.valueChanges.subscribe((val) => {
-      console.log(val);
-      
       if (val.fundSize && val.offerPrice) {
         const issuedShareValue = val.fundSize / val.offerPrice;
         this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
@@ -670,14 +668,16 @@ export class CreateFundComponent implements OnInit {
       const formData: FormData = new FormData();
       let file = event.target.files[0];
       formData.append('director_' + control.name[0].id, file);
-      ((this.fundForm.get('subFundData.directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
+      console.log((this.fundForm.get('subFundData.S_directorsList') as FormArray)?.controls);
+      
+      ((this.fundForm.get('subFundData.S_directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
       file = undefined;
     } else {
       let controlForName = this.fundForm.get('directorsList')?.value[index];
       
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      formData.append('director' + controlForName.name[0].id, file);
+      formData.append('director_' + controlForName.name[0].id, file);
       
       ((this.fundForm.get('directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
 
@@ -947,7 +947,11 @@ export class CreateFundComponent implements OnInit {
      * signature -> single
      */
     let arr = this.findInvalidControls();
-    if (this.fundForm.valid) {
+    let directorsArraySF=[];
+    let directorsArray = [];
+    let closingPeriodArraySF = [];
+    let closingPeriodArray = [];
+    // if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -993,6 +997,14 @@ export class CreateFundComponent implements OnInit {
           this.fundForm.get('subFundData.S_directorsList')?.value &&
           this.fundForm.get('subFundData.S_directorsList')?.value.length
         ) {
+
+          directorsArraySF =  this.fundForm
+          .get('subFundData.S_directorsList')
+          ?.value.map((obj:any) => {
+            return obj.name;
+          });
+
+
           this.fundForm
             .get('subFundData.S_directorsList')
             ?.setValue(
@@ -1011,6 +1023,11 @@ export class CreateFundComponent implements OnInit {
             this.fundForm.get('subFundData.S_closingPeriods')?.value
           );
           this.fundForm.get('subFundData.S_closingPeriods')?.setValue(arr);
+          closingPeriodArraySF =  this.fundForm
+          .get('subFundData.S_closingPeriods')
+          ?.value.map((obj:any) => {
+            return obj.date;
+          });
         }
 
         if (this.fundForm.get('subFundData.S_redeem')?.value) {
@@ -1199,14 +1216,13 @@ export class CreateFundComponent implements OnInit {
           )?.value,
           S_fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
             ?.value,
-            S_boardExtension:this.fundForm.get('subFundData.S_boardExtension')
-            ?.value,
-            S_investorExtension:this.fundForm.get('subFundData.S_investorExtension')
-            ?.value,
+            S_boardExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_boardExtension')?.value : '',
+            S_investorExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_investorExtension')?.value : '',
             S_fundLifeYears:this.fundForm.get('subFundData.S_fundLifeYears')
             ?.value,
           S_fundStructure: this.fundForm.get('subFundData.S_fundStructure')
             ?.value,
+            S_directors:directorsArraySF,
           S_offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
           S_fundSize: this.fundForm.get('subFundData.S_fundSize')?.value,
           S_issuedShares: this.fundForm.get('subFundData.S_issuedShares')
@@ -1248,8 +1264,7 @@ export class CreateFundComponent implements OnInit {
           S_fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
           S_GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
           S_preparer: this.fundForm.get('subFundData.S_preparer')?.value,
-          S_closingPeriods: this.fundForm.get('subFundData.S_closingPeriods')
-            ?.value,
+          S_closingPeriod: closingPeriodArraySF,
           S_reclassificationFreq: this.fundForm.get(
             'subFundData.S_reclassificationFreq'
           )?.value,
@@ -1328,6 +1343,12 @@ export class CreateFundComponent implements OnInit {
             }
           }
         });
+
+        directorsArray =  this.fundForm
+        .get('directorsList')
+        ?.value.map((obj:any) => {
+          return obj.name;
+        });
       }
 
       if (
@@ -1339,6 +1360,12 @@ export class CreateFundComponent implements OnInit {
           this.fundForm.get('closingPeriods')?.value
         );
         this.fundForm.get('closingPeriods')?.setValue(arr);
+        closingPeriodArray =  this.fundForm
+        .get('closingPeriods')
+        ?.value.map((obj:any) => {
+          return obj.date;
+        });
+
       }
 
       if (this.fundForm.get('redeem')?.value) {
@@ -1457,7 +1484,7 @@ export class CreateFundComponent implements OnInit {
             )
           );
       }
-
+      
       let obj: any = {
         fundName: this.fundForm.get('fundName')?.value,
         registrationNumber: this.fundForm.get('registrationNumber')?.value,
@@ -1474,12 +1501,9 @@ export class CreateFundComponent implements OnInit {
         fundStructure: this.fundForm.get('fundStructure')?.value,
         offerPrice: this.fundForm.get('offerPrice')?.value,
         fundSize: this.fundForm.get('fundSize')?.value,
-        boardExtension:this.fundForm.get('boardExtension')
-        ?.value,
-        investorExtension:this.fundForm.get('investorExtension')
-        ?.value,
-        fundLifeYears:this.fundForm.get('fundLifeYears')
-        ?.value,
+        boardExtension:this.fundForm.get('fundStructure')?.value == 'open-ended' ? this.fundForm.get('boardExtension')?.value: '',
+        investorExtension:this.fundForm.get('fundStructure')?.value == 'open-ended' ? this.fundForm.get('investorExtension')?.value: '',
+        fundLifeYears:this.fundForm.get('fundLifeYears')?.value,
         issuedShares: this.fundForm.get('issuedShares')?.value,
         ordinaryShare: this.fundForm.get('ordinaryShare')?.value,
         fundEndDate: this.fundForm.get('fundEndDate')?.value,
@@ -1498,12 +1522,13 @@ export class CreateFundComponent implements OnInit {
         trustee: this.fundForm.get('trustee')?.value,
         trusteeRep: this.fundForm.get('trusteeRep')?.value,
         subscribers: this.fundForm.get('subscribers')?.value,
+        directors: directorsArray,
         investmentComittee: this.fundForm.get('investmentComittee')?.value,
         authorizedSignatory: this.fundForm.get('authorizedSignatory')?.value,
         fundAdmin: this.fundForm.get('fundAdmin')?.value,
         GIIN: this.fundForm.get('GIIN')?.value,
         preparer: this.fundForm.get('preparer')?.value,
-        closingPeriods: this.fundForm.get('closingPeriods')?.value,
+        closingPeriod: closingPeriodArray,
         reclassificationFreq: this.fundForm.get('reclassificationFreq')?.value,
         approver: this.fundForm.get('approver')?.value,
         directorFee: this.fundForm.get('directorFee')?.value,
@@ -1518,8 +1543,87 @@ export class CreateFundComponent implements OnInit {
         redeemReason: this.fundForm.get('redeemReason')?.value,
         liquidate: this.fundForm.get('liquidate')?.value,
         liquidateReason: this.fundForm.get('liquidateReason')?.value,
+        assetUnderManagement:"2.22",
       };
-      formData.append('json', obj);
+
+      // let obj = {
+      //   "fundName": "hhfgh",
+      //   "registrationNumber": "ert",
+      //   "fundDescription": "tert",
+      //   "subFund": "N",
+      //   "domicile": "singapore",
+      //   "fundType": "regulated",
+      //   "fundManagerEntity": "erter",
+      //   "fundManagerRep": [
+      //     "2"
+      //   ],
+      //   "fundStructure": "close-ended",
+      //   "offerPrice": 1.04,
+      //   "fundSize": 0.03,
+      //   "boardExtension": null,
+      //   "investorExtension": null,
+      //   "fundLifeYears": 2,
+      //   "issuedShares": 0.028846153846153844,
+      //   "ordinaryShare": 3,
+      //   "fundEndDate": "2021-12-29",
+      //   "fundStatus": "onboarding",
+      //   "fundStatusReason": "",
+      //   "reportingCurrency": "USD",
+      //   "lockupPeriod": 2,
+      //   "fundYearEnd": "Dec",
+      //   "productType": "private-equity",
+      //   "catchup": 0.03,
+      //   "reportingFrequency": "month",
+      //   "legalCounsel": "yrtryr",
+      //   "legalCounselRep": "yrtyr",
+      //   "auditor": "yrtytr",
+      //   "auditorRep": "ghf",
+      //   "trustee": "hfgh",
+      //   "trusteeRep": "hfghf",
+      //   "subscribers": [
+      //     {
+      //       "name": "2",
+      //       "commitment": 0.04
+      //     }
+      //   ],
+      //   "directors": [
+      //     "1"
+      //   ],
+      //   "investmentComittee": [
+      //     "2"
+      //   ],
+      //   "authorizedSignatory": [
+      //     "2"
+      //   ],
+      //   "fundAdmin": [
+      //     "1"
+      //   ],
+      //   "GIIN": "jhghjgj",
+      //   "preparer": [
+      //     "2"
+      //   ],
+      //   "closingPeriod": ["2021-12-23"],
+      //   "reclassificationFreq": "weekly",
+      //   "approver": [
+      //     "3"
+      //   ],
+      //   "directorFee": 0.02,
+      //   "managementFee": 0.02,
+      //   "hurdleRate": 0.0003,
+      //   "CTC": 0.02,
+      //   "bank": "OCBC",
+      //   "bankAccount": "45534",
+      //   "bankAccessId": "fundsadmin",
+      //   "bankAccessPassword": "ghjghjg",
+      //   "redeem": "2021-12-16",
+      //   "redeemReason": "ghjgh",
+      //   "liquidate": "involuntary",
+      //   "liquidateReason": "ghjgh",
+      //   "assetUnderManagement": "2.22"
+      // }
+      console.log(obj);
+      
+      formData.append('json', JSON.stringify(obj));
 
       if (this.fundForm.get('PPM')?.value) {
         for (let pair of this.fundForm.get('PPM')?.value.entries()) {
@@ -1551,6 +1655,8 @@ export class CreateFundComponent implements OnInit {
 
       this.fundForm.value.created_at = new Date().toISOString();
       this.fundForm.value.updated_at = null;
+      console.log(formData.get('json'), typeof formData.get('json'));
+      
       this.apiService.onSave(formData).subscribe(
         (result: any) => {
           if (result.status == 'ok') {
@@ -1565,7 +1671,7 @@ export class CreateFundComponent implements OnInit {
         },
         (err: any) => {}
       );
-    }
+    // }
   }
 
   Cancel() {

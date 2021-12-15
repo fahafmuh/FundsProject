@@ -2560,8 +2560,9 @@
           CANCEL
         </button>
       </div>
+      <!-- [disabled]="(!fundForm.valid || globalDisable && globalDisableSF)" -->
       <div class="p-2">
-        <button type="button" class="btn btn-success" (click)="Submit()" ngbButton [disabled]="(!fundForm.valid || globalDisable && globalDisableSF)">
+        <button type="button" class="btn btn-success" (click)="Submit()" ngbButton >
           SUBMIT
         </button>
       </div>
