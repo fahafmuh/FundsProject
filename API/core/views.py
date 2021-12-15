@@ -9,7 +9,7 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import logout
 import json
 from .models import (BoardResolution, Fund,FundCountry,Director,FUND_TYPE,FUND_STRUCTURE,
-                    FUND_STATUS,FUND_YEAR_END_MONTH,ReportingCurrency,ProductType,
+                    FUND_STATUS,FUND_YEAR_END_MONTH,ReportingCurrency,ProductType,FUND_APPROVAL_STATUS,
                     ReportingFrequency,ReclassificationFrequency,Bank,FundLifeClose,
                     FundLifeOpen,closingperiod,Subscriber)
                 
@@ -22,8 +22,8 @@ def create_fund_object(data,request,sub_fund=False):
     report_currency=get_object_or_none(ReportingCurrency,'report_currency',data['reportingCurrency'])
     product_type=get_object_or_none(ProductType,'product_type',data['productType'])
     reporting_frequency=get_object_or_none(ReportingFrequency,'reporting_frequency',data['reportingFrequency'])
-    AuthorizedSignatory=get_object_or_none(Director,'None',data['authorizedSignatory'])
-    fundManagerRep=get_object_or_none(Director,'None',data['fundManagerRep'])
+    AuthorizedSignatory=get_object_or_none(Director,'None',data['authorizedSignatory'][0])
+    fundManagerRep=get_object_or_none(Director,'None',data['fundManagerRep'][0])
 
     if AuthorizedSignatory!=None and AuthorizedSignatory.director_signature is None:
         AuthorizedSignatory.director_signature=request.FILES.get('signature' if not sub_fund else 's_signature',None)
@@ -31,7 +31,7 @@ def create_fund_object(data,request,sub_fund=False):
 
     ReclassificationFrequency_obj=get_object_or_none(ReclassificationFrequency,'ReclassificationFrequency',data['reclassificationFreq'])
     Bank_obj=get_object_or_none(Bank,'Bank',data['bank'])
-    Approver=get_object_or_none(Director,'None',data['approver'])
+    Approver=get_object_or_none(Director,'None',data['approver'][0])
 
     fund_obj=Fund(user=request.user,
                 fund_name=data['fundName'],
@@ -123,12 +123,12 @@ def create_fund_object(data,request,sub_fund=False):
 
     #open close table creation
     if data['fundStructure']=='open-ended':
-        obj=FundLifeOpen(fund=fund_obj,fundlife=int(data['fundLifeYears']),
+        obj=FundLifeOpen(fund=fund_obj,fundlife=int(data['fundLife']),
                         #below fields not given from frontend assumed!
                         Board_Extension=int(data['boardExtension']),Investor_Extension=int(data['investorExtension']))
         obj.save()
     else:
-        obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLifeYears']))
+        obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLife']))
         obj.save()
     #end
     
@@ -141,7 +141,7 @@ def create_fund_object(data,request,sub_fund=False):
     #subscriber creation
     if(len(data['subscribers'])!=0):
         for obj in data['subscribers']:
-            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['commitment']))
+            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['amount']))
             obj.save()
     #end
 
@@ -176,7 +176,7 @@ def Logout(request):
     logout(request)
     return Response('User Logged out successfully')
 
-@api_view(["GET","POST","DELETE"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication,])
 def Director_API(request):
@@ -188,10 +188,16 @@ def Director_API(request):
             Director_object=Director(director_name=directors)
             Director_object.save()
         return Response(DirectorSerializer(Director_object).data)
-    elif request.method=='DELETE':
-        id=request.POST.get('id')
-        Director.objects.get(pk=int(id)).delete()
-        return Response('Director Deleted Successfully')
+    
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def director_delete_view(request):
+    id=request.POST.get('id')
+    Director.objects.get(pk=int(id)).delete()
+    return Response('Director Deleted Successfully')
+
 
 @api_view(["POST",])
 @permission_classes([IsAuthenticated])
@@ -280,3 +286,44 @@ def create_fund_view(request):
         fund_obj.save()
         
     return Response(FundSerializer(fund_obj).data)
+
+@api_view(["POST",])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def manager_approval_view(request):
+    status=json.loads(request.body)
+    fund_id=status['fund_id']
+    fund_status=get_id_of_tuple(status['fund_approval_status'],FUND_APPROVAL_STATUS)
+    reason=''
+    if 'reason' in status:
+        reason=status['reason']
+    try:
+        fund_obj=Fund.objects.get(pk=fund_id)
+    except:
+        return Response({'id':fund_id,"status":"Fund doesn't exist with provided id"})
+    
+    fund_obj.manager_approval=fund_status
+    fund_obj.manager_reason=reason
+    fund_obj.save()
+    return Response({'id':fund_id,"status":"Fund Approval Status Successfully Updated"})
+
+@api_view(["POST",])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def supervisor_approval_view(request):
+    status=json.loads(request.body)
+    fund_id=status['fund_id']
+    fund_status=get_id_of_tuple(status['fund_approval_status'],FUND_APPROVAL_STATUS)
+    reason=''
+    if 'reason' in status:
+        reason=status['reason']
+    try:
+        fund_obj=Fund.objects.get(pk=fund_id)
+    except:
+        return Response({'id':fund_id,"status":"Fund doesn't exist with provided id"})
+    
+    fund_obj.supervisor_approval=fund_status
+    fund_obj.supervisor_reason=reason
+    fund_obj.save()
+    return Response({'id':fund_id,"status":"Fund Approval Status Successfully Updated"})
+
