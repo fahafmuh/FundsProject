@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'core.apps.CoreConfig',
-    'corsheaders',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -55,8 +55,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'FundsApi.urls'
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
@@ -76,7 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FundsApi.wsgi.application'
 
-
+CORS_ORIGIN_ALLOW_ALL = True
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -87,14 +85,7 @@ DATABASES = {
     }
 }
 
-REST_FRAMEWORK = {
-   'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework.authentication.TokenAuthentication',
-   ),
-   'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser'
-   ),
-}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -134,7 +125,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL='/media/'
-# MEDIA_ROOT=os.path.join(BASE_DIR,"media")
-
+MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
 AUTH_USER_MODEL='core.User'
