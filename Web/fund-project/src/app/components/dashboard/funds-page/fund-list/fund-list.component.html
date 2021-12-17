@@ -1,12 +1,12 @@
-<div class="d-flex shadow-sm border p-2 align-items-center">
+<div class="d-flex shadow-sm border p-2 align-items-center" *ngFor="let fund of funds;let index=index">
     <div class="p-1 flex-grow-1">
-        <p class="mb-0 fw-bold">Fund Name : <span class="fw-light">Experience Survey</span></p>
+        <p class="mb-0 fw-bold">Fund Name : <span class="fw-light">{{fund.fund_name}}</span></p>
         <P class="text-danger mb-0"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Created : Apr 24,2020 | 1:01PM</span></P>
         <P class="text-primary mb-0"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Updated : Jan 24,2020 | 1:01PM</span></P>
     </div>
 
-    <div class="p-1"><span><i placement="top" ngbTooltip="Edit Fund data" class="fa fa-pencil-square-o" aria-hidden="true"></i></span></div>
+    <div class="p-1"><span><i placement="top" ngbTooltip="Edit Fund data" class="fa fa-pencil-square-o" aria-hidden="true" (click)="EditFund(fund)"></i></span></div>
     <div class="p-1">
-        <span><i placement="top" ngbTooltip="Delete Fund" class="fa fa-trash-o" aria-hidden="true"></i></span>
+        <span><i placement="top" ngbTooltip="Delete Fund" class="fa fa-trash-o" aria-hidden="true" (click)="deleteFund(fund.id)"></i></span>
     </div>
 </div>

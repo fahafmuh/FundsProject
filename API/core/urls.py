@@ -9,7 +9,9 @@ urlpatterns = [
     path('logout/',views.Logout),
     path('Directors/',views.Director_API),
     path('create-fund/',views.create_fund_view),
-    path('update-manager-approval/',views.manager_approval_view),
-    path('update-supervisor-approval/',views.supervisor_approval_view),
-    path('director-delete/',views.director_delete_view)
+    path('fund-approval/',views.approval_view),
+    # path('update-supervisor-approval/',views.supervisor_approval_view),
+    path('director-delete/',views.director_delete_view),
+    path('getallfunds/',views.getallfunds_view),
+    path('getfundsbyrole/',views.getfundsbyrole_view)
 ]

@@ -1,3 +1,4 @@
+from django.db.models import manager
 from rest_framework.authtoken.views import ObtainAuthToken
 from core.models import Director
 from .serializers import AuthTokenSerializer, DirectorSerializer,FundSerializer
@@ -290,7 +291,7 @@ def create_fund_view(request):
 @api_view(["POST",])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication,])
-def manager_approval_view(request):
+def approval_view(request):
     status=json.loads(request.body)
     fund_id=status['fund_id']
     fund_status=get_id_of_tuple(status['fund_approval_status'],FUND_APPROVAL_STATUS)
@@ -301,29 +302,36 @@ def manager_approval_view(request):
         fund_obj=Fund.objects.get(pk=fund_id)
     except:
         return Response({'id':fund_id,"status":"Fund doesn't exist with provided id"})
-    
-    fund_obj.manager_approval=fund_status
-    fund_obj.manager_reason=reason
-    fund_obj.save()
+    if request.user.user_type==2:
+        fund_obj.manager_approval=fund_status
+        fund_obj.manager_reason=reason
+        fund_obj.save()
+    elif request.user.user_type==3:
+        fund_obj.supervisor_approval=fund_status
+        fund_obj.supervisor_reason=reason
+        fund_obj.save()
     return Response({'id':fund_id,"status":"Fund Approval Status Successfully Updated"})
 
-@api_view(["POST",])
+
+@api_view(["GET",])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication,])
-def supervisor_approval_view(request):
-    status=json.loads(request.body)
-    fund_id=status['fund_id']
-    fund_status=get_id_of_tuple(status['fund_approval_status'],FUND_APPROVAL_STATUS)
-    reason=''
-    if 'reason' in status:
-        reason=status['reason']
-    try:
-        fund_obj=Fund.objects.get(pk=fund_id)
-    except:
-        return Response({'id':fund_id,"status":"Fund doesn't exist with provided id"})
-    
-    fund_obj.supervisor_approval=fund_status
-    fund_obj.supervisor_reason=reason
-    fund_obj.save()
-    return Response({'id':fund_id,"status":"Fund Approval Status Successfully Updated"})
+def getallfunds_view(request):
+    all_funds=Fund.objects.all()
+    return Response({'data':FundSerializer(all_funds,many=True).data})
+
+
+@api_view(["GET",])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def getfundsbyrole_view(request):
+    if request.user.user_type==2:
+        fundsdata=Fund.objects.filter(supervisor_approval=2,manager_approval=1)
+    elif request.user.user_type==3:
+        fundsdata=Fund.objects.filter(supervisor_approval=1,manager_approval=1)
+    return Response({'data':FundSerializer(fundsdata,many=True).data})
+
+
+
+
 

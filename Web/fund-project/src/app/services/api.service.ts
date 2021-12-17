@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
@@ -14,10 +14,12 @@ export class APIService {
   private fundCreateApi = 'api/create-fund/';
   private DirectorsApi = 'api/Directors/';
   private deleteDirectorsApi = 'api/director-delete/';
+  private deleteFundApi = 'api/fund-delete/';
   private ApprovalApi = 'api/update-manager-approval/';
   private getAllFundsApi = 'api/getallfunds/';
   private getFundsByRolesApi = 'api/getallfunds/';
 
+  public selectedFund: BehaviorSubject<any> = new BehaviorSubject(undefined);
   constructor(private http: HttpClient) {}
 
   login(formValues: any): Observable<any> {
@@ -134,7 +136,7 @@ export class APIService {
             
             observer.next({
               status: 'ok',
-              funds: response
+              funds: response.data
             });
             observer.complete();
           },
@@ -234,4 +236,27 @@ export class APIService {
         );
     });
   }
+
+  deleteFundService(id: string): Observable<any> {
+    return new Observable((observer) => {
+      let formData = new FormData();
+      formData.append('id', id);
+      this.http
+        .post(this.serverURL + this.deleteFundApi,formData,this.setHeaders())
+        .subscribe(
+          (response: any) => {
+            console.log(response);
+            observer.next({
+              status: 'ok',
+            });
+            observer.complete();
+          },
+          (err) => {
+            observer.next({ status: 'error' });
+            observer.complete();
+          }
+        );
+    });
+  }
+  
 }
