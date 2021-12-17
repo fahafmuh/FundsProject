@@ -1,13 +1,6 @@
-<!-- <div *ngIf="!isCreated">
-    <app-fund-list></app-fund-list>
-
-    <button type="button" class="btn btn-info" (click)="addForm()">Create Fund</button>
-</div>
-
-<app-create-fund *ngIf="isCreated"></app-create-fund> -->
-
 
 <main role="main" class="container">
+
     <div class="col-md-12 ml-sm-auto col-lg-12">
         <div *ngIf="!isCreated" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h3 class="h4" *ngIf="router.url.includes('list')">Funds List</h3>
@@ -18,13 +11,11 @@
                 <div class="btn-group mr-3" (click)="addForm()" *ngIf="!router.url.includes('create')">
                     <button type="button" class="btn btn-outline-primary active">Create</button>
                     <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-                        <button class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <app-fund-list *ngIf="!isCreated"></app-fund-list>
-    <app-create-fund *ngIf="isCreated"> </app-create-fund> -->
     <router-outlet></router-outlet>
 </main>

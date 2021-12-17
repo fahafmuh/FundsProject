@@ -153,8 +153,6 @@ export class CreateFundComponent implements OnInit {
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
-          console.log(this.directors);
-          
           this.setMultiDropdownSettings();
           this.setSingleDS();
         } else {
@@ -677,7 +675,6 @@ export class CreateFundComponent implements OnInit {
       const formData: FormData = new FormData();
       let file = event.target.files[0];
       formData.append('director_' + control.name[0].id, file);
-      console.log((this.fundForm.get('subFundData.S_directorsList') as FormArray)?.controls);
       
       ((this.fundForm.get('subFundData.S_directorsList') as FormArray)?.controls as any)[index].controls.signature.setValue(formData);
       file = undefined;
@@ -910,8 +907,6 @@ export class CreateFundComponent implements OnInit {
 
   ParseDirectors(arr: any) {
     let retArr: any = [];
-    console.log(arr);
-
     arr.map((result: any) => {
       if (result && result.id) {
         retArr.push(result.id.toString());

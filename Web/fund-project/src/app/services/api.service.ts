@@ -13,6 +13,10 @@ export class APIService {
   private logoutApi = 'api/logout/';
   private fundCreateApi = 'api/create-fund/';
   private DirectorsApi = 'api/Directors/';
+  private deleteDirectorsApi = 'api/director-delete/';
+  private ApprovalApi = 'api/update-manager-approval/';
+  private getAllFundsApi = 'api/getallfunds/';
+  private getFundsByRolesApi = 'api/getallfunds/';
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +29,6 @@ export class APIService {
         })
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
               value: response.token,
@@ -120,6 +123,52 @@ export class APIService {
     });
   }
 
+  getAllFunds() {
+    return new Observable((observer) => {
+      this.http
+        .get(this.serverURL + this.getAllFundsApi, this.setHeaders())
+        .subscribe(
+          (res) => {
+            let response: any = res;
+            console.log(response);
+            
+            observer.next({
+              status: 'ok',
+              funds: response
+            });
+            observer.complete();
+          },
+          (err) => {
+            observer.next({ status: 'error' });
+            observer.complete();
+          }
+        );
+    });
+  }
+
+    getFundsByRoles() {
+    return new Observable((observer) => {
+      this.http
+        .get(this.serverURL + this.getFundsByRolesApi, this.setHeaders())
+        .subscribe(
+          (res) => {
+            let response: any = res;
+            console.log(response);
+            
+            observer.next({
+              status: 'ok',
+              fundsByRoles: response
+            });
+            observer.complete();
+          },
+          (err) => {
+            observer.next({ status: 'error' });
+            observer.complete();
+          }
+        );
+    });
+  }
+
   addDirector(value: any): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
@@ -143,12 +192,33 @@ export class APIService {
     });
   }
 
-  deleteDirector(id: number): Observable<any> {
+  updateFundStatus(formValues:any): Observable<any>{
+    return new Observable((observer) => {
+
+      this.http
+        .post(this.serverURL + this.ApprovalApi, formValues, this.setHeaders())
+        .subscribe(
+          (response: any) => {
+            console.log(response);
+            observer.next({
+              status: 'ok',
+            });
+            observer.complete();
+          },
+          (err) => {
+            observer.next({ status: 'error' });
+            observer.complete();
+          }
+        );
+    });
+  }
+
+  deleteDirector(id: string): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
-      formData.append('id', id.toString());
+      formData.append('id', id);
       this.http
-        .post(this.serverURL + this.DirectorsApi,formData,this.setHeaders())
+        .post(this.serverURL + this.deleteDirectorsApi,formData,this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);

@@ -66,7 +66,7 @@ export class CreateDirectorsComponent implements OnInit {
   deleteDirector(id: number) {
     let index = this._directorsList.findIndex((res: any) => res.id == id);
     if (index >= 0) {
-      this.apiService.deleteDirector(id).subscribe(
+      this.apiService.deleteDirector(id.toString()).subscribe(
         (res: any) => {
           if (res.status == 'ok') {
             this._directorsList.splice(index, 1);
