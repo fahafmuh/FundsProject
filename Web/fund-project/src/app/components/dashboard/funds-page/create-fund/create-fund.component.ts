@@ -17,6 +17,7 @@ import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CreateFundComponent implements OnInit {
   fundForm: FormGroup;
+  showInvalidControls:any = [];
   sectionNo = 1;
   isDropdownDisabled = false;
   isSimpleOption = false;
@@ -521,11 +522,17 @@ export class CreateFundComponent implements OnInit {
       (this.fundForm.get('subFundData') as FormGroup).controls[
         'S_fundStatus'
       ].enable();
+      (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_fundStatusReason'
+      ].enable();
       this.isDropdownDisabledSF = true;
     } else {
       (this.fundForm.get('subFundData') as FormGroup).enable();
       (this.fundForm.get('subFundData') as FormGroup).controls[
         'S_fundStatus'
+      ].enable();
+      (this.fundForm.get('subFundData') as FormGroup).controls[
+        'S_fundStatusReason'
       ].enable();
       this.isDropdownDisabledSF = false;
     }
@@ -577,10 +584,12 @@ export class CreateFundComponent implements OnInit {
     if (value == 'funded' || value == 'freeze' || value == 'close') {
       this.fundForm.disable();
       this.fundForm.get('fundStatus')?.enable();
+      this.fundForm.get('fundStatusReason')?.enable();
       this.isDropdownDisabled = true;
     } else {
       this.fundForm.enable();
       this.fundForm.get('fundStatus')?.enable();
+      this.fundForm.get('fundStatusReason')?.enable();
       this.isDropdownDisabled = false;
     }
 
@@ -930,10 +939,77 @@ export class CreateFundComponent implements OnInit {
             invalid.push(name);
         }
     }
-    console.log(invalid);
-    
-    return invalid;
+    return this.MapFieldNames(invalid);
 }
+
+MapFieldNames(fields:any){
+  let obj:any = {
+    fundName:'Fund Name',
+registrationNumber:'Registration Number',
+fundDescription:'Fund Description',
+domicile:'Domicile',
+fundType:'Fund type',
+fundManagerEntity:'Fund Manager Entity',
+fundManagerRep:'Fund Manager Entity Representative',
+boardExtension:'Board Extension',
+investorExtension:'Investor Extension',
+fundLifeYears:'Fund life years',
+fundStructure:'Fund structure',
+directors:'Directors List',
+offerPrice:'Offer price',
+fundSize:'Fund size',
+issuedShares:'Issued Shares',
+ordinaryShare:'Ordinary Share',
+fundEndDate:'Fund End date',
+fundStatus:'Fund status',
+fundStatusReason:'Fund status reason',
+reportingCurrency:'Reporting currency',
+lockupPeriod:'Lock up period',
+fundYearEnd:'Fund year end',
+productType:'Product type',
+catchup:'Catchup',
+reportingFrequency:'Reporting Frequency',
+legalCounsel:'Legal Counsel',
+legalCounselRep:'Legal Counsel Representative',
+auditor:'Auditor',
+auditorRep:'Auditor Representative',
+trustee:'Trustee',
+trusteeRep:'Trustee Representative',
+subscribers:'Subscribers List',
+investmentComittee:'Investment Committee',
+authorizedSignatory:'Authorized Signatory',
+fundAdmin:'Fund Admin',
+GIIN:'GIIN',
+preparer:'Preparer',
+closingPeriod:'Closing Period',
+reclassificationFreq:'Re-classification Frequency',
+approver:'Approver',
+directorFee:"Director's Fees",
+managementFee:'Management Fees',
+hurdleRate:'Hurdle rate',
+CTC:'CTC',
+bank:'Bank',
+bankAccount:'Bank account number',
+bankAccessId:'Bank access Id',
+bankAccessPassword:'Bank access password',
+redeem:'Redeem',
+redeemReason:'Reason to redeem',
+liquidate:'Liquidate',
+liquidateReason:'Reason to liquidate'
+  }
+  let fieldNames:any;
+  let finalObj:any = {};
+    for (let k in obj){
+      if (fields.includes(k)){
+        finalObj[k] = obj[k];
+      }
+    }
+    if(fields.length == Object.keys(finalObj).length){
+      fieldNames = Object.values(finalObj);
+    }
+  return fieldNames;
+}
+
 
   Submit() {
     /**
@@ -946,12 +1022,14 @@ export class CreateFundComponent implements OnInit {
      * fund life docs -> multiple
      * signature -> single
      */
-    let arr = this.findInvalidControls();
+     this.showInvalidControls = this.findInvalidControls();
+     console.log(this.showInvalidControls);
+     
     let directorsArraySF=[];
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    // if (this.fundForm.valid) {
+    if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -1203,89 +1281,89 @@ export class CreateFundComponent implements OnInit {
         }
 
         subFundDataObj = {
-          S_fundName: this.fundForm.get('subFundData.S_fundName')?.value,
-          S_registrationNumber: this.fundForm.get(
+          fundName: this.fundForm.get('subFundData.S_fundName')?.value,
+          registrationNumber: this.fundForm.get(
             'subFundData.S_registrationNumber'
           )?.value,
-          S_fundDescription: this.fundForm.get('subFundData.S_fundDescription')
+          fundDescription: this.fundForm.get('subFundData.S_fundDescription')
             ?.value,
-          S_domicile: this.fundForm.get('subFundData.S_domicile')?.value,
-          S_fundType: this.fundForm.get('subFundData.S_fundType')?.value,
-          S_fundManagerEntity: this.fundForm.get(
+          domicile: this.fundForm.get('subFundData.S_domicile')?.value,
+          fundType: this.fundForm.get('subFundData.S_fundType')?.value,
+          fundManagerEntity: this.fundForm.get(
             'subFundData.S_fundManagerEntity'
           )?.value,
-          S_fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
+          fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
             ?.value,
-            S_boardExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_boardExtension')?.value : '',
-            S_investorExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_investorExtension')?.value : '',
-            S_fundLifeYears:this.fundForm.get('subFundData.S_fundLifeYears')
+            boardExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_boardExtension')?.value : '',
+            investorExtension: this.fundForm.get('subFundData.S_fundStructure')?.value == 'open-ended' ?this.fundForm.get('subFundData.S_investorExtension')?.value : '',
+            fundLifeYears:this.fundForm.get('subFundData.S_fundLifeYears')
             ?.value,
-          S_fundStructure: this.fundForm.get('subFundData.S_fundStructure')
+          fundStructure: this.fundForm.get('subFundData.S_fundStructure')
             ?.value,
-            S_directors:directorsArraySF,
-          S_offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
-          S_fundSize: this.fundForm.get('subFundData.S_fundSize')?.value,
-          S_issuedShares: this.fundForm.get('subFundData.S_issuedShares')
+            directors:directorsArraySF,
+          offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
+          fundSize: this.fundForm.get('subFundData.S_fundSize')?.value,
+          issuedShares: this.fundForm.get('subFundData.S_issuedShares')
             ?.value,
-          S_ordinaryShare: this.fundForm.get('subFundData.S_ordinaryShare')
+          ordinaryShare: this.fundForm.get('subFundData.S_ordinaryShare')
             ?.value,
-          S_fundEndDate: this.fundForm.get('subFundData.S_fundEndDate')?.value,
-          S_fundStatus: this.fundForm.get('subFundData.S_fundStatus')?.value,
-          S_fundStatusReason: this.fundForm.get(
+          fundEndDate: this.fundForm.get('subFundData.S_fundEndDate')?.value,
+          fundStatus: this.fundForm.get('subFundData.S_fundStatus')?.value,
+          fundStatusReason: this.fundForm.get(
             'subFundData.S_fundStatusReason'
           )?.value,
-          S_reportingCurrency: this.fundForm.get(
+          reportingCurrency: this.fundForm.get(
             'subFundData.S_reportingCurrency'
           )?.value,
-          S_lockupPeriod: this.fundForm.get(
+          lockupPeriod: this.fundForm.get(
             'subFundData.subFundData.S_lockupPeriod'
           )?.value,
-          S_fundYearEnd: this.fundForm.get('subFundData.S_fundYearEnd')?.value,
-          S_productType: this.fundForm.get('subFundData.S_productType')?.value,
-          S_catchup: this.fundForm.get('subFundData.S_catchup')?.value,
-          S_reportingFrequency: this.fundForm.get(
+          fundYearEnd: this.fundForm.get('subFundData.S_fundYearEnd')?.value,
+          productType: this.fundForm.get('subFundData.S_productType')?.value,
+          catchup: this.fundForm.get('subFundData.S_catchup')?.value,
+          reportingFrequency: this.fundForm.get(
             'subFundData.S_reportingFrequency'
           )?.value,
-          S_legalCounsel: this.fundForm.get('subFundData.S_legalCounsel')
+          legalCounsel: this.fundForm.get('subFundData.S_legalCounsel')
             ?.value,
-          S_legalCounselRep: this.fundForm.get('subFundData.S_legalCounselRep')
+          legalCounselRep: this.fundForm.get('subFundData.S_legalCounselRep')
             ?.value,
-          S_auditor: this.fundForm.get('subFundData.S_auditor')?.value,
-          S_auditorRep: this.fundForm.get('subFundData.S_auditorRep')?.value,
-          S_trustee: this.fundForm.get('subFundData.S_trustee')?.value,
-          S_trusteeRep: this.fundForm.get('subFundData.S_trusteeRep')?.value,
-          S_subscribers: this.fundForm.get('subFundData.S_subscribers')?.value,
-          S_investmentComittee: this.fundForm.get(
+          auditor: this.fundForm.get('subFundData.S_auditor')?.value,
+          auditorRep: this.fundForm.get('subFundData.S_auditorRep')?.value,
+          trustee: this.fundForm.get('subFundData.S_trustee')?.value,
+          trusteeRep: this.fundForm.get('subFundData.S_trusteeRep')?.value,
+          subscribers: this.fundForm.get('subFundData.S_subscribers')?.value,
+          investmentComittee: this.fundForm.get(
             'subFundData.S_investmentComittee'
           )?.value,
-          S_authorizedSignatory: this.fundForm.get(
+          authorizedSignatory: this.fundForm.get(
             'subFundData.S_authorizedSignatory'
           )?.value,
-          S_fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
-          S_GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
-          S_preparer: this.fundForm.get('subFundData.S_preparer')?.value,
-          S_closingPeriod: closingPeriodArraySF,
-          S_reclassificationFreq: this.fundForm.get(
+          fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
+          GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
+          preparer: this.fundForm.get('subFundData.S_preparer')?.value,
+          closingPeriod: closingPeriodArraySF,
+          reclassificationFreq: this.fundForm.get(
             'subFundData.S_reclassificationFreq'
           )?.value,
-          S_approver: this.fundForm.get('subFundData.S_approver')?.value,
-          S_directorFee: this.fundForm.get('subFundData.S_directorFee')?.value,
-          S_managementFee: this.fundForm.get('subFundData.S_managementFee')
+          approver: this.fundForm.get('subFundData.S_approver')?.value,
+          directorFee: this.fundForm.get('subFundData.S_directorFee')?.value,
+          managementFee: this.fundForm.get('subFundData.S_managementFee')
             ?.value,
-          S_hurdleRate: this.fundForm.get('subFundData.S_hurdleRate')?.value,
-          S_CTC: this.fundForm.get('subFundData.S_CTC')?.value,
-          S_bank: this.fundForm.get('subFundData.S_bank')?.value,
-          S_bankAccount: this.fundForm.get('subFundData.S_bankAccount')?.value,
-          S_bankAccessId: this.fundForm.get('subFundData.S_bankAccessId')
+          hurdleRate: this.fundForm.get('subFundData.S_hurdleRate')?.value,
+          CTC: this.fundForm.get('subFundData.S_CTC')?.value,
+          bank: this.fundForm.get('subFundData.S_bank')?.value,
+          bankAccount: this.fundForm.get('subFundData.S_bankAccount')?.value,
+          bankAccessId: this.fundForm.get('subFundData.S_bankAccessId')
             ?.value,
-          S_bankAccessPassword: this.fundForm.get(
+          bankAccessPassword: this.fundForm.get(
             'subFundData.S_bankAccessPassword'
           )?.value,
-          S_redeem: this.fundForm.get('subFundData.S_redeem')?.value,
-          S_redeemReason: this.fundForm.get('subFundData.S_redeemReason')
+          redeem: this.fundForm.get('subFundData.S_redeem')?.value,
+          redeemReason: this.fundForm.get('subFundData.S_redeemReason')
             ?.value,
-          S_liquidate: this.fundForm.get('subFundData.S_liquidate')?.value,
-          S_liquidateReason: this.fundForm.get('subFundData.S_liquidateReason')
+          liquidate: this.fundForm.get('subFundData.S_liquidate')?.value,
+          liquidateReason: this.fundForm.get('subFundData.S_liquidateReason')
             ?.value,
         };
       }
@@ -1671,7 +1749,7 @@ export class CreateFundComponent implements OnInit {
         },
         (err: any) => {}
       );
-    // }
+    }
   }
 
   Cancel() {

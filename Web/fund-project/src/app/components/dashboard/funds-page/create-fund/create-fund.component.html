@@ -486,6 +486,30 @@
                             Multiple file upload allowed.
                           </div>
                         </div>
+
+                        
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label"
+                >Investment Committee<span style="color: rgb(253, 65, 65);">&nbsp;*</span></label
+              >
+              <div class="col-sm-10">
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Investment Committee Member(s)'"
+                  [settings]="dropdownSettings"
+                  [disabled]="isDropdownDisabled"
+                  [data]="directors"
+                  formControlName="S_investmentComittee"
+                >
+                </ng-multiselect-dropdown>
+                <br />
+                <app-create-directors
+                  [directorsList]="directors"
+                  [headingPerson]="'Investment Committee Member'"
+                  (sendDirectorsData)="refreshDirectors($event)"
+                ></app-create-directors>
+              </div>
+            </div>
+
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
@@ -2545,6 +2569,13 @@
       </p>
 
       <br />
+
+      <p *ngIf="showInvalidControls && showInvalidControls.length">
+        <ngb-alert type="danger" [dismissible]="noNeed" class="p-2">
+          <h5>Following required fields are invalid right now:</h5>
+          <p *ngFor="let control of showInvalidControls">{{control}}</p>
+        </ngb-alert>
+      </p>
 
       <div class="p-2" *ngIf="sectionNo < 4" ngbButton>
         <button
