@@ -25,7 +25,7 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'approval/:role',
+        path: 'fund-approval',
         component: ApprovalComponent,
         canActivate: [AuthGuard],
       },

@@ -7,13 +7,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./approval.component.scss']
 })
 export class ApprovalComponent implements OnInit {
-  role = '';
-  constructor(private route:ActivatedRoute) {
-    this.route.params.subscribe(params => {
-      this.role = params.role; 
-      console.log(this.role);
-      
-    });
+  role:any = '';
+  constructor() {
+    this.role = sessionStorage.getItem('role');
    }
 
   ngOnInit(): void {
