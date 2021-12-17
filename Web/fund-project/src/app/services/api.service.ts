@@ -13,6 +13,8 @@ export class APIService {
   private logoutApi = 'api/logout/';
   private fundCreateApi = 'api/createFund';
   private DirectorsApi = 'api/Directors/';
+  private deleteDirectorsApi = 'api/director-delete/';
+  private ApprovalApi = 'api/update-manager-approval/';
 
   constructor(private http: HttpClient) {}
 
@@ -145,17 +147,33 @@ export class APIService {
     });
   }
 
-  deleteDirector(id: number): Observable<any> {
+  updateFundStatus(formValues:any): Observable<any>{
+    return new Observable((observer) => {
+
+      this.http
+        .post(this.serverURL + this.ApprovalApi, formValues, this.setHeaders())
+        .subscribe(
+          (response: any) => {
+            console.log(response);
+            observer.next({
+              status: 'ok',
+            });
+            observer.complete();
+          },
+          (err) => {
+            observer.next({ status: 'error' });
+            observer.complete();
+          }
+        );
+    });
+  }
+
+  deleteDirector(id: string): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
-      formData.append('id', "4");
-      const options = {
-        ...this.setHeaders(),
-        "mimeType":"multipart/form-data",
-          data: formData,
-      };
+      formData.append('id', id);
       this.http
-        .delete(this.serverURL + this.DirectorsApi,options)
+        .post(this.serverURL + this.deleteDirectorsApi,formData,this.setHeaders())
         .subscribe(
           (response: any) => {
             console.log(response);

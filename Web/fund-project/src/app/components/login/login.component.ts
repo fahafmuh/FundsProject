@@ -63,15 +63,15 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.username == 'fundsadmin' &&
       this.loginForm.value.password == 'fundsadmin'
     ) {
-      // sessionStorage.setItem('role', 'admin');
-      // sessionStorage.setItem('username', 'fundsadmin');
-      // sessionStorage.setItem('password', 'fundsadmin');
-      // this.router.navigate(['dashboard/funds']);
+      sessionStorage.setItem('role', 'admin');
+      sessionStorage.setItem('username', 'fundsadmin');
+      sessionStorage.setItem('password', 'fundsadmin');
+      this.router.navigate(['dashboard/funds']);
 
-      sessionStorage.setItem('role', 'manager');
-      sessionStorage.setItem('username', 'fundsmanager');
-      sessionStorage.setItem('password', 'fundsmanager');
-      this.router.navigate(['dashboard/fund-approval']);
+      // sessionStorage.setItem('role', 'manager');
+      // sessionStorage.setItem('username', 'fundsmanager');
+      // sessionStorage.setItem('password', 'fundsmanager');
+      // this.router.navigate(['dashboard/fund-approval']);
     } else if (
       this.loginForm.value.username == 'fundssupervisor' &&
       this.loginForm.value.password == 'fundssupervisor'
