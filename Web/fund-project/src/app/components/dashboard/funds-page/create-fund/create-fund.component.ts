@@ -1092,17 +1092,22 @@ export class CreateFundComponent implements OnInit {
       liquidate: 'Liquidate',
       liquidateReason: 'Reason to liquidate',
     };
-    let fieldNames: any;
-    let finalObj: any = {};
-    for (let k in obj) {
-      if (fields.includes(k)) {
-        finalObj[k] = obj[k];
+    let fieldNames: any =[];
+    fields.map((res:any)=>{
+      if(this.keyInArray(obj,res)){
+        fieldNames.push(obj[res])
       }
-    }
-    if (fields.length == Object.keys(finalObj).length) {
-      fieldNames = Object.values(finalObj);
-    }
+    });
     return fieldNames;
+  }
+
+  keyInArray(obj:any,value:string){
+    let bool=false;
+    let arr = Object.keys(obj);
+    if(arr.includes(value)) bool = true;
+    else bool = false;
+
+    return bool;
   }
 
   Submit() {
@@ -1116,9 +1121,9 @@ export class CreateFundComponent implements OnInit {
      * fund life docs -> multiple
      * signature -> single
      */
+    
     this.showInvalidControls = this.findInvalidControls();
-    console.log(this.showInvalidControls);
-
+    
     let directorsArraySF = [];
     let directorsArray = [];
     let closingPeriodArraySF = [];
