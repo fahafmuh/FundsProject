@@ -36,7 +36,7 @@ export class FundListComponent implements OnInit {
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
     }).then((result) => {
-      if (!result.isConfirmed) {
+      if (result.isConfirmed) {
         this.apiService.deleteFundService(id.toString()).subscribe((res:any)=>{
           if(res.status == "ok"){
             this._snackBar.open('Fund deleted successfully!', '', {
