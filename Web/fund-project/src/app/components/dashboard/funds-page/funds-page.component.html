@@ -1,17 +1,100 @@
-
 <main role="main" class="container">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 mt-3">
+            <h2>Funds For Approval</h2>
+        </div>
+        <div class="col-md-12 col-lg-6">
 
-    <div class="col-md-12 ml-sm-auto col-lg-12">
-        <div *ngIf="!isCreated" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h3 class="h4" *ngIf="router.url.includes('list')">Funds List</h3>
-            <h3 class="h4" *ngIf="router.url.includes('create')">Add New Fund</h3>
-            <h3 class="h4" *ngIf="router.url.includes('edit')">Edit Fund</h3>
-            <div class="btn-toolbar mb-2 mb-md-0">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Fund Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Last Updated At</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mark</td>
+                        <td><span class="elip">Bootstrap provides the some basic styling for the tables including CSS classes for responsiveness</span></td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <td>Otto</td>
+                        <td>@twitter</td>
+                        <td>@twitter</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <td>Otto</td>
+                        <td>@twitter</td>
+                        <td>@twitter</td>
+                        <td>@twitter</td>
+                        <td>@twitter</td>
+                        <td>@mdo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 col-lg-6">
+            <div class="border p-2">
+                <h3 class="h3 fw-bold">Heading</h3>
+                <div class="d-flex justify-content-between">
+                    <div class="mb-3">
+                        <div class="btn-group btn-group-toggle" name="radioBasic">
+                            <label class="btn-success">
+                              <input type="radio" value="Approved"> Approve <span><mat-icon>check_circle</mat-icon></span>
+                            </label>
+                            <label class="btn-danger">
+                              <input type="radio" value="Rejected"> Reject <span><mat-icon>check_circle</mat-icon></span>
+                            </label>
+                        </div>
 
-                <div class="btn-group mr-3" (click)="addForm()" *ngIf="!router.url.includes('create')">
-                    <button type="button" class="btn btn-outline-primary active">Create</button>
-                    <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-                        <button class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" placeholder="Enter reason" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary">SUBMIT</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 ml-sm-auto col-lg-12">
+            <div *ngIf="!isCreated" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h3 class="h4" *ngIf="router.url.includes('list')">Funds List</h3>
+                <h3 class="h4" *ngIf="router.url.includes('create')">Add New Fund</h3>
+                <h3 class="h4" *ngIf="router.url.includes('edit')">Edit Fund</h3>
+                <div class="btn-toolbar mb-2 mb-md-0">
+
+                    <div class="btn-group mr-3" (click)="addForm()" *ngIf="!router.url.includes('create')">
+                        <button type="button" class="btn btn-outline-primary active">Create</button>
+                        <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                            <button class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>

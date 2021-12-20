@@ -1,5 +1,5 @@
 <header class="p-3 border-bottom bg-secondary text-white">
-    <div class="container">
+    <div class="container-fluid">
         <div class="d-flex flex-wrap align-items-center justify-content-between">
             <a style="cursor: pointer" (click)="Reload()" class="
           d-flex
@@ -14,8 +14,8 @@
                 <button class="btn btn-primary " id="profile" ngbDropdownToggle>
             <i class="fa fa-user-circle-o" aria-hidden="true"></i>
           </button>
-          
-          <div ngbDropdownMenu aria-labelledby="profile">
+
+                <div ngbDropdownMenu aria-labelledby="profile">
                     <button ngbDropdownItem disabled>Hi, {{displayName(role)}}</button>
                     <div class="dropdown-divider"></div>
                     <button ngbDropdownItem (click)="Logout()">Sign Out</button>
