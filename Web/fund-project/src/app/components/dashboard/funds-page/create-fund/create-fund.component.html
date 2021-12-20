@@ -817,16 +817,42 @@
                 </div>
               </div>
             </div>
+
+
             <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">Issued Shares</label>
+              <label for="staticEmail" class="col-sm-2 col-form-label">Fund Size</label>
               <div class="col-sm-10">
-                <input type="number" [disabled]="disable" class="form-control" readonly placeholder="Issued Shares"
-                  formControlName="issuedShares" />
+
+                <input type="number" min="0.00" step="0.01" class="form-control" formControlName="fundSize"
+                  placeholder="Fund Size" />
                 <div id="emailHelp" class="form-text">
                   We'll never share your email with anyone else.
                 </div>
               </div>
             </div>
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label">Issued Shares</label>
+              <div class="col-sm-10">
+
+                <input type="number" [disabled]="disable" class="form-control" readonly
+                  placeholder="Issued Shares" formControlName="issuedShares" />
+                <div id="emailHelp" class="form-text">
+                  We'll never share your email with anyone else.
+                </div>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="staticEmail" class="col-sm-2 col-form-label">Ordinary Share</label>
+              <div class="col-sm-10">
+
+                <input type="number" min="0" step="1" class="form-control" formControlName="ordinaryShare"
+                  placeholder="Ordinary Share" />
+                <div id="emailHelp" class="form-text">
+                  We'll never share your email with anyone else.
+                </div>
+              </div>
+            </div>
+
             <div class="mb-3 row">
               <label for="staticEmail" class="col-sm-2 col-form-label">Fund Status<span
                   style="color: rgb(253, 65, 65)">&nbsp;*</span></label>

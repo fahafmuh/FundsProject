@@ -17,6 +17,8 @@ export class ApprovalComponent implements OnInit {
     this.apiService.getFundsByRoles().subscribe((res:any)=>{
       if(res.status == "ok"){
         this.funds = res.funds;
+        console.log(this.funds);
+        
       }else{
         this.funds = [];
       }
