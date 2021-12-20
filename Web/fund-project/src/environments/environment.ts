@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  serverIP:'http://127.0.0.1:8000/'
+  serverIP:'http://3.132.119.57:8000/'
 };
 
 /*
