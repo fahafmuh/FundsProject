@@ -100,14 +100,17 @@ export class CreateDirectorsComponent implements OnInit {
 
     if (this.directorForm.valid) {
       this.apiService
-        .addDirector(this.directorForm.value.directors[0])
+        .addDirector(this.directorForm.value.directors)
         .subscribe(
           (result: any) => {
             if (result.status == 'ok') {
-              let obj = {
-                director_name: this.directorForm.value.directors[0].name,
-              };
-              this._directorsList.push(obj);
+              this.directorForm.value.directors.map((res:any)=>{
+                let obj = {
+                  director_name: res.name,
+                };
+                this._directorsList.push(obj);
+              })
+            
               this._snackBar.open(
                 this.headingPerson + ' added successfully!',
                 '',
@@ -120,6 +123,8 @@ export class CreateDirectorsComponent implements OnInit {
               this.refresh();
               this.sendDirectorsData.emit(this._directorsList);
               this.directorForm.reset();
+              (this.directorForm.get('directors') as FormArray).clear();
+              this.addDirector();
             } else {
               this.refresh();
             }

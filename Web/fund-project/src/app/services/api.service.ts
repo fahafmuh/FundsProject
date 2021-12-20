@@ -15,9 +15,9 @@ export class APIService {
   private DirectorsApi = 'api/Directors/';
   private deleteDirectorsApi = 'api/director-delete/';
   private deleteFundApi = 'api/fund-delete/';
-  private ApprovalApi = 'api/update-manager-approval/';
+  private ApprovalApi = 'api/fund-approval/';
   private getAllFundsApi = 'api/getallfunds/';
-  private getFundsByRolesApi = 'api/getallfunds/';
+  private getFundsByRolesApi = 'api/getfundsbyrole/';
 
   public selectedFund: BehaviorSubject<any> = new BehaviorSubject(undefined);
   constructor(private http: HttpClient) {}
@@ -174,7 +174,9 @@ export class APIService {
   addDirector(value: any): Observable<any> {
     return new Observable((observer) => {
       let formData = new FormData();
-      formData.append('name', value.name);
+      value.map((res:any)=>{
+        formData.append('name', res.name);
+      });
 
       this.http
         .post(this.serverURL + this.DirectorsApi, formData, this.setHeaders())

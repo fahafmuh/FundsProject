@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -24,7 +23,7 @@ import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 export class CreateFundComponent implements OnInit {
   fundForm: FormGroup;
   showInvalidControls: any = [];
-  sectionNo = 1;
+  sectionNo = 0;
   isDropdownDisabled = false;
   isSimpleOption = false;
   isSimpleOptionSF = false;
@@ -146,6 +145,7 @@ export class CreateFundComponent implements OnInit {
   globalDisableSF = false;
   isDropdownDisabledSF = false;
 
+  maxNumberOfTabs = 4;
   directors: any = [];
   selectedFund: any = undefined;
   constructor(
@@ -181,17 +181,48 @@ export class CreateFundComponent implements OnInit {
   MapValues(fundValue: any) {
     console.log(fundValue);
     this.fundForm.get('fundName')?.patchValue(fundValue.fund_name);
-    this.fundForm
-      .get('registrationNumber')
-      ?.patchValue(fundValue.registration_no);
-    this.fundForm
-      .get('fundDescription')
-      ?.patchValue(fundValue.fund_description);
-    this.fundForm.get('domicile')?.patchValue(fundValue.domicile);
-    this.fundForm
-      .get('fundManagerEntity')
-      ?.patchValue(fundValue.fund_manager_entity);
-    this.fundForm.get('domicile')?.patchValue(fundValue.domicile);
+    this.fundForm.get('registrationNumber')?.patchValue(fundValue.registration_no);
+    this.fundForm.get('fundDescription')?.patchValue(fundValue.fund_description);
+    this.fundForm.get('fundManagerEntity')?.patchValue(fundValue.fund_manager_entity);
+    this.fundForm.get('domicile')?.patchValue(fundValue.domicile.country_name);
+    this.fundForm.get('offerPrice')?.patchValue(fundValue.offer_price);
+    this.fundForm.get('issuedShares')?.patchValue(fundValue.issued_shares);
+    this.fundForm.get('ordinaryShares')?.patchValue(fundValue.ordinary_shares);
+    this.fundForm.get('fundSize')?.patchValue(fundValue.fund_size);
+    this.fundForm.get('lockupPeriod')?.patchValue(fundValue.lock_up_period);
+    this.fundForm.get('fundYearEnd')?.patchValue(fundValue.fund_year_end);
+    this.fundForm.get('fundEndDate')?.patchValue(fundValue.fund_end_date);
+    this.fundForm.get('catchUp')?.patchValue(fundValue.catch_up);
+    this.fundForm.get('legalCounsel')?.patchValue(fundValue.legal_counsel);
+    this.fundForm.get('legalCounselRep')?.patchValue(fundValue.legal_counsel_rep);
+    this.fundForm.get('auditor')?.patchValue(fundValue.Auditor);
+    this.fundForm.get('auditorRep')?.patchValue(fundValue.Auditor_rep);
+    this.fundForm.get('trustee')?.patchValue(fundValue.Custodian);
+    this.fundForm.get('trusteeRep')?.patchValue(fundValue.Custodian_rep);
+    this.fundForm.get('fundAdmin')?.patchValue(fundValue.FundAdministrator);
+    this.fundForm.get('GIIN')?.patchValue(fundValue.GIIN);
+    this.fundForm.get('directorFee')?.patchValue(fundValue.Director_Fees);
+    this.fundForm.get('managementFee')?.patchValue(fundValue.Management_Fee);
+    this.fundForm.get('hurdleRate')?.patchValue(fundValue.Hurdle_Rate);
+    this.fundForm.get('CTC')?.patchValue(fundValue.CTC);
+    this.fundForm.get('bankAccount')?.patchValue(fundValue.BankAccount);
+    this.fundForm.get('bankAccessId')?.patchValue(fundValue.BankAccessID);
+    this.fundForm.get('BankAccessPassword')?.patchValue(fundValue.BankAccessPassword);
+    this.fundForm.get('redeem')?.patchValue(fundValue.redeem);
+    this.fundForm.get('redeemReason')?.patchValue(fundValue.redeemReason);
+    this.fundForm.get('liquidate')?.patchValue(fundValue.liquidate);
+    this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
+    this.fundForm.get('fundStructure')?.patchValue(fundValue.fund_structure);
+    this.fundForm.get('fundStatus')?.patchValue(fundValue.fund_status);
+    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency.reporting_frequency_name);
+    this.fundForm.get('reclassificationFrequency')?.patchValue(fundValue.ReclassificationFrequency.reclassification_frequency_name);
+    this.fundForm.get('productType')?.patchValue(fundValue.product_type.product_type_name);
+    this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
+    this.fundForm.get('preparer')?.patchValue(fundValue.Preparer);
+    this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
+    if(fundValue.sub_fund != null){
+      this.fundForm.get('subFundData.fundName')?.patchValue(fundValue.sub_fund.fund_name);
+    }
   }
 
   refreshDirectors(event: any) {
@@ -810,6 +841,16 @@ export class CreateFundComponent implements OnInit {
         }
       }
     }
+  }
+
+  nextStep() {
+    if (this.sectionNo != this.maxNumberOfTabs) {
+      this.sectionNo = this.sectionNo + 1;
+    }
+  }
+
+  previousStep() {
+      this.sectionNo = this.sectionNo - 1;
   }
 
   TransformSubscribers(): FormGroup[] {
