@@ -63,10 +63,14 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.username == 'fundsadmin' &&
       this.loginForm.value.password == 'fundsadmin'
     ) {
-      sessionStorage.setItem('role', 'admin');
+      sessionStorage.setItem('role', 'manager');
       sessionStorage.setItem('username', 'fundsadmin');
       sessionStorage.setItem('password', 'fundsadmin');
-      this.router.navigate(['dashboard/funds']);
+      this.router.navigate(['dashboard/fund-approval']);
+      // sessionStorage.setItem('role', 'admin');
+      // sessionStorage.setItem('username', 'fundsadmin');
+      // sessionStorage.setItem('password', 'fundsadmin');
+      // this.router.navigate(['dashboard/funds']);
     } else if (
       this.loginForm.value.username == 'funds-supervisor' &&
       this.loginForm.value.password == 'Hello123!'
@@ -81,7 +85,7 @@ export class LoginComponent implements OnInit {
     ) {
       sessionStorage.setItem('role', 'manager');
       sessionStorage.setItem('username', 'fundsmanager');
-      sessionStorage.setItem('password', 'fundsmanager');
+      sessionStorage.setItem('password', 'Hello123!');
       this.router.navigate(['dashboard/fund-approval']);
     } else {
       return;

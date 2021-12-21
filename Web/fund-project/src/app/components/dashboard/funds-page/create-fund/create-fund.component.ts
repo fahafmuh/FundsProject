@@ -222,6 +222,44 @@ export class CreateFundComponent implements OnInit {
     this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
     if(fundValue.sub_fund != null){
       this.fundForm.get('subFundData.fundName')?.patchValue(fundValue.sub_fund.fund_name);
+      this.fundForm.get('subFundData.registrationNumber')?.patchValue(fundValue.sub_fund.registration_no);
+      this.fundForm.get('subFundData.fundDescription')?.patchValue(fundValue.sub_fund.fund_description);
+      this.fundForm.get('subFundData.fundManagerEntity')?.patchValue(fundValue.sub_fund.fund_manager_entity);
+      this.fundForm.get('subFundData.domicile')?.patchValue(fundValue.sub_fund.domicile.country_name);
+      this.fundForm.get('subFundData.offerPrice')?.patchValue(fundValue.sub_fund.offer_price);
+      this.fundForm.get('subFundData.issuedShares')?.patchValue(fundValue.sub_fund.issued_shares);
+      this.fundForm.get('subFundData.ordinaryShares')?.patchValue(fundValue.sub_fund.ordinary_shares);
+      this.fundForm.get('subFundData.fundSize')?.patchValue(fundValue.sub_fund.fund_size);
+      this.fundForm.get('subFundData.lockupPeriod')?.patchValue(fundValue.sub_fund.lock_up_period);
+      this.fundForm.get('subFundData.fundYearEnd')?.patchValue(fundValue.sub_fund.fund_year_end);
+      this.fundForm.get('subFundData.fundEndDate')?.patchValue(fundValue.sub_fund.fund_end_date);
+      this.fundForm.get('subFundData.catchUp')?.patchValue(fundValue.sub_fund.catch_up);
+      this.fundForm.get('subFundData.legalCounsel')?.patchValue(fundValue.sub_fund.legal_counsel);
+      this.fundForm.get('subFundData.legalCounselRep')?.patchValue(fundValue.sub_fund.legal_counsel_rep);
+      this.fundForm.get('subFundData.auditor')?.patchValue(fundValue.sub_fund.Auditor);
+      this.fundForm.get('subFundData.auditorRep')?.patchValue(fundValue.sub_fund.Auditor_rep);
+      this.fundForm.get('subFundData.trustee')?.patchValue(fundValue.sub_fund.Custodian);
+      this.fundForm.get('subFundData.trusteeRep')?.patchValue(fundValue.sub_fund.Custodian_rep);
+      this.fundForm.get('subFundData.fundAdmin')?.patchValue(fundValue.sub_fund.FundAdministrator);
+      this.fundForm.get('subFundData.GIIN')?.patchValue(fundValue.sub_fund.GIIN);
+      this.fundForm.get('subFundData.directorFee')?.patchValue(fundValue.sub_fund.Director_Fees);
+      this.fundForm.get('subFundData.managementFee')?.patchValue(fundValue.sub_fund.Management_Fee);
+      this.fundForm.get('subFundData.hurdleRate')?.patchValue(fundValue.sub_fund.Hurdle_Rate);
+      this.fundForm.get('subFundData.CTC')?.patchValue(fundValue.sub_fund.CTC);
+      this.fundForm.get('subFundData.bankAccount')?.patchValue(fundValue.sub_fund.BankAccount);
+      this.fundForm.get('subFundData.bankAccessId')?.patchValue(fundValue.sub_fund.BankAccessID);
+      this.fundForm.get('subFundData.BankAccessPassword')?.patchValue(fundValue.sub_fund.BankAccessPassword);
+      this.fundForm.get('subFundData.redeem')?.patchValue(fundValue.sub_fund.redeem);
+      this.fundForm.get('subFundData.redeemReason')?.patchValue(fundValue.sub_fund.redeemReason);
+      this.fundForm.get('subFundData.liquidate')?.patchValue(fundValue.sub_fund.liquidate);
+      this.fundForm.get('subFundData.liquidateReason')?.patchValue(fundValue.liquidateReason);
+      this.fundForm.get('subFundData.fundStructure')?.patchValue(fundValue.sub_fund.fund_structure);
+      this.fundForm.get('subFundData.fundStatus')?.patchValue(fundValue.sub_fund.fund_status);
+      this.fundForm.get('subFundData.reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency.reporting_frequency_name);
+      this.fundForm.get('subFundData.reclassificationFrequency')?.patchValue(fundValue.sub_fund.ReclassificationFrequency.reclassification_frequency_name);
+      this.fundForm.get('subFundData.productType')?.patchValue(fundValue.sub_fund.product_type.product_type_name);
+      this.fundForm.get('subFundData.reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
+      this.fundForm.get('subFundData.preparer')?.patchValue(fundValue.sub_fund.Preparer);
     }
   }
 
