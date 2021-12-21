@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -20,7 +20,7 @@ import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './create-fund.component.html',
   styleUrls: ['./create-fund.component.scss'],
 })
-export class CreateFundComponent implements OnInit {
+export class CreateFundComponent implements OnInit, OnDestroy {
   fundForm: FormGroup;
   showInvalidControls: any = [];
   sectionNo = 0;
@@ -1211,6 +1211,8 @@ export class CreateFundComponent implements OnInit {
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
     if (this.fundForm.valid) {
+      console.log(this.fundForm.value);
+      
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -1218,6 +1220,8 @@ export class CreateFundComponent implements OnInit {
       let boardResolutionArrsSF: any = [];
       // SUB FUND
       if (this.fundForm.get('subFund')?.value == 'Y') {
+        console.log("here");
+        
         if (this.fundForm.get('subFundData.S_boardResolutions')?.value) {
           for (let pair of this.fundForm
             .get('subFundData.S_boardResolutions')
@@ -1741,6 +1745,10 @@ export class CreateFundComponent implements OnInit {
               this.fundForm.get('subscribers')?.value
             )
           );
+          console.log( this.fundForm
+            .get('subscribers')
+            ?.value);
+          
       }
 
       let obj: any = {
@@ -1948,9 +1956,14 @@ export class CreateFundComponent implements OnInit {
     }).then((result) => {
       if (!result.isConfirmed) {
         this.router.navigate(['dashboard/funds/list']);
+        this.selectedFund = undefined;
       } else {
         return;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+      this.selectedFund = undefined;
   }
 }

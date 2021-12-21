@@ -3,7 +3,7 @@
     <div class="row">
         
         <div class="col-md-12 col-lg-12 mt-3">
-            <h2>Funds For Approval</h2>
+            <h2>Fund(s) For Approval</h2>
         </div>
         <div class="col-md-12 col-lg-6">
             <table class="table table-bordered table-hover">
@@ -11,62 +11,34 @@
                     <tr>
                         <th scope="col">Fund Name</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Registration number</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Last Updated At</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Reason</th>
+                        <th scope="col">SubFund</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mark</td>
-                        <td [title]=""><span class="elip">Bootstrap provides the some basic styling for the tables including CSS classes for responsiveness</span></td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
+                    <tr *ngFor="let fund of funds" (click)="FundSelect(fund.fund_name)" [ngClass]="selectedFund ? 'active' : ''">
+                        <td>{{fund.fund_name}}</td>
+                        <td [title]="fund.fund_description"><span class="elip">{{fund.fund_description}}</span></td>
+                        <td>{{fund.registration_no}}</td>
+                        <td>{{fund.created_at}}</td>
+                        <td>{{fund.updated_at}}</td>
+                        <td>{{fund.sub_fund ? 'Yes' : 'No'}}</td>
                     </tr>
-                    <tr>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <td>Otto</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <td>Otto</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@mdo</td>
-                    </tr>
+            
                 </tbody>
             </table>
         </div>
-        <div class="col-md-12 col-lg-6">
+        <div class="col-md-12 col-lg-6" *ngIf="selectedFund">
             <div class="border p-2">
-                <h3 class="h3 fw-bold">Heading</h3>
+                <h3 class="h3 fw-bold">Fund Name : {{selectedFund}}</h3>
                 <div class="d-flex justify-content-between">
                     <div class="mb-3">
-                        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="status">
-                            <label ngbButtonLabel class="btn-success">
-                              <input ngbButton type="radio" value="Approved"> Approve <span><mat-icon *ngIf="status == 'Approved'">check_circle</mat-icon></span>
-                            </label>
-                            <label ngbButtonLabel class="btn-danger">
-                              <input ngbButton type="radio" value="Rejected"> Reject <span><mat-icon *ngIf="status == 'Rejected'">check_circle</mat-icon></span>
-                            </label>
-                          </div>
-
+                          <mat-button-toggle-group name="status" [(ngModel)]="status">
+                            <mat-button-toggle value="Approved"><mat-icon *ngIf="status == 'Approved'">check_circle</mat-icon>&nbsp;Approve</mat-button-toggle>
+                            <mat-button-toggle value="Rejected"><mat-icon *ngIf="status == 'Rejected'">check_circle</mat-icon>&nbsp;Reject</mat-button-toggle>
+                          </mat-button-toggle-group>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -76,6 +48,7 @@
                 <div class="d-flex justify-content-end mt-4">
     
                     <div class="mb-3">
+                        <button type="button"  class="btn btn-danger" (click)="Cancel()">CANCEL</button> &nbsp;
                         <button type="button" [disabled]="DisableCondition()" class="btn btn-primary" (click)="Reaction()">SUBMIT</button>
                     </div>
     
