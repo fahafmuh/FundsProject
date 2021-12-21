@@ -257,7 +257,7 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('subFundData.S_liquidateReason')?.patchValue(fundValue.liquidateReason);
       this.fundForm.get('subFundData.S_fundStructure')?.patchValue(fundValue.sub_fund.fund_structure);
       this.fundForm.get('subFundData.S_fundStatus')?.patchValue(fundValue.sub_fund.fund_status);
-      this.fundForm.get('subFundData.S_reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency.reporting_frequency_name);
+      this.fundForm.get('subFundData.S_reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency);
       this.fundForm.get('subFundData.S_reclassificationFrequency')?.patchValue(fundValue.sub_fund.ReclassificationFrequency.reclassification_frequency_name);
       this.fundForm.get('subFundData.S_productType')?.patchValue(fundValue.sub_fund.product_type.product_type_name);
       this.fundForm.get('subFundData.S_reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
@@ -1206,7 +1206,6 @@ export class CreateFundComponent implements OnInit {
      */
     
     this.showInvalidControls = this.findInvalidControls();
-    
     let directorsArraySF = [];
     let directorsArray = [];
     let closingPeriodArraySF = [];
