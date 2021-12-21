@@ -184,6 +184,7 @@ export class CreateFundComponent implements OnInit {
     this.fundForm.get('registrationNumber')?.patchValue(fundValue.registration_no);
     this.fundForm.get('fundDescription')?.patchValue(fundValue.fund_description);
     this.fundForm.get('fundManagerEntity')?.patchValue(fundValue.fund_manager_entity);
+    this.fundForm.get('fundManagerRep')?.patchValue([fundValue.fund_manager_rep['director_name']]);
     this.fundForm.get('domicile')?.patchValue(fundValue.domicile.country_name);
     this.fundForm.get('offerPrice')?.patchValue(fundValue.offer_price);
     this.fundForm.get('issuedShares')?.patchValue(fundValue.issued_shares);
@@ -214,7 +215,7 @@ export class CreateFundComponent implements OnInit {
     this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
     this.fundForm.get('fundStructure')?.patchValue(fundValue.fund_structure);
     this.fundForm.get('fundStatus')?.patchValue(fundValue.fund_status);
-    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency.reporting_frequency_name);
+    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency);
     this.fundForm.get('reclassificationFrequency')?.patchValue(fundValue.ReclassificationFrequency.reclassification_frequency_name);
     this.fundForm.get('productType')?.patchValue(fundValue.product_type.product_type_name);
     this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
@@ -261,6 +262,8 @@ export class CreateFundComponent implements OnInit {
       this.fundForm.get('subFundData.reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
       this.fundForm.get('subFundData.preparer')?.patchValue(fundValue.sub_fund.Preparer);
     }
+    console.log(this.fundForm.value);
+    
   }
 
   refreshDirectors(event: any) {

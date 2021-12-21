@@ -712,7 +712,7 @@
                     <div class="mb-3 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Fund Manager Representative</label>
                         <div class="col-sm-10">
-                            <ng-multiselect-dropdown [placeholder]="'Select Fund Manager Representative(s)'" [settings]="dropdownSettings" [data]="directors" [disabled]="isDropdownDisabled" formControlName="fundManagerRep">
+                            <ng-multiselect-dropdown [placeholder]="'Select Fund Manager Representative(s)'" [settings]="dropdownSingleSettings" [data]="directors" [disabled]="isDropdownDisabled" formControlName="fundManagerRep">
                             </ng-multiselect-dropdown>
                             <br />
                             <app-create-directors [directorsList]="directors" [headingPerson]="'Fund Manager Representative'" (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
