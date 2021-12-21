@@ -165,6 +165,9 @@ class Fund(models.Model):
     redeemReason=models.TextField(blank=True)
     liquidate=models.CharField(max_length=256,blank=True)
     liquidateReason=models.TextField(blank=True)
+    created_at=models.DateField(auto_now_add=True)
+    updated_at=models.DateField(auto_now=True)
+    active=models.BooleanField(default=True)
 
     
 class FundLifeClose(models.Model):

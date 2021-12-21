@@ -1,4 +1,4 @@
-from django.db.models import manager
+from django.http.response import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
 from core.models import Director
 from .serializers import AuthTokenSerializer, DirectorSerializer,FundSerializer
@@ -317,8 +317,23 @@ def approval_view(request):
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication,])
 def getallfunds_view(request):
-    all_funds=Fund.objects.all()
+    all_funds=Fund.objects.filter(active=True)
     return Response({'data':FundSerializer(all_funds,many=True).data})
+
+@api_view(["POST",])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,])
+def delete_fund(request):
+    try:
+        obj=Fund.objects.get(pk=request.POST['id'],active=True)
+    except:
+        obj=None
+    
+    if obj==None:
+        raise Http404()
+    obj.active=False
+    obj.save()
+    return Response("Fund deleted Successfully")
 
 
 @api_view(["GET",])
@@ -330,8 +345,6 @@ def getfundsbyrole_view(request):
     elif request.user.user_type==3:
         fundsdata=Fund.objects.filter(supervisor_approval=1,manager_approval=1)
     return Response({'data':FundSerializer(fundsdata,many=True).data})
-
-
 
 
 
