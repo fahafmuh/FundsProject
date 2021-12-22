@@ -1208,83 +1208,102 @@
             </div>
           </div>
 
-          <div class="mb-3 row g-3 align-items-center" formArrayName="subscribers">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)<span
-                style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
-            <ng-template ngFor let-value [ngForOf]="GetControls('subscribers')" let-index="index">
-              <ng-container [formGroupName]="index">
-                <div class="col-auto">
-                  <label class="col-form-label">Name</label>
-                </div>
-                <div class="col-auto" style="width: 29%">
-                  <ng-multiselect-dropdown [placeholder]="'Select Subscriber(s)'" [settings]="dropdownSettings"
-                    [disabled]="isDropdownDisabled" [data]="directors" formControlName="name">
-                  </ng-multiselect-dropdown>
-                </div>
-                <div class="col-auto">
-                  <label class="col-form-label">Commitment</label>
-                </div>
-                <div class="col-auto">
-                  <input type="number" min="0.00" step="0.01" style="width: 266px" class="form-control"
-                    formControlName="commitment" placeholder="Subscriber commitment" />
-                </div>
-                <div class="col-auto">
-                  <button (click)="addSubscriber()" *ngIf="checkAddAvailibility('subscribers', index)" type="button"
-                    class="btn btn-sm btn-primary d-inline mr-1">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                  </button>
-                  <button type="button" *ngIf="checkDeleteAvailibility('subscribers')"
-                    class="btn btn-sm btn-secondary d-inline" (click)="removeSubscriber(index)">
-                    <i class="fa fa-minus" aria-hidden="true"></i>
-                  </button>
-                </div>
-              </ng-container>
-            </ng-template>
-
-            <br />
-            <app-create-directors [directorsList]="directors" [headingPerson]="'Subscriber'"
-              (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-          </div>
-
-          <div class="mb-3 row" formArrayName="directorsList">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Directors<span
-                style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
-            <ng-template ngFor let-value [ngForOf]="GetControls('directorsList')" let-index="index">
-              <ng-container [formGroupName]="index">
-                <div class="col-auto">
-                  <label class="col-form-label">Name</label>
-                </div>
-                <div class="col-auto" style="width: 29%">
-                  <ng-multiselect-dropdown [placeholder]="'Select Director'" [settings]="dropdownSingleSettings"
+          <div class="mb-3 row" formArrayName="subscribers">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)</label>
+            <div class="col-sm-8">
+              <div class="d-flex" *ngFor="let value of GetControls('subscribers');let index = index">
+                <div class="p-2 flex-grow-1 row" [formGroupName]="index">
+                  <div class="col-auto">
+                    <label class="col-form-label">Name</label>
+                  </div>
+                  <div class="col-auto" style="width: 37%">
+                    <ng-multiselect-dropdown [placeholder]="'Select Subscriber'" [settings]="dropdownSingleSettings"
                     [data]="directors" [disabled]="isDropdownDisabled" formControlName="name">
-                  </ng-multiselect-dropdown>
+                  </ng-multiselect-dropdown>                  </div>
+                  <div class="col-auto">
+                    <label class="col-form-label">Commitment</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="number" min="0.00" step="0.01" class="form-control" formControlName="commitment"
+                      placeholder="Subscriber commitment" />
+                  </div>
+                  <div class="col-auto" *ngIf="checkDeleteAvailibility('subscribers')"  (click)="removeSubscriber(index)">
+                    <button type="button" class="btn btn-secondary" > <i class="fa fa-minus"
+                      aria-hidden="true"></i></button>
+                  </div>
+
+
                 </div>
-
-                <div class="col-auto">
-                  <input class="form-control" type="file" accept=".pdf,.doc"
-                    (change)="handleFileInputDirector(index, $event)" id="formFileMultiple" />
-
-                  <div id="emailHelp" class="form-text">
-                    Single file upload only.
+              </div>
+            </div>
+            <div class="col-sm-2" (click)="addSubscriber()">
+              <div class="d-flex">
+                <div class="p-2 flex-shrink-1 w-25 row">
+                  <div class="col-auto">
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-primary mr-2">Add </button>
+                  
+                    </div>
                   </div>
                 </div>
-                <div class="col-auto">
-                  <button (click)="addDirector()" *ngIf="checkAddAvailibility('directorsList', index)" type="button"
-                    class="btn btn-sm btn-primary d-inline mr-1">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                  </button>
-                  <button type="button" *ngIf="checkDeleteAvailibility('directorsList')"
-                    class="btn btn-sm btn-secondary d-inline" (click)="removeDirector(index)">
-                    <i class="fa fa-minus" aria-hidden="true"></i>
-                  </button>
-                </div>
-              </ng-container>
-            </ng-template>
-
-            <br />
-            <app-create-directors [directorsList]="directors" [headingPerson]="'Director'"
-              (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+              </div>
+            </div>
           </div>
+          <app-create-directors [directorsList]="directors" [headingPerson]="'Subscriber'"
+          (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+
+          <br>
+
+          <div class="mb-3 row"formArrayName="directorsList">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Director(s)</label>
+            <div class="col-sm-8">
+              <div class="d-flex" *ngFor="let value of GetControls('directorsList');let index = index">
+                <div class="p-2 flex-grow-1 row" [formGroupName]="index">
+                  <div class="col-auto">
+                    <label class="col-form-label">Name</label>
+                  </div>
+                  <div class="col-auto" style="width: 24%">
+                    <ng-multiselect-dropdown [placeholder]="'Select Director'" [settings]="dropdownSingleSettings"
+                    [data]="directors" [disabled]="isDropdownDisabled" formControlName="name">
+                  </ng-multiselect-dropdown>                 
+                 </div>
+                  <div class="col-auto">
+                    <label class="col-form-label">Signature</label>
+                  </div>
+                  <div class="col-auto">
+                    <input class="form-control" type="file" accept=".pdf,.doc"
+                      (change)="handleFileInputDirector(index, $event)" id="formFileMultiple" />
+  
+                    <div id="emailHelp" class="form-text">
+                      Single file upload only.
+                    </div>
+                  </div>
+                  <div class="col-auto" *ngIf="checkDeleteAvailibility('directorsList')" (click)="removeDirector(index)">
+                    <button type="button" class="btn btn-secondary" > <i class="fa fa-minus"
+                      aria-hidden="true"></i></button>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2" (click)="addDirector()">
+              <div class="d-flex">
+                <div class="p-2 flex-shrink-1 w-25 row">
+                  <div class="col-auto">
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-primary mr-2">Add </button>
+                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <app-create-directors [directorsList]="directors" [headingPerson]="'Director'"
+          (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+
         </mat-tab>
         <mat-tab label="Internal details">
           <div class="mb-3 row mt-4">
@@ -1350,7 +1369,7 @@
             </div>
           </div>
 
-          <div class="mb-3 row" formArrayName="closingPeriods">
+          <!-- <div class="mb-3 row" formArrayName="closingPeriods">
             <label for="staticEmail" class="col-sm-2 col-form-label">Closing Period<span
                 style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <ng-template ngFor let-value [ngForOf]="GetControls('closingPeriods')" let-index="index">
@@ -1377,6 +1396,47 @@
                 </div>
               </ng-container>
             </ng-template>
+          </div> -->
+
+          <div class="mb-3 row"formArrayName="closingPeriods">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Closing Period(s)<span
+              style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
+            <div class="col-sm-8">
+              <div class="d-flex" *ngFor="let value of GetControls('closingPeriods');let index = index">
+                <div class="p-2 flex-grow-1 row" [formGroupName]="index">
+                  <div class="col-auto">
+                    <label class="col-form-label">Period {{ index + 1 }} :</label>
+                  </div>
+                  <div class="col-auto" style="width: 70%">
+                    <input class="form-control" placeholder="YYYY-MM-DD" name="dp" [max]="today" formControlName="date"
+                      ngbDatepicker #d="ngbDatepicker" />
+                      
+                  </div>
+                  <div class="col-auto">
+                    <button class="btn btn-outline-secondary calendar fa fa-calendar" (click)="d.toggle()"
+                      type="button"></button>
+                  </div>
+                  <div class="col-auto" *ngIf="checkDeleteAvailibility('closingPeriods')" (click)="removeClosingPeriod(index)">
+                    <button type="button" class="btn btn-secondary" > <i class="fa fa-minus"
+                      aria-hidden="true"></i></button>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2" (click)="addClosingPeriod()">
+              <div class="d-flex">
+                <div class="p-2 flex-shrink-1 w-25 row">
+                  <div class="col-auto">
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-primary mr-2">Add </button>
+                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3 row">
@@ -1478,16 +1538,6 @@
                 Percentage format (%) up to 4 decimal places.
               </div>
             </div>
-          </div>
-          <div class="mb-3">
-            <label for="staticEmail" class="form-label">Bank
-            </label>
-            <select class="form-select" formControlName="S_bank">
-              <option selected disabled>Select Bank</option>
-              <option *ngFor="let data of bankData" [value]="data.value">
-                {{ data.viewValue }}
-              </option>
-            </select>
           </div>
 
           <div class="mb-3 row mt-4">

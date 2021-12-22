@@ -248,6 +248,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_managementFee')?.patchValue(fundValue.sub_fund.Management_Fee);
       this.fundForm.get('subFundData.S_hurdleRate')?.patchValue(fundValue.sub_fund.Hurdle_Rate);
       this.fundForm.get('subFundData.S_CTC')?.patchValue(fundValue.sub_fund.CTC);
+      this.fundForm.get('subFundData.S_bank')?.patchValue(fundValue.sub_fund.Bank);
       this.fundForm.get('subFundData.S_bankAccount')?.patchValue(fundValue.sub_fund.BankAccount);
       this.fundForm.get('subFundData.S_bankAccessId')?.patchValue(fundValue.sub_fund.BankAccessID);
       this.fundForm.get('subFundData.S_BankAccessPassword')?.patchValue(fundValue.sub_fund.BankAccessPassword);
