@@ -131,7 +131,7 @@ def create_fund_object(data,request,sub_fund=False):
         obj.save()
         if 'fundLifedocuments' or 'S_fundLifedocuments' in request.FILES:
             for file in request.FILES.getlist('fundLifedocuments' if not sub_fund else 'S_fundLifedocuments' ):
-                obj=FundLifeOpenDocument(fundlifeopen=fund_obj,document=file)
+                obj=FundLifeOpenDocument(fundlifeopen=obj,document=file)
                 obj.save()
     else:
         obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLife']))
