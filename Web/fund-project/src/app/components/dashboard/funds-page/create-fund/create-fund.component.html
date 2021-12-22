@@ -131,7 +131,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Fund Type</label>
                         <select class="form-select" aria-label="Default select example" formControlName="S_fundType">
-                          <option disabled>Select Fund Type</option>
+                          <option value="" disabled>Select Fund Type</option>
                           <option value="regulated">Regulated</option>
                           <option value="un-regulated">Un regulated</option>
                         </select>
@@ -168,7 +168,7 @@
                         <label for="staticEmail" class="form-label">Fund Structure</label>
                         <select class="form-select" formControlName="S_fundStructure"
                           (change)="StructureChangeSubFund($event)" aria-label="Default select example">
-                          <option disabled>Select Fund Structure</option>
+                          <option value="" disabled>Select Fund Structure</option>
                           <option value="open-ended">Open-End</option>
                           <option value="close-ended">Close-End</option>
                         </select>
@@ -214,7 +214,7 @@
                         <label for="staticEmail" class="form-label">Fund Status</label>
                         <select class="form-select" aria-label="Default select example"
                           (change)="StatusChangeSubFund($event)" formControlName="S_fundStatus">
-                          <option disabled>Select Fund Status</option>
+                          <option value="" disabled>Select Fund Status</option>
                           <option *ngFor="let data of fundStatusData" [value]="data.value">
                             {{ data.viewValue }}
                           </option>
@@ -248,7 +248,7 @@
                         <label for="staticEmail" class="form-label">Reporting Currency</label>
                         <select class="form-select" aria-label="Default select example"
                           formControlName="S_reportingCurrency">
-                          <option disabled>Select Reporting Currency</option>
+                          <option value="" disabled>Select Reporting Currency</option>
                           <option *ngFor="let data of currencyData" [value]="data.value">
                             {{ data.viewValue }}
                           </option>
@@ -269,7 +269,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Fund Year End</label>
                         <select class="form-select" aria-label="Default select example" formControlName="S_fundYearEnd">
-                          <option disabled>Select Fund Year-end</option>
+                          <option value="" disabled>Select Fund Year-end</option>
                           <option *ngFor="let data of monthsData" [value]="data.value">
                             {{ data.viewValue }}
                           </option>
@@ -281,7 +281,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Product Type</label>
                         <select class="form-select" aria-label="Default select example" formControlName="S_productType">
-                          <option disabled>Select Product Type</option>
+                          <option value="" disabled>Select Product Type</option>
                           <option *ngFor="let data of productTypeData" [value]="data.value">
                             {{ data.viewValue }}
                           </option>
@@ -335,7 +335,7 @@
                         <label for="staticEmail" class="form-label">Reporting Frequency</label>
                         <select class="form-select" aria-label="Default select example"
                           formControlName="S_reportingFrequency">
-                          <option disabled>Select Reporting Frequency</option>
+                          <option value="" disabled>Select Reporting Frequency</option>
                           <option *ngFor="let data of reportingFrequencyData" [value]="data.value">
                             {{ data.viewValue }}
                           </option>
@@ -527,7 +527,7 @@
                         <app-create-directors [directorsList]="directors" [headingPerson]="'Authorized Signatory'"
                           (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
                         <div id="emailHelp" class="form-text">
-                          Either is from the director’s list or proxy appointment.
+                          Either is from the director's list or proxy appointment.
                         </div>
                       </div>
                       <div class="mb-3">
@@ -555,13 +555,9 @@
                       </div>
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Fund Administrator</label>
-                        <ng-multiselect-dropdown [placeholder]="'Select Fund Administrator'"
-                          [settings]="dropdownSingleSettings" [data]="directors" [disabled]="isDropdownDisabledSF"
-                          formControlName="S_fundAdmin">
-                        </ng-multiselect-dropdown>
+                        <input type="text" class="form-control" formControlName="S_fundAdmin" placeholder="Enter Fund Admin" />
+
                         <br />
-                        <app-create-directors [directorsList]="directors" [headingPerson]="'Fund Admin'"
-                          (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
                         <div id="emailHelp" class="form-text">
                           Appointed by the Fund Manager.
                         </div>
@@ -744,7 +740,7 @@
                         <label for="staticEmail" class="form-label">Reclassification Frequency</label>
                         <select class="form-select" aria-label="Default select example"
                           formControlName="S_reclassificationFreq">
-                          <option disabled>
+                          <option value="" disabled>
                             Select Reclassification Frequency
                           </option>
                           <option *ngFor="let data of reportingFrequencyData" [value]="data.value">
@@ -828,7 +824,7 @@
             <div class="col-sm-10">
 
               <select class="form-select" aria-label="Default select example" formControlName="fundType">
-                <option disabled>Select Fund Type</option>
+                <option value="" disabled>Select Fund Type</option>
                 <option value="regulated">Regulated</option>
                 <option value="un-regulated">Un regulated</option>
               </select>
@@ -888,7 +884,7 @@
             <div class="col-sm-10">
               <select class="form-select" aria-label="Default select example" formControlName="fundStructure"
                 (change)="StructureChange($event)">
-                <option disabled>Select Fund Structure</option>
+                <option value="" disabled>Select Fund Structure</option>
                 <option value="open-ended">Open-End</option>
                 <option value="close-ended">Close-End</option>
               </select>
@@ -950,7 +946,7 @@
             <div class="col-sm-10">
               <select (change)="StatusChange($event)" class="form-select" aria-label="Default select example"
                 formControlName="fundStatus">
-                <option disabled>Select Fund Status</option>
+                <option value="" disabled>Select Fund Status</option>
                 <option *ngFor="let data of fundStatusData" [value]="data.value">
                   {{ data.viewValue }}
                 </option>
@@ -986,7 +982,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">Reporting Currency</label>
             <div class="col-sm-10">
               <select class="form-select" aria-label="Default select example" formControlName="reportingCurrency">
-                <option disabled>Select Reporting Currency</option>
+                <option value="" disabled>Select Reporting Currency</option>
                 <option *ngFor="let data of currencyData" [value]="data.value">
                   {{ data.viewValue }}
                 </option>
@@ -1001,7 +997,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">Fund year end</label>
             <div class="col-sm-10">
               <select class="form-select" aria-label="Default select example" formControlName="fundYearEnd">
-                <option disabled>Select Fund Year-end</option>
+                <option value="" disabled>Select Fund Year-end</option>
                 <option *ngFor="let data of monthsData" [value]="data.value">
                   {{ data.viewValue }}
                 </option>
@@ -1068,7 +1064,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">Reporting Frequency</label>
             <div class="col-sm-10">
               <select class="form-select" aria-label="Default select example" formControlName="reportingFrequency">
-                <option disabled>Select Reporting Frequency</option>
+                <option value="" disabled>Select Reporting Frequency</option>
                 <option *ngFor="let data of reportingFrequencyData" [value]="data.value">
                   {{ data.viewValue }}
                 </option>
@@ -1310,7 +1306,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">
               Authorized Signatory<span style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-10">
-              <ng-multiselect-dropdown [placeholder]="'Select Authorized Signatory'" [settings]="dropdownSettings"
+              <ng-multiselect-dropdown [placeholder]="'Select Authorized Signatory'" [settings]="dropdownSingleSettings"
                 [data]="directors" [disabled]="isDropdownDisabled" formControlName="authorizedSignatory">
               </ng-multiselect-dropdown>
               <br />
@@ -1354,14 +1350,11 @@
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">Fund Administrator</label>
+              <label for="staticEmail" class="col-sm-2 col-form-label">Fund Administrator<span
+                style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
               <div class="col-sm-10">
-                <ng-multiselect-dropdown [placeholder]="'Select Fund Administrator'" [settings]="dropdownSingleSettings"
-                  [data]="directors" [disabled]="isDropdownDisabled" formControlName="fundAdmin">
-                </ng-multiselect-dropdown>
-                <br />
-                <app-create-directors [directorsList]="directors" [headingPerson]="'Fund Admin'"
-                  (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+                <input type="text" class="form-control" formControlName="fundAdmin" placeholder="Enter Fund Admin" />
+
                 <div id="emailHelp" class="form-text">
                   Appointed by the Fund Manager.
                 </div>
@@ -1443,7 +1436,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">Reclassification Frequency</label>
             <div class="col-sm-10">
               <select class="form-select" aria-label="Default select example" formControlName="reclassificationFreq">
-                <option disabled>Select Reclassification Frequency</option>
+                <option value="" disabled>Select Reclassification Frequency</option>
                 <option *ngFor="let data of reportingFrequencyData" [value]="data.value">
                   {{ data.viewValue }}
                 </option>
