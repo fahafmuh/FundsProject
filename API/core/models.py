@@ -189,7 +189,7 @@ class FundLifeOpenDocument(models.Model):
     document=models.FileField(upload_to='fundlife_opendocument/',null=True,blank=True)
 
 class closingperiod(models.Model):
-    fund=models.ForeignKey(Fund,on_delete=models.CASCADE)
+    fund=models.ForeignKey(Fund,on_delete=models.CASCADE,related_name="closingDates")
     closing_Date=models.DateField(blank=False,null=False)
 
 class Subscriber(models.Model):
@@ -198,5 +198,5 @@ class Subscriber(models.Model):
     subscriber_commitment=models.DecimalField(max_digits=6,decimal_places=2,default=0.00)
 
 class BoardResolution(models.Model):
-    fund=models.ForeignKey(Fund,on_delete=models.CASCADE)
+    fund=models.ForeignKey(Fund,on_delete=models.CASCADE,related_name="boardResolution")
     board_resolution=models.FileField(upload_to='board_resolution/',null=True,blank=True)
