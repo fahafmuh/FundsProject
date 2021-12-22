@@ -1659,25 +1659,25 @@
   </div>
   <div class="col-md-12">
     <div class="d-flex align-item-center justify-content-end">
-      <div class="p-2" *ngIf="sectionNo > 0">
-        <button type="button" class="btn btn-primary" (click)="previousStep()">
+      <div class="p-2" *ngIf="sectionNo > 0" (click)="previousStep()">
+        <button type="button" class="btn btn-primary">
           PREVIOUS
         </button>
       </div>
 
-      <div class="p-2" *ngIf="sectionNo < 4" ngbButton>
-        <button type="button" class="btn btn-primary" (click)="nextStep()">
+      <div class="p-2" *ngIf="sectionNo < 4" ngbButton (click)="nextStep()">
+        <button type="button" class="btn btn-primary">
           NEXT
         </button>
       </div>
-      <div class="p-2">
-        <button type="button" class="btn btn-danger" (click)="Cancel()" ngbButton>
+      <div class="p-2" (click)="Cancel()">
+        <button type="button" class="btn btn-danger"  ngbButton>
           CANCEL
         </button>
       </div>
       <!-- [disabled]="(!fundForm.valid || globalDisable && globalDisableSF)" -->
-      <div class="p-2">
-        <button type="button" class="btn btn-success" (click)="Submit()" ngbButton>
+      <div class="p-2" (click)="Submit()">
+        <button type="button" class="btn btn-success"  ngbButton>
           SUBMIT
         </button>
       </div>
