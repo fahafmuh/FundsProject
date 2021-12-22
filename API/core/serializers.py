@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Director,Fund, User,FundLifeClose,FundLifeOpen, FundLifeOpenDocument,closingperiod,BoardResolution
+from core.models import Director,Fund, User,FundLifeClose,FundLifeOpen, FundLifeOpenDocument,closingperiod,BoardResolution,Subscriber
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -62,6 +62,11 @@ class BoardResolutionSerializer(serializers.ModelSerializer):
         model=BoardResolution
         fields=('board_resolution',)
 
+class SubscriberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Subscriber
+        fields=('subscriber_name','subscriber_commitment')
+
 class BaseFundSerializer(serializers.ModelSerializer):
     supervisor_approval=serializers.CharField(source='get_supervisor_approval_display')
     manager_approval=serializers.CharField(source='get_manager_approval_display')
@@ -74,6 +79,7 @@ class BaseFundSerializer(serializers.ModelSerializer):
     fundlifeopen=FundLifeOpenSerializer()
     closingDates=ClosingPeriodSerializer(many=True)
     boardResolution=BoardResolutionSerializer(many=True)
+    subscribers=SubscriberSerializer(many=True)
 
     class Meta:
         model=Fund

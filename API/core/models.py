@@ -193,7 +193,7 @@ class closingperiod(models.Model):
     closing_Date=models.DateField(blank=False,null=False)
 
 class Subscriber(models.Model):
-    fund=models.ForeignKey(Fund,on_delete=models.CASCADE)
+    fund=models.ForeignKey(Fund,on_delete=models.CASCADE,related_name="subscribers")
     subscriber_name=models.CharField(max_length=256)
     subscriber_commitment=models.DecimalField(max_digits=6,decimal_places=2,default=0.00)
 
