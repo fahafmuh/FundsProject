@@ -213,7 +213,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('fundSize')?.patchValue(fundValue.fund_size);
     this.fundForm.get('lockupPeriod')?.patchValue(fundValue.lock_up_period);
     this.fundForm.get('fundYearEnd')?.patchValue(fundValue.fund_year_end);
-    this.fundForm.get('fundEndDate')?.patchValue(this.MapDate(fundValue.fund_end_date));
+    this.fundForm.get('fundEndDate')?.patchValue(fundValue.fund_end_date ? this.MapDate(fundValue.fund_end_date) : '');
     this.fundForm.get('catchUp')?.patchValue(fundValue.catch_up);
     this.fundForm.get('legalCounsel')?.patchValue(fundValue.legal_counsel);
     this.fundForm.get('legalCounselRep')?.patchValue(fundValue.legal_counsel_rep);
@@ -232,7 +232,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('bankAccount')?.patchValue(fundValue.BankAccount);
     this.fundForm.get('bankAccessId')?.patchValue(fundValue.BankAccessID);
     this.fundForm.get('bankAccessPassword')?.patchValue(fundValue.BankAccessPassword);
-    this.fundForm.get('redeem')?.patchValue(fundValue.redeem);
+    this.fundForm.get('redeem')?.patchValue(fundValue.redeem ? this.MapDate(fundValue.redeem) : '');
     this.fundForm.get('redeemReason')?.patchValue(fundValue.redeemReason);
     this.fundForm.get('liquidate')?.patchValue(fundValue.liquidate);
     this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
@@ -243,6 +243,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('productType')?.patchValue(fundValue.product_type.product_type_name);
     this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
     this.fundForm.get('preparer')?.patchValue(fundValue.Preparer);
+    this.fundForm.get('created_at')?.patchValue(fundValue.created_at);
+    this.fundForm.get('updated_at')?.patchValue(fundValue.updated_at);
     this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
     if(fundValue.sub_fund != null){
       this.fundForm.get('subFundData.S_fundName')?.patchValue(fundValue.sub_fund.fund_name);
@@ -260,7 +262,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_fundSize')?.patchValue(fundValue.sub_fund.fund_size);
       this.fundForm.get('subFundData.S_lockupPeriod')?.patchValue(fundValue.sub_fund.lock_up_period);
       this.fundForm.get('subFundData.S_fundYearEnd')?.patchValue(fundValue.sub_fund.fund_year_end);
-      this.fundForm.get('subFundData.S_fundEndDate')?.patchValue(fundValue.sub_fund.fund_end_date);
+      this.fundForm.get('subFundData.S_fundEndDate')?.patchValue(fundValue.sub_fund.fund_end_date ? this.MapDate(fundValue.sub_fund.fund_end_date) : '');
       this.fundForm.get('subFundData.S_catchUp')?.patchValue(fundValue.sub_fund.catch_up);
       this.fundForm.get('subFundData.S_legalCounsel')?.patchValue(fundValue.sub_fund.legal_counsel);
       this.fundForm.get('subFundData.S_legalCounselRep')?.patchValue(fundValue.sub_fund.legal_counsel_rep);
@@ -278,7 +280,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_bankAccount')?.patchValue(fundValue.sub_fund.BankAccount);
       this.fundForm.get('subFundData.S_bankAccessId')?.patchValue(fundValue.sub_fund.BankAccessID);
       this.fundForm.get('subFundData.S_BankAccessPassword')?.patchValue(fundValue.sub_fund.BankAccessPassword);
-      this.fundForm.get('subFundData.S_redeem')?.patchValue(fundValue.sub_fund.redeem);
+      this.fundForm.get('subFundData.S_redeem')?.patchValue(fundValue.sub_fund.redeem ? this.MapDate(fundValue.sub_fund.redeem) : '');
       this.fundForm.get('subFundData.S_redeemReason')?.patchValue(fundValue.sub_fund.redeemReason);
       this.fundForm.get('subFundData.S_liquidate')?.patchValue(fundValue.sub_fund.liquidate);
       this.fundForm.get('subFundData.S_liquidateReason')?.patchValue(fundValue.liquidateReason);
@@ -1226,7 +1228,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return bool;
   }
 
-  Submit() {
+  Submit(id?:any) {
     /**
      * file controls:
      * director signature -> single
@@ -1253,8 +1255,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       let boardResolutionArrsSF: any = [];
       // SUB FUND
       if (this.fundForm.get('subFund')?.value == 'Y') {
-        console.log("here");
-        
         if (this.fundForm.get('subFundData.S_boardResolutions')?.value) {
           for (let pair of this.fundForm
             .get('subFundData.S_boardResolutions')
@@ -1848,85 +1848,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         redeemReason: this.fundForm.get('redeemReason')?.value,
         liquidate: this.fundForm.get('liquidate')?.value,
         liquidateReason: this.fundForm.get('liquidateReason')?.value,
-        assetUnderManagement: '2.22',
+        assetUnderManagement: '',
       };
-
-      // let obj = {
-      //   "fundName": "hhfgh",
-      //   "registrationNumber": "ert",
-      //   "fundDescription": "tert",
-      //   "subFund": "N",
-      //   "domicile": "singapore",
-      //   "fundType": "regulated",
-      //   "fundManagerEntity": "erter",
-      //   "fundManagerRep": [
-      //     "2"
-      //   ],
-      //   "fundStructure": "close-ended",
-      //   "offerPrice": 1.04,
-      //   "fundSize": 0.03,
-      //   "boardExtension": null,
-      //   "investorExtension": null,
-      //   "fundLifeYears": 2,
-      //   "issuedShares": 0.028846153846153844,
-      //   "ordinaryShare": 3,
-      //   "fundEndDate": "2021-12-29",
-      //   "fundStatus": "onboarding",
-      //   "fundStatusReason": "",
-      //   "reportingCurrency": "USD",
-      //   "lockupPeriod": 2,
-      //   "fundYearEnd": "Dec",
-      //   "productType": "private-equity",
-      //   "catchup": 0.03,
-      //   "reportingFrequency": "month",
-      //   "legalCounsel": "yrtryr",
-      //   "legalCounselRep": "yrtyr",
-      //   "auditor": "yrtytr",
-      //   "auditorRep": "ghf",
-      //   "trustee": "hfgh",
-      //   "trusteeRep": "hfghf",
-      //   "subscribers": [
-      //     {
-      //       "name": "2",
-      //       "commitment": 0.04
-      //     }
-      //   ],
-      //   "directors": [
-      //     "1"
-      //   ],
-      //   "investmentComittee": [
-      //     "2"
-      //   ],
-      //   "authorizedSignatory": [
-      //     "2"
-      //   ],
-      //   "fundAdmin": [
-      //     "1"
-      //   ],
-      //   "GIIN": "jhghjgj",
-      //   "preparer": [
-      //     "2"
-      //   ],
-      //   "closingPeriod": ["2021-12-23"],
-      //   "reclassificationFreq": "weekly",
-      //   "approver": [
-      //     "3"
-      //   ],
-      //   "directorFee": 0.02,
-      //   "managementFee": 0.02,
-      //   "hurdleRate": 0.0003,
-      //   "CTC": 0.02,
-      //   "bank": "OCBC",
-      //   "bankAccount": "45534",
-      //   "bankAccessId": "fundsadmin",
-      //   "bankAccessPassword": "ghjghjg",
-      //   "redeem": "2021-12-16",
-      //   "redeemReason": "ghjgh",
-      //   "liquidate": "involuntary",
-      //   "liquidateReason": "ghjgh",
-      //   "assetUnderManagement": "2.22"
-      // }
-      console.log(obj);
 
       formData.append('json', JSON.stringify(obj));
 
@@ -1958,24 +1881,28 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.fundForm.value.created_at = new Date().toISOString();
-      this.fundForm.value.updated_at = null;
+      this.fundForm.value.created_at = id ? this.fundForm.value.created_at : new Date().toISOString();
+      this.fundForm.value.updated_at =  id ? new Date().toISOString() : null;
       console.log(formData.get('json'), typeof formData.get('json'));
 
-      this.apiService.onSave(formData).subscribe(
-        (result: any) => {
-          if (result.status == 'ok') {
-            this._snackBar.open('Fund created successfully!', '', {
-              horizontalPosition: this.horizontalPosition,
-              verticalPosition: this.verticalPosition,
-              duration: 4000,
-            });
-            this.fundForm.reset();
-            this.router.navigate(['dashboard/funds/list']);
-          }
-        },
-        (err: any) => {}
-      );
+      if(id != ''){
+
+      }else{
+        this.apiService.onSave(formData).subscribe(
+          (result: any) => {
+            if (result.status == 'ok') {
+              this._snackBar.open('Fund created successfully!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.fundForm.reset();
+              this.router.navigate(['dashboard/funds/list']);
+            }
+          },
+          (err: any) => {}
+        );
+      }
     }
   }
 
