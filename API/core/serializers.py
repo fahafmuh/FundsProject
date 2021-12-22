@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Director,Fund, User
+from core.models import Director,Fund, User,FundLifeClose,FundLifeOpen, FundLifeOpenDocument,closingperiod,BoardResolution
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -36,6 +36,31 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields=('username','first_name','last_name','email','user_type')
     
+class FundLifeCloseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=FundLifeClose
+        fields=('fundlife',)
+
+class FundLifeOpenDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=FundLifeOpenDocument
+        fields=('document',)
+
+class FundLifeOpenSerializer(serializers.ModelSerializer):
+    fundlifeopendoc=FundLifeOpenDocumentSerializer(many=True)
+    class Meta:
+        model=FundLifeOpen
+        fields=('fundlife','Board_Extension','Investor_Extension','fundlifeopendoc')
+
+class ClosingPeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=closingperiod
+        fields=('closing_Date',)
+
+class BoardResolutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=BoardResolution
+        fields=('board_resolution',)
 
 class BaseFundSerializer(serializers.ModelSerializer):
     supervisor_approval=serializers.CharField(source='get_supervisor_approval_display')
@@ -45,6 +70,10 @@ class BaseFundSerializer(serializers.ModelSerializer):
     fund_status=serializers.CharField(source='get_fund_status_display')
     fund_year_end=serializers.CharField(source='get_fund_year_end_display')
     user=UserSerializer()
+    fundlifeclose=FundLifeCloseSerializer()
+    fundlifeopen=FundLifeOpenSerializer()
+    closingDates=ClosingPeriodSerializer(many=True)
+    boardResolution=BoardResolutionSerializer(many=True)
 
     class Meta:
         model=Fund

@@ -165,31 +165,31 @@ class Fund(models.Model):
     redeemReason=models.TextField(blank=True)
     liquidate=models.CharField(max_length=256,blank=True)
     liquidateReason=models.TextField(blank=True)
-    created_at=models.DateField(auto_now_add=True)
-    updated_at=models.DateField(auto_now=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
     active=models.BooleanField(default=True)
 
     
 class FundLifeClose(models.Model):
-    fund=models.OneToOneField(Fund,on_delete=models.CASCADE)
+    fund=models.OneToOneField(Fund,on_delete=models.CASCADE,related_name='fundlifeclose')
     fundlife=models.PositiveIntegerField()
 
 class FundLifeOpen(models.Model):
-    fund=models.OneToOneField(Fund,on_delete=models.CASCADE)
+    fund=models.OneToOneField(Fund,on_delete=models.CASCADE,related_name='fundlifeopen')
     fundlife=models.PositiveIntegerField()
     Board_Extension=models.PositiveIntegerField()
     Investor_Extension=models.PositiveIntegerField()
     # Documents='done'
 
-# class FundLifeOpenDocument(models.Model):
-#     fundlifeopen=models.ForeignKey(FundLifeOpen,on_delete=models.CASCADE)
-#     document_name=models.CharField(max_length=256)
-#     upload_date=models.DateField(auto_now_add=True)
-#     description=models.TextField(blank=True)
-#     document=models.FileField(upload_to='fundlife_opendocument/',null=True,blank=True)
+class FundLifeOpenDocument(models.Model):
+    fundlifeopen=models.ForeignKey(FundLifeOpen,on_delete=models.CASCADE,related_name='fundlifeopendoc')
+    # document_name=models.CharField(max_length=256)
+    # upload_date=models.DateField(auto_now_add=True)
+    # description=models.TextField(blank=True)
+    document=models.FileField(upload_to='fundlife_opendocument/',null=True,blank=True)
 
 class closingperiod(models.Model):
-    fund=models.ForeignKey(Fund,on_delete=models.CASCADE)
+    fund=models.ForeignKey(Fund,on_delete=models.CASCADE,related_name="closingDates")
     closing_Date=models.DateField(blank=False,null=False)
 
 class Subscriber(models.Model):
@@ -198,5 +198,5 @@ class Subscriber(models.Model):
     subscriber_commitment=models.DecimalField(max_digits=6,decimal_places=2,default=0.00)
 
 class BoardResolution(models.Model):
-    fund=models.ForeignKey(Fund,on_delete=models.CASCADE)
+    fund=models.ForeignKey(Fund,on_delete=models.CASCADE,related_name="boardResolution")
     board_resolution=models.FileField(upload_to='board_resolution/',null=True,blank=True)
