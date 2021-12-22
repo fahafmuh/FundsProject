@@ -14,6 +14,7 @@ import {
 } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-create-fund',
@@ -152,6 +153,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     private config: NgbDatepickerConfig,
     private apiService: APIService,
     private _snackBar: MatSnackBar,
+    private spinner:NgxSpinnerService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder
@@ -178,6 +180,22 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
   }
 
+  MapArrayDirector(arr:any){
+    let final:any = [];
+    arr.map((res:any)=>{
+      final.push(res.director_name);
+    });
+    return final;
+  }
+
+  MapDate(date:any){
+    let splitCreatedDate = date.split("-",3);
+    let apiYear = Number(splitCreatedDate[0]);
+    let apiMonth = Number(splitCreatedDate[1]);
+    let apiDay = Number(splitCreatedDate[2]);
+    return {year:apiYear,month:apiMonth,day:apiDay};
+  }
+
   MapValues(fundValue: any) {
     console.log(fundValue);
     this.fundForm.get('fundName')?.patchValue(fundValue.fund_name);
@@ -185,6 +203,9 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('fundDescription')?.patchValue(fundValue.fund_description);
     this.fundForm.get('fundManagerEntity')?.patchValue(fundValue.fund_manager_entity);
     this.fundForm.get('fundManagerRep')?.patchValue([fundValue.fund_manager_rep['director_name']]);
+    this.fundForm.get('investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.investment_committee));
+    this.fundForm.get('authorizedSignatory')?.patchValue([fundValue.AuthorizedSignatory['director_name']]);
+    this.fundForm.get('approver')?.patchValue([fundValue.Approver['director_name']]);
     this.fundForm.get('domicile')?.patchValue(fundValue.domicile.country_name);
     this.fundForm.get('offerPrice')?.patchValue(fundValue.offer_price);
     this.fundForm.get('issuedShares')?.patchValue(fundValue.issued_shares);
@@ -192,7 +213,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('fundSize')?.patchValue(fundValue.fund_size);
     this.fundForm.get('lockupPeriod')?.patchValue(fundValue.lock_up_period);
     this.fundForm.get('fundYearEnd')?.patchValue(fundValue.fund_year_end);
-    this.fundForm.get('fundEndDate')?.patchValue(fundValue.fund_end_date);
+    this.fundForm.get('fundEndDate')?.patchValue(this.MapDate(fundValue.fund_end_date));
     this.fundForm.get('catchUp')?.patchValue(fundValue.catch_up);
     this.fundForm.get('legalCounsel')?.patchValue(fundValue.legal_counsel);
     this.fundForm.get('legalCounselRep')?.patchValue(fundValue.legal_counsel_rep);
@@ -206,16 +227,18 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('managementFee')?.patchValue(fundValue.Management_Fee);
     this.fundForm.get('hurdleRate')?.patchValue(fundValue.Hurdle_Rate);
     this.fundForm.get('CTC')?.patchValue(fundValue.CTC);
+    this.fundForm.get('GIIN')?.patchValue(fundValue.GIIN);
+    this.fundForm.get('bank')?.patchValue(fundValue.Bank.Bank_name);
     this.fundForm.get('bankAccount')?.patchValue(fundValue.BankAccount);
     this.fundForm.get('bankAccessId')?.patchValue(fundValue.BankAccessID);
-    this.fundForm.get('BankAccessPassword')?.patchValue(fundValue.BankAccessPassword);
+    this.fundForm.get('bankAccessPassword')?.patchValue(fundValue.BankAccessPassword);
     this.fundForm.get('redeem')?.patchValue(fundValue.redeem);
     this.fundForm.get('redeemReason')?.patchValue(fundValue.redeemReason);
     this.fundForm.get('liquidate')?.patchValue(fundValue.liquidate);
     this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
     this.fundForm.get('fundStructure')?.patchValue(fundValue.fund_structure);
     this.fundForm.get('fundStatus')?.patchValue(fundValue.fund_status);
-    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency);
+    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency == null ? '' : fundValue.reporting_frequency);
     this.fundForm.get('reclassificationFrequency')?.patchValue(fundValue.ReclassificationFrequency.reclassification_frequency_name);
     this.fundForm.get('productType')?.patchValue(fundValue.product_type.product_type_name);
     this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
@@ -226,7 +249,10 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_registrationNumber')?.patchValue(fundValue.sub_fund.registration_no);
       this.fundForm.get('subFundData.S_fundDescription')?.patchValue(fundValue.sub_fund.fund_description);
       this.fundForm.get('subFundData.S_fundManagerEntity')?.patchValue(fundValue.sub_fund.fund_manager_entity);
-      this.fundForm.get('subFundData.S_fundManagerRep')?.patchValue([fundValue.fund_manager_rep['director_name']]);
+      this.fundForm.get('subFundData.S_fundManagerRep')?.patchValue([fundValue.sub_fund.fund_manager_rep['director_name']]);
+      this.fundForm.get('subFundData.S_investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.sub_fund.investment_committee));
+      this.fundForm.get('subFundData.S_authorizedSignatory')?.patchValue([fundValue.sub_fund.AuthorizedSignatory['director_name']]);
+      this.fundForm.get('subFundData.S_approver')?.patchValue([fundValue.sub_fund.Approver['director_name']]);
       this.fundForm.get('subFundData.S_domicile')?.patchValue(fundValue.sub_fund.domicile.country_name);
       this.fundForm.get('subFundData.S_offerPrice')?.patchValue(fundValue.sub_fund.offer_price);
       this.fundForm.get('subFundData.S_issuedShares')?.patchValue(fundValue.sub_fund.issued_shares);
@@ -248,7 +274,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_managementFee')?.patchValue(fundValue.sub_fund.Management_Fee);
       this.fundForm.get('subFundData.S_hurdleRate')?.patchValue(fundValue.sub_fund.Hurdle_Rate);
       this.fundForm.get('subFundData.S_CTC')?.patchValue(fundValue.sub_fund.CTC);
-      this.fundForm.get('subFundData.S_bank')?.patchValue(fundValue.sub_fund.Bank);
+      this.fundForm.get('subFundData.S_bank')?.patchValue(fundValue.sub_fund.Bank.Bank_name);
       this.fundForm.get('subFundData.S_bankAccount')?.patchValue(fundValue.sub_fund.BankAccount);
       this.fundForm.get('subFundData.S_bankAccessId')?.patchValue(fundValue.sub_fund.BankAccessID);
       this.fundForm.get('subFundData.S_BankAccessPassword')?.patchValue(fundValue.sub_fund.BankAccessPassword);
@@ -258,7 +284,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_liquidateReason')?.patchValue(fundValue.liquidateReason);
       this.fundForm.get('subFundData.S_fundStructure')?.patchValue(fundValue.sub_fund.fund_structure);
       this.fundForm.get('subFundData.S_fundStatus')?.patchValue(fundValue.sub_fund.fund_status);
-      this.fundForm.get('subFundData.S_reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency);
+      this.fundForm.get('subFundData.S_reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency == null ? '' : fundValue.sub_fund.reporting_frequency);
       this.fundForm.get('subFundData.S_reclassificationFrequency')?.patchValue(fundValue.sub_fund.ReclassificationFrequency.reclassification_frequency_name);
       this.fundForm.get('subFundData.S_productType')?.patchValue(fundValue.sub_fund.product_type.product_type_name);
       this.fundForm.get('subFundData.S_reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
@@ -497,9 +523,12 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.apiService.selectedFund.subscribe((result: any) => {
       if (result) {
         this.selectedFund = result;
+        this.spinner.show();
         this.MapValues(this.selectedFund);
+        this.spinner.hide();
       } else {
         if (this.router.url.includes('edit')) {
+          this.spinner.show();
           this.apiService.getAllFunds().subscribe(
             (res: any) => {
               if (res.status == 'ok') {
@@ -508,10 +537,12 @@ export class CreateFundComponent implements OnInit, OnDestroy {
                   if (result.id == id) {
                     this.selectedFund = result;
                     this.MapValues(this.selectedFund);
+                    this.spinner.hide();
                   }
                 });
               } else {
                 this.selectedFund = undefined;
+                this.spinner.hide();
                 this._snackBar.open(
                   'Error: Go back to list, and edit again!',
                   '',
@@ -525,6 +556,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             },
             (err) => {
               this.selectedFund = undefined;
+              this.spinner.hide();
               this._snackBar.open(
                 'Error: Go back to list, and edit again!',
                 '',
@@ -1488,7 +1520,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             'open-ended'
               ? this.fundForm.get('subFundData.S_investorExtension')?.value
               : '',
-          fundLifeYears: this.fundForm.get('subFundData.S_fundLifeYears')
+              fundLife: this.fundForm.get('subFundData.S_fundLifeYears')
             ?.value,
           fundStructure: this.fundForm.get('subFundData.S_fundStructure')
             ?.value,
@@ -1776,7 +1808,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
           this.fundForm.get('fundStructure')?.value == 'open-ended'
             ? this.fundForm.get('investorExtension')?.value
             : '',
-        fundLifeYears: this.fundForm.get('fundLifeYears')?.value,
+        fundLife: this.fundForm.get('fundLifeYears')?.value,
         issuedShares: this.fundForm.get('issuedShares')?.value,
         ordinaryShare: this.fundForm.get('ordinaryShare')?.value,
         fundEndDate: this.fundForm.get('fundEndDate')?.value,

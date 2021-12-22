@@ -8,7 +8,7 @@
             <h3 class="h4" *ngIf="router.url.includes('edit')">Edit Fund</h3>
             <div class="btn-toolbar mb-2 mb-md-0">
 
-                <div class="btn-group mr-3" (click)="addForm()" *ngIf="!router.url.includes('create')">
+                <div class="btn-group mr-3" (click)="addForm()" *ngIf="!router.url.includes('create') || !router.url.includes('edit') ">
                     <button type="button" class="btn btn-outline-primary active">Create</button>
                     <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
                         <button class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
