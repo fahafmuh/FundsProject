@@ -16,6 +16,7 @@ import { MaterialModule } from 'src/app/app.material.module';
 import { ConfirmationDialogComponent } from 'src/app/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { CreateDirectorsComponent } from './funds-page/create-directors/create-directors.component';
+import { NgxSpinnerModule } from "ngx-spinner";
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -33,6 +34,7 @@ import { CreateDirectorsComponent } from './funds-page/create-directors/create-d
     RouterModule,
     NgbModule,
     MaterialModule,
+    NgxSpinnerModule,
     CommonModule,
     DashboardRoutingModule,
   ],

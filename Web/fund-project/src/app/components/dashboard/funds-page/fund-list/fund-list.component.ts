@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition, MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { APIService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2';
 
@@ -13,15 +14,19 @@ export class FundListComponent implements OnInit {
   funds:any = [];
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
-  constructor(private apiService:APIService, private _snackBar: MatSnackBar, private router:Router) {
+  constructor(private apiService:APIService,private spinner:NgxSpinnerService, private _snackBar: MatSnackBar, private router:Router) {
+    this.spinner.show();
     this.apiService.getAllFunds().subscribe((res:any)=>{
       if(res.status == "ok"){
         this.funds = res.funds;
+        this.spinner.hide();
       }else{
         this.funds = [];
+         this.spinner.hide();
       }
     },err=>{
       this.funds = [];
+       this.spinner.hide();
     });
    }
 
