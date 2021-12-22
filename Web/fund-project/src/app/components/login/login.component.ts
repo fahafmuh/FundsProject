@@ -59,6 +59,8 @@ export class LoginComponent implements OnInit {
   }
 
   setRoleAndRedirect() {
+    console.log(this.loginForm.value);
+    
     if (
       this.loginForm.value.username == 'fundsadmin' &&
       this.loginForm.value.password == 'fundsadmin'
@@ -68,20 +70,20 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem('password', 'fundsadmin');
       this.router.navigate(['dashboard/funds']);
     } else if (
-      this.loginForm.value.username == 'funds-supervisor' &&
-      this.loginForm.value.password == 'Hello123!'
+      this.loginForm.value.username == 'fundssupervisor' &&
+      this.loginForm.value.password == '200786fundsup'
     ) {
       sessionStorage.setItem('role', 'supervisor');
       sessionStorage.setItem('username', 'fundssupervisor');
-      sessionStorage.setItem('password', 'fundssupervisor');
+      sessionStorage.setItem('password', '200786fundsup');
       this.router.navigate(['dashboard/fund-approval']);
     } else if (
-      this.loginForm.value.username == 'funds-manager' &&
-      this.loginForm.value.password == 'Hello123!'
+      this.loginForm.value.username == 'fundsmanager' &&
+      this.loginForm.value.password == '200786Fundmanagerabc'
     ) {
       sessionStorage.setItem('role', 'manager');
       sessionStorage.setItem('username', 'fundsmanager');
-      sessionStorage.setItem('password', 'fundsmanager');
+      sessionStorage.setItem('password', '200786Fundmanagerabc');
       this.router.navigate(['dashboard/fund-approval']);
     } else {
       return;

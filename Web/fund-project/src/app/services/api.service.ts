@@ -159,7 +159,7 @@ export class APIService {
             
             observer.next({
               status: 'ok',
-              fundsByRoles: response
+              fundsByRoles: response.data
             });
             observer.complete();
           },
