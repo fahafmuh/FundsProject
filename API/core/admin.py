@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from .models import (User,Director,FundCountry,ReportingCurrency,
                         ReportingFrequency,ReclassificationFrequency,Bank,Fund,Subscriber,BoardResolution,
-                        closingperiod,FundLifeOpen,FundLifeClose,ProductType)
+                        closingperiod,FundLifeOpen,FundLifeClose,ProductType,FundLifeOpenDocument)
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Register your models here.
@@ -48,5 +48,6 @@ admin.site.register(FundLifeOpen)
 admin.site.register(FundLifeClose)
 admin.site.register(ProductType)
 admin.site.register(Fund)
+admin.site.register(FundLifeOpenDocument)
 
 

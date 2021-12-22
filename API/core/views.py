@@ -1,5 +1,6 @@
 from django.http.response import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from core.models import Director
 from .serializers import AuthTokenSerializer, DirectorSerializer,FundSerializer
 from rest_framework.settings import api_settings
@@ -9,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import logout
 import json
-from .models import (BoardResolution, Fund,FundCountry,Director,FUND_TYPE,FUND_STRUCTURE,
-                    FUND_STATUS,FUND_YEAR_END_MONTH,ReportingCurrency,ProductType,FUND_APPROVAL_STATUS,
+from .models import (BoardResolution, Fund,FundCountry,Director,FUND_TYPE,FUND_STRUCTURE,USER_DESIGNATION,
+                    FUND_STATUS,FUND_YEAR_END_MONTH, FundLifeOpenDocument,ReportingCurrency,ProductType,FUND_APPROVAL_STATUS,
                     ReportingFrequency,ReclassificationFrequency,Bank,FundLifeClose,
                     FundLifeOpen,closingperiod,Subscriber)
                 
@@ -27,7 +28,7 @@ def create_fund_object(data,request,sub_fund=False):
     fundManagerRep=get_object_or_none(Director,'None',data['fundManagerRep'][0])
 
     if AuthorizedSignatory!=None and AuthorizedSignatory.director_signature is None:
-        AuthorizedSignatory.director_signature=request.FILES.get('signature' if not sub_fund else 's_signature',None)
+        AuthorizedSignatory.director_signature=request.FILES.get('signature' if not sub_fund else 'S_signature',None)
         AuthorizedSignatory.save()
 
     ReclassificationFrequency_obj=get_object_or_none(ReclassificationFrequency,'ReclassificationFrequency',data['reclassificationFreq'])
@@ -70,9 +71,9 @@ def create_fund_object(data,request,sub_fund=False):
                 Preparer=data['preparer'],
                 ReclassificationFrequency=ReclassificationFrequency_obj,
                 Approver=Approver,
-                Subscription_Agreement=request.FILES.get('subscriptionAgreement' if not sub_fund else 's_subscriptionAgreement',None),
-                Investment_Agreement=request.FILES.get('investmentAgreement' if not sub_fund else 's_investmentAgreement',None),
-                PPM=request.FILES.get('PPM' if not sub_fund else 's_PPM',None),
+                Subscription_Agreement=request.FILES.get('subscriptionAgreement' if not sub_fund else 'S_subscriptionAgreement',None),
+                Investment_Agreement=request.FILES.get('investmentAgreement' if not sub_fund else 'S_investmentAgreement',None),
+                PPM=request.FILES.get('PPM' if not sub_fund else 'S_PPM',None),
                 Director_Fees=float(data['directorFee']),
                 Management_Fee=float(data['managementFee']),
                 Hurdle_Rate=float(data['hurdleRate']),
@@ -128,6 +129,10 @@ def create_fund_object(data,request,sub_fund=False):
                         #below fields not given from frontend assumed!
                         Board_Extension=int(data['boardExtension']),Investor_Extension=int(data['investorExtension']))
         obj.save()
+        if 'fundLifedocuments' or 'S_fundLifedocuments' in request.FILES:
+            for file in request.FILES.getlist('fundLifedocuments' if not sub_fund else 'S_fundLifedocuments' ):
+                obj=FundLifeOpenDocument(fundlifeopen=fund_obj,document=file)
+                obj.save()
     else:
         obj=FundLifeClose(fund=fund_obj,fundlife=int(data['fundLife']))
         obj.save()
@@ -142,13 +147,13 @@ def create_fund_object(data,request,sub_fund=False):
     #subscriber creation
     if(len(data['subscribers'])!=0):
         for obj in data['subscribers']:
-            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['amount']))
+            obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['commitment']))
             obj.save()
     #end
 
     #boardresolution creation
-    if 'boardResolutions' or 's_boardResolutions' in request.FILES:
-        for file in request.FILES.getlist('boardResolutions' if not sub_fund else 's_boardResolutions' ):
+    if 'boardResolutions' or 'S_boardResolutions' in request.FILES:
+        for file in request.FILES.getlist('boardResolutions' if not sub_fund else 'S_boardResolutions' ):
             obj=BoardResolution(fund=fund_obj,board_resolution=file)
             obj.save()
     
@@ -158,6 +163,18 @@ def create_fund_object(data,request,sub_fund=False):
 class UserLoginView(ObtainAuthToken):
     serializer_class=AuthTokenSerializer
     renderer_classes=api_settings.DEFAULT_RENDERER_CLASSES
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                       context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'role': [type for id,type in USER_DESIGNATION if int(user.user_type)==id][0]
+        })
 
 @api_view(['GET',])
 @authentication_classes([TokenAuthentication,])
