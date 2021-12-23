@@ -35,8 +35,8 @@ export class LoginComponent implements OnInit {
       this.apiService.login(this.loginForm.value).subscribe(
         (result: any) => {
           if(result.status == "ok"){
-            sessionStorage.setItem('token', result.value);
-            this.setRoleAndRedirect();
+            sessionStorage.setItem('token', result.value.token);
+            this.setRoleAndRedirect(result.value.role);
           }else{
             this._snackBar.open('Error in log in, Try again!', '', {
               horizontalPosition: this.horizontalPosition,
@@ -58,35 +58,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  setRoleAndRedirect() {
-    console.log(this.loginForm.value);
-    
-    if (
-      this.loginForm.value.username == 'fundsadmin' &&
-      this.loginForm.value.password == 'fundsadmin'
-    ) {
-      sessionStorage.setItem('role', 'admin');
-      sessionStorage.setItem('username', 'fundsadmin');
-      sessionStorage.setItem('password', 'fundsadmin');
-      this.router.navigate(['dashboard/funds']);
-    } else if (
-      this.loginForm.value.username == 'fundssupervisor' &&
-      this.loginForm.value.password == '200786fundsup'
-    ) {
-      sessionStorage.setItem('role', 'supervisor');
-      sessionStorage.setItem('username', 'fundssupervisor');
-      sessionStorage.setItem('password', '200786fundsup');
-      this.router.navigate(['dashboard/fund-approval']);
-    } else if (
-      this.loginForm.value.username == 'fundsmanager' &&
-      this.loginForm.value.password == '200786Fundmanagerabc'
-    ) {
-      sessionStorage.setItem('role', 'manager');
-      sessionStorage.setItem('username', 'fundsmanager');
-      sessionStorage.setItem('password', '200786Fundmanagerabc');
-      this.router.navigate(['dashboard/fund-approval']);
-    } else {
-      return;
+  setRoleAndRedirect(role:string) {
+    sessionStorage.setItem('role', role.toLowerCase());
+    switch(role.toLowerCase()){
+      case 'admin':
+        this.router.navigate(['dashboard/funds']);
+        break;
+      
+      case 'funds manager':
+        this.router.navigate(['dashboard/fund-approval']);
+        break;
+
+      case 'supervisor':
+        this.router.navigate(['dashboard/fund-approval']);
+        break;
+
     }
   }
 

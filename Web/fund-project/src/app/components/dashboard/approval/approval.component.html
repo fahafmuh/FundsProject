@@ -18,12 +18,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let fund of funds" (click)="FundSelect(fund.fund_name)" [ngClass]="selectedFund ? 'active' : ''">
+                    <tr *ngFor="let fund of funds" (click)="FundSelect(fund)" [ngClass]="selectedFund && selectedFund.id == fund.id ? 'active' : ''">
                         <td>{{fund.fund_name}}</td>
                         <td [title]="fund.fund_description"><span class="elip">{{fund.fund_description}}</span></td>
                         <td>{{fund.registration_no}}</td>
-                        <td>{{fund.created_at}}</td>
-                        <td>{{fund.updated_at}}</td>
+                        <td *ngIf="fund.created_at">{{fund.created_at | date :'mediumDate'}} | {{ fund.created_at | date :'shortTime' }}</td>
+                        <td *ngIf="!fund.created_at"> - </td>
+                        <td *ngIf="fund.updated_at">{{fund.updated_at | date :'mediumDate'}} | {{ fund.updated_at | date :'shortTime' }}</td>
+                        <td *ngIf="!fund.updated_at"> - </td>
                         <td>{{fund.sub_fund ? 'Yes' : 'No'}}</td>
                     </tr>
             
@@ -32,7 +34,7 @@
         </div>
         <div class="col-md-12 col-lg-6" *ngIf="selectedFund">
             <div class="border p-2">
-                <h3 class="h3 fw-bold">Fund Name : {{selectedFund}}</h3>
+                <h3 class="h3 fw-bold">Fund Name : {{selectedFund.fund_name}}</h3>
                 <div class="d-flex justify-content-between">
                     <div class="mb-3">
                           <mat-button-toggle-group name="status" [(ngModel)]="status">
@@ -57,3 +59,5 @@
         </div>
     </div>
 </main>
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "line-spin-clockwise-fade" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

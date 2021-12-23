@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { APIService } from 'src/app/services/api.service';
 
 @Component({
@@ -14,16 +15,23 @@ export class ApprovalComponent implements OnInit,OnDestroy {
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
   funds:any = [];
-  constructor(private apiService:APIService,private _snackBar: MatSnackBar) {
+  id:string = '';
+  constructor(private apiService:APIService,private spinner:NgxSpinnerService,private _snackBar: MatSnackBar) {
+    this.spinner.show();
     this.apiService.getFundsByRoles().subscribe((res:any)=>{
       if(res.status == "ok"){
         this.funds = res.fundsByRoles;
-        
+        this.spinner.hide();
+
       }else{
         this.funds = [];
+        this.spinner.hide();
+
       }
     },err=>{
       this.funds = [];
+      this.spinner.hide();
+
     });
    }
 
@@ -31,6 +39,7 @@ export class ApprovalComponent implements OnInit,OnDestroy {
   }
 
   FundSelect(fund:any){
+    this.id = fund.id;
     this.selectedFund = fund;
   }
 
@@ -38,6 +47,7 @@ export class ApprovalComponent implements OnInit,OnDestroy {
     this.selectedFund = undefined;
     this.reason = '';
     this.status = '';
+    this.id = '';
   }
 
   Reaction(){
@@ -48,17 +58,22 @@ export class ApprovalComponent implements OnInit,OnDestroy {
     }
     this.apiService.updateFundStatus(obj).subscribe((result:any)=>{
       if(result.status == "ok"){
-        this.selectedFund = undefined;
-        this._snackBar.open('Fund created successfully!', '', {
+        this.Cancel();
+        this._snackBar.open('Fund status sent successfully!', '', {
           horizontalPosition: this.horizontalPosition,
           verticalPosition: this.verticalPosition,
           duration: 4000,
         });
       }else{
-
+        this._snackBar.open('Error in sending fund status!', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 4000,
+        });
+        return;
       }
     },err=>{
-
+      return;
     });
     
   }
