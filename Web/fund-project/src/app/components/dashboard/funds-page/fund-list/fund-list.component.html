@@ -1,8 +1,10 @@
 <div class="d-flex shadow-sm border p-2 align-items-center" *ngFor="let fund of funds;let index=index">
     <div class="p-1 flex-grow-1">
         <p class="mb-0 fw-bold">Fund Name : <span class="fw-light">{{fund.fund_name}}</span></p>
-        <P class="text-danger mb-0"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Created : Apr 24,2020 | 1:01PM</span></P>
-        <P class="text-primary mb-0"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Updated : Jan 24,2020 | 1:01PM</span></P>
+        <P class="text-danger mb-0" *ngIf="fund.created_at"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Created At: {{fund.created_at | date :'mediumDate'}} | {{ fund.created_at | date :'shortTime' }}</span></P>
+        <P class="text-danger mb-0" *ngIf="!fund.created_at"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Created At: -</span></P>
+        <P class="text-primary mb-0" *ngIf="fund.updated_at"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Updated At: {{fund.updated_at | date :'mediumDate'}} | {{ fund.updated_at | date :'shortTime' }}</span></P>
+        <P class="text-primary mb-0" *ngIf="!fund.updated_at"><i class="fa fa-plus-square-o" aria-hidden="true"></i><span> Updated At:  -</span></P>
     </div>
 
     <div class="p-1" style="cursor: pointer;"><span><i placement="top" ngbTooltip="Edit Fund data" class="fa fa-pencil-square-o" aria-hidden="true" (click)="EditFund(fund)"></i></span></div>

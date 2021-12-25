@@ -31,9 +31,11 @@ export class APIService {
         })
         .subscribe(
           (response: any) => {
+            console.log(response);
+            
             observer.next({
               status: 'ok',
-              value: response.token,
+              value: response,
             });
             observer.complete();
           },
