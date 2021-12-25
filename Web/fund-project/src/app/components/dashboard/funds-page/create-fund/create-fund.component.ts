@@ -260,7 +260,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('lockupPeriod')?.patchValue(fundValue.lock_up_period);
     this.fundForm.get('fundYearEnd')?.patchValue(fundValue.fund_year_end);
     this.fundForm.get('fundEndDate')?.patchValue(fundValue.fund_end_date ? this.MapDate(fundValue.fund_end_date) : '');
-    this.fundForm.get('catchUp')?.patchValue(fundValue.catch_up);
+    this.fundForm.get('catchUp')?.patchValue(Number(fundValue.catch_up));
     this.fundForm.get('legalCounsel')?.patchValue(fundValue.legal_counsel);
     this.fundForm.get('legalCounselRep')?.patchValue(fundValue.legal_counsel_rep);
     this.fundForm.get('auditor')?.patchValue(fundValue.Auditor);
