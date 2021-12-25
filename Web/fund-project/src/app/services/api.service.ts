@@ -12,6 +12,7 @@ export class APIService {
   private loginApi = 'api/login/';
   private logoutApi = 'api/logout/';
   private fundCreateApi = 'api/create-fund/';
+  private fundEditApi = 'api/edit-fund/';
   private DirectorsApi = 'api/Directors/';
   private deleteDirectorsApi = 'api/director-delete/';
   private deleteFundApi = 'api/fund-delete/';
@@ -84,6 +85,26 @@ export class APIService {
           }
         );
     });
+  }
+
+  onEdit(formData:any): Observable<any> {
+      return new Observable((observer) => {
+        this.http
+          .post(this.serverURL + this.fundEditApi, formData, this.setHeaders())
+          .subscribe(
+            (response: any) => {
+              console.log(response);
+              observer.next({
+                status: 'ok',
+              });
+              observer.complete();
+            },
+            (err) => {
+              observer.next({ status: 'error' });
+              observer.complete();
+            }
+          );
+      });
   }
 
   onSave(formData: any): Observable<any> {
