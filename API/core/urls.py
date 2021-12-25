@@ -13,5 +13,6 @@ urlpatterns = [
     path('director-delete/',views.director_delete_view),
     path('getallfunds/',views.getallfunds_view),
     path('getfundsbyrole/',views.getfundsbyrole_view),
-    path('delete-fund/',views.delete_fund)
+    path('delete-fund/',views.delete_fund),
+    path('edit-fund/',views.update_fund)
 ]

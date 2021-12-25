@@ -45,7 +45,17 @@ def get_object_or_none(Model,key,value):
     
     return obj
 
+def get_file_or_none(request,s1,s2,subfund):
+    s=s1
+    if subfund:
+        s=s2
+    
+    if s not in request.POST and s not in request.FILES:
+        return None
+    elif s in request.FILES:
+        return request.FILES[s]
+    elif s in request.POST: #doesn't want to change existing file
+        return -1
 
-    #hello
 
 
