@@ -15,11 +15,12 @@ export class HeaderComponent implements OnInit {
     this.role = sessionStorage.getItem('role');
   }
 
-  Logout() {
+  Logout() {      
+    sessionStorage.clear();
+    this.router.navigate(['login']);
     this.apiService.logout().subscribe((result: any) => {
       if(result.status == "ok"){
-        sessionStorage.clear();
-        this.router.navigate(['login']);
+  
       }
     });
   }

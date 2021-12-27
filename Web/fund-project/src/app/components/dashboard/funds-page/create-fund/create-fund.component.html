@@ -92,14 +92,16 @@
                   <div class="row g-3" formGroupName="subFundData">
                     <div class="col-6">
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Fund Name</label>
+                        <label for="staticEmail" class="form-label">Fund Name<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_fundName" placeholder="Fund Name" />
                         <div id="emailHelp" class="form-text">
                           Fund's Name of max length 256.
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Registration No</label>
+                        <label for="staticEmail" class="form-label">Registration No<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_registrationNumber"
                           placeholder="Registration No." />
                         <div id="emailHelp" class="form-text">
@@ -107,7 +109,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Fund Description</label>
+                        <label for="staticEmail" class="form-label">Fund Description<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <textarea class="form-control" formControlName="S_fundDescription" rows="3"
                           placeholder="Fund Description"></textarea>
                         <div id="emailHelp" class="form-text">
@@ -141,7 +144,8 @@
                       </div>
 
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Fund Manager Entity</label>
+                        <label for="staticEmail" class="form-label">Fund Manager Entity<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_fundManagerEntity"
                           placeholder="Enter Fund manager entity" />
 
@@ -211,7 +215,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Fund Status</label>
+                        <label for="staticEmail" class="form-label">Fund Status<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <select class="form-select" aria-label="Default select example"
                           (change)="StatusChangeSubFund($event)" formControlName="S_fundStatus">
                           <option value="" disabled>Select Fund Status</option>
@@ -307,9 +312,9 @@
                                 $event,
                                 true
                               )
-                            " id="formFileMultiple" />
+                            " />
                         <div id="emailHelp" class="form-text" *ngIf="!isSimpleOptionSF">
-                          Multiple file upload allowed.
+                          Single file upload allowed.
                         </div>
                       </div>
 
@@ -346,7 +351,8 @@
                       </div>
 
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Legal Counsel</label>
+                        <label for="staticEmail" class="form-label">Legal Counsel<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_legalCounsel"
                           placeholder="Enter Legal Counsel" />
                         <div id="emailHelp" class="form-text">
@@ -354,7 +360,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Legal Counsel Representative</label>
+                        <label for="staticEmail" class="form-label">Legal Counsel Representative<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_legalCounselRep"
                           placeholder="Enter Legal Counsel Representative" />
                         <div id="emailHelp" class="form-text">
@@ -362,7 +369,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Auditor</label>
+                        <label for="staticEmail" class="form-label">Auditor<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_auditor"
                           placeholder="Enter Auditor" />
                         <div id="emailHelp" class="form-text">
@@ -370,7 +378,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Auditor Representative</label>
+                        <label for="staticEmail" class="form-label">Auditor Representative<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_auditorRep"
                           placeholder="Enter Auditor Representative" />
                         <div id="emailHelp" class="form-text">
@@ -378,7 +387,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Custodian / Trustee</label>
+                        <label for="staticEmail" class="form-label">Custodian / Truste<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span>e</label>
                         <input type="text" class="form-control" formControlName="S_trustee"
                           placeholder="Enter Custodian / Trustee" />
                         <div id="emailHelp" class="form-text">
@@ -386,7 +396,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Enter Custodian / Trustee Representative</label>
+                        <label for="staticEmail" class="form-label">Custodian / Trustee Representative<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_trusteeRep"
                           placeholder="Enter Custodian / Trustee Representative" />
                         <div id="emailHelp" class="form-text">
@@ -407,29 +418,41 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Subscription Agreement</label>
+                        <label for="staticEmail" class="form-label">Subscription Agreement<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                               handleFileInput('S_subscriptionAgreement', $event)
-                            " id="formFileMultiple" />
+                            " />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_subscriptionAgreement')?.value && checkType(fundForm.get('subFundData.S_subscriptionAgreement')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_subscriptionAgreement')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Investment Agreement</label>
+                        <label for="staticEmail" class="form-label">Investment Agreement<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                               handleFileInput('S_investmentAgreement', $event)
-                            " id="formFileMultiple" />
+                            "  />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_investmentAgreement')?.value && !checkType(fundForm.get('subFundData.S_investmentAgreement')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_investmentAgreement')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
 
                       </div>
 
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Director’s Fees</label>
+                        <label for="staticEmail" class="form-label">Director's Fees</label>
                         <input type="number" min="0.00" step="0.01" class="form-control" formControlName="S_directorFee"
                           placeholder="Enter Director's Fee" />
                         <div id="emailHelp" class="form-text">
@@ -530,13 +553,19 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Signature</label>
+                        <label for="staticEmail" class="form-label">Signature<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc"
-                          (change)="handleFileInput('S_signature', $event)" id="formFileMultiple" />
+                          (change)="handleFileInput('S_signature', $event)" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_signature')?.value && !checkType(fundForm.get('subFundData.S_signature')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_signature')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
                       </div>
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Board Resolutions</label>
@@ -546,14 +575,20 @@
                                 $event,
                                 true
                               )
-                            " id="formFileMultiple" />
+                            " />
 
                         <div id="emailHelp" class="form-text">
-                          Multiple file upload allowed.
+                          Single file upload allowed.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_boardResolutions')?.value && fundForm.get('subFundData.S_boardResolutions')?.value.length && !checkType(fundForm.get('subFundData.S_boardResolutions')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_boardResolutions')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Fund Administrator</label>
+                        <label for="staticEmail" class="form-label">Fund Administrator<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_fundAdmin" placeholder="Enter Fund Admin" />
 
                         <br />
@@ -562,7 +597,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">GIIN</label>
+                        <label for="staticEmail" class="form-label">GIIN<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_GIIN" placeholder="Enter GIIN" />
                         <div id="emailHelp" class="form-text">
                           Data Entry with 50 alphanumeric characters.
@@ -581,7 +617,8 @@
                         </div>
                       </div>
                       <div class="mb-3" formArrayName="S_closingPeriods">
-                        <label for="staticEmail" class="form-label">Closing Period</label>
+                        <label for="staticEmail" class="form-label">Closing Period<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <ng-template ngFor [ngForOf]="GetControlsSubFund('S_closingPeriods')" let-value
                           let-index="index">
                           <ng-container [formGroupName]="index">
@@ -623,7 +660,8 @@
                       </div>
 
                       <div class="mb-3 row g-3 align-items-center" formArrayName="S_subscribers">
-                        <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)</label>
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <ng-template ngFor let-value [ngForOf]="GetControlsSubFund('S_subscribers')" let-index="index">
                           <ng-container [formGroupName]="index">
                             <div class="col-auto">
@@ -717,7 +755,7 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Cost to Company (CTC)</label>
+                        <label for="staticEmail" class="form-label">CTC</label>
                         <input type="number" min="0.00" step="0.01" class="form-control" formControlName="S_CTC"
                           placeholder="Enter CTC" />
                         <div id="emailHelp" class="form-text">
@@ -728,11 +766,16 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Private Placement Memorandum (PPM)</label>
                         <input class="form-control" type="file" accept=".pdf,.doc"
-                          (change)="handleFileInput('S_PPM', $event)" id="formFileMultiple" />
+                          (change)="handleFileInput('S_PPM', $event)" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_PPM')?.value && !checkType(fundForm.get('subFundData.S_PPM')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_PPM')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
                       </div>
 
                       <div class="mb-3">
@@ -752,7 +795,8 @@
                       </div>
 
                       <div class="mb-3 row" formArrayName="S_directorsList">
-                        <label for="staticEmail" class="col-sm-2 col-form-label">Directors</label>
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Directors<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <ng-template ngFor let-value [ngForOf]="GetControlsSubFund('S_directorsList')"
                           let-index="index">
                           <ng-container [formGroupName]="index">
@@ -769,11 +813,16 @@
                             <div class="col-auto">
                               <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                                     handleFileInputDirector(index, $event, true)
-                                  " id="formFileMultiple" />
+                                  " />
 
                               <div id="emailHelp" class="form-text">
                                 Single file upload only.
                               </div>
+                              <ng-container *ngIf="selectedFund && selectedFund.id && value.get('signature')?.value && !checkType(value.get('signature')?.value)">
+                                <p>
+                                  <ngb-alert [dismissible]="false" type="primary">Uploaded file: {{getFileName(value.get('signature')?.value)}}</ngb-alert>
+                                </p>
+                              </ng-container>
                             </div>
                             <div class="col-auto">
                               <button (click)="addDirector(true)" *ngIf="
@@ -1023,10 +1072,10 @@
               <input class="form-control" type="file" *ngIf="!isSimpleOption" accept=".pdf,.doc"
                 (change)="
                     handleFileMultipleInput('fundLifedocuments', $event)
-                  " id="formFileMultiple" />
+                  "  />
 
               <div id="emailHelp" class="form-text" *ngIf="!isSimpleOption">
-                Multiple file upload allowed.
+                Single file upload allowed.
               </div>
             </div>
           </div>
@@ -1203,21 +1252,25 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="staticEmail" class="form-label">Preparer</label>
-            <ng-multiselect-dropdown [placeholder]="'Select Preparer'" [settings]="dropdownSingleSettings"
-              [data]="directors" [disabled]="isDropdownDisabledSF" formControlName="preparer">
-            </ng-multiselect-dropdown>
-            <br />
-            <app-create-directors [directorsList]="directors" [headingPerson]="'Preparer'"
-              (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-            <div id="emailHelp" class="form-text">
-              Appointed by the Fund Manager.
+          <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Preparer</label>
+            <div class="col-sm-10">
+
+              <ng-multiselect-dropdown [placeholder]="'Select Preparer'" [settings]="dropdownSingleSettings"
+                [data]="directors" [disabled]="isDropdownDisabledSF" formControlName="preparer">
+              </ng-multiselect-dropdown>
+              <br />
+              <app-create-directors [directorsList]="directors" [headingPerson]="'Preparer'"
+                (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+              <div id="emailHelp" class="form-text">
+                Appointed by the Fund Manager.
+              </div>
             </div>
           </div>
 
           <div class="mb-3 row" formArrayName="subscribers">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)</label>
+            <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)<span
+              style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-8">
               <div class="d-flex" *ngFor="let value of GetControls('subscribers');let index = index">
                 <div class="p-2 flex-grow-1 row" [formGroupName]="index">
@@ -1269,7 +1322,8 @@
           <br>
 
           <div class="mb-3 row"formArrayName="directorsList">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Director(s)</label>
+            <label for="staticEmail" class="col-sm-2 col-form-label">Director(s)<span
+              style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-8">
               <div class="d-flex" *ngFor="let value of GetControls('directorsList');let index = index">
                 <div class="p-2 flex-grow-1 row" [formGroupName]="index">
@@ -1286,14 +1340,14 @@
                   </div>
                   <div class="col-auto">
                     <input class="form-control" type="file" accept=".pdf,.doc"
-                      (change)="handleFileInputDirector(index, $event)" id="formFileMultiple" />
+                      (change)="handleFileInputDirector(index, $event)" />
   
                     <div id="emailHelp" class="form-text">
                       Single file upload only.
                     </div>
-                    <ng-container *ngIf="selectedFund && selectedFund.id && value.get('signature')?.value">
+                    <ng-container *ngIf="selectedFund && selectedFund.id && value.get('signature')?.value && !checkType(value.get('signature')?.value)">
                       <p>
-                        <ngb-alert [dismissible]="false" type="primary">{{getFileName(value.get('signature')?.value)}}</ngb-alert>
+                        <ngb-alert [dismissible]="false" type="primary">Uploaded file: {{getFileName(value.get('signature')?.value)}}</ngb-alert>
                       </p>
                     </ng-container>
 
@@ -1346,22 +1400,32 @@
                 style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc" (change)="handleFileInput('signature', $event)"
-                id="formFileMultiple" />
+                 />
 
               <div id="emailHelp" class="form-text">
                 Single file allowed.
               </div>
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('signature')?.value && !checkType(fundForm.get('signature')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{ getFileName(fundForm.get('signature')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
             </div>
           </div>
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label">Board Resolutions</label>
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileMultipleInput('boardResolutions', $event)" id="formFileMultiple" />
+                (change)="handleFileMultipleInput('boardResolutions', $event)" />
 
               <div id="emailHelp" class="form-text">
-                Multiple files allowed.
+                Single file allowed.
               </div>
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('boardResolutions')?.value && fundForm.get('boardResolutions')?.value.length && !checkType(fundForm.get('boardResolutions')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{ getFileName(fundForm.get('boardResolutions')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
             </div>
           </div>
           <div class="mb-3 row">
@@ -1492,11 +1556,17 @@
                 style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileInput('subscriptionAgreement', $event)" id="formFileMultiple" />
+                (change)="handleFileInput('subscriptionAgreement', $event)" />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
               </div>
+
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subscriptionAgreement')?.value && !checkType(fundForm.get('subscriptionAgreement')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subscriptionAgreement')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
             </div>
           </div>
           <div class="mb-3 row">
@@ -1505,11 +1575,16 @@
 
             <div class="col-sm-10">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileInput('investmentAgreement', $event)" id="formFileMultiple" />
+                (change)="handleFileInput('investmentAgreement', $event)"  />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
               </div>
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('investmentAgreement')?.value && !checkType(fundForm.get('investmentAgreement')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('investmentAgreement')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
             </div>
           </div>
 
@@ -1519,11 +1594,16 @@
 
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc" (change)="handleFileInput('PPM', $event)"
-                id="formFileMultiple" />
+                 />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
               </div>
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('PPM')?.value && !checkType(fundForm.get('PPM')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('PPM')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
            
             </div>
           </div>
@@ -1559,8 +1639,8 @@
           </div>
 
           
-          <div class="mb-3 row mt-4">
-            <label for="staticEmail" class="form-label">Lock up Period (in years)</label>
+          <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Lock up Period (in years)</label>
             <div class="col-sm-10">
 
               <input type="number" min="0" step="1" class="form-control" formControlName="lockupPeriod"

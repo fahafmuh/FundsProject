@@ -163,6 +163,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       (result: any) => {
         if (result.status == 'ok') {
           this.directors = result.directors;
+          console.log(this.directors);
+          
           this.setMultiDropdownSettings();
           this.setSingleDS();
         } else {
@@ -197,40 +199,50 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return {year:apiYear,month:apiMonth,day:apiDay};
   }
 
-  MapDirectors(directors:any){
-    let arr:any = [];
-    directors.map((res:any)=>{
-      arr.push({
-        name:[res.director_name],
-        signature:res.director_signature
+  MapDirectors(directors:any,controlsForm:FormArray){
+    for (const c of directors) {
+      let fb: FormGroup = this.formBuilder.group({
+        name: [[c.director_name], [Validators.required]],
+        signature: [c.director_signature, [Validators.required]],
       });
-    });
-    return arr;
+      if(controlsForm) controlsForm.push(fb);
+    }
+    if(controlsForm) controlsForm.removeAt(0);
   }
 
-  MapSubs(persons:any){
-    let arr:any = [];
-    persons.map((res:any)=>{
-      console.log(res);
-      
-      arr.push({
-        name:[res.subscriber_name],
-        commitment:res.subscriber_commitment
-      });
+  MapSubs(persons:any,controlsForm:FormArray){
+   for (const c of persons) {
+    let fb: FormGroup = this.formBuilder.group({
+      name: [[c.subscriber_name], [Validators.required]],
+      commitment: [c.subscriber_commitment, [Validators.required]],
     });
-   return arr;
+    if(controlsForm) controlsForm.push(fb);
+  }
+  if(controlsForm) controlsForm.removeAt(0);
   }
 
-  MapClosingDates(dates:any){
-    let arr:any = [];
-    dates.map((res:any)=>{
-      arr.push({date:this.MapDate(res.closing_Date)})
-    });
-    return arr;
+  
+  MapClosingDates(dates:any,controlsForm:FormArray){
+    for (const c of dates) {
+      let fb: FormGroup = this.formBuilder.group({
+        date: [this.MapDate(c.closing_Date), [Validators.required]],
+      });
+      if(controlsForm) controlsForm.push(fb);
+    }
+    if(controlsForm) controlsForm.removeAt(0);
   }
 
   getFileName(data:any){
-    return data.split('/')[3];
+    let str = '';
+    if(Array.isArray(data)) data = data[0];
+    if(data && typeof data == 'string'){
+      str = data.split('/')[3];
+    }
+    return str;
+  }
+
+  checkType(field:any){
+    return field instanceof FormData ? true : false;
   }
 
   MapFiles(files:any){
@@ -292,15 +304,33 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('created_at')?.patchValue(fundValue.created_at);
     this.fundForm.get('updated_at')?.patchValue(fundValue.updated_at);
     this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
-    this.fundForm.get('directorsList')?.patchValue(this.MapDirectors(fundValue.directors));
-    this.fundForm.get('subscribers')?.patchValue(this.MapSubs(fundValue.subscribers));
-    this.fundForm.get('closingPeriods')?.patchValue(this.MapClosingDates(fundValue.closingDates));
-    this.fundForm.get('investmentAgreement')?.patchValue((fundValue.closingDates));
-    this.fundForm.get('subscriptionAgreement')?.patchValue(this.MapClosingDates(fundValue.closingDates));
-    this.fundForm.get('boardResolutions')?.patchValue(fundValue.closingDates);
+    // this.fundForm.get('subscribers')?.patchValue(this.MapSubs(fundValue.subscribers));
+    this.MapClosingDates(fundValue.closingDates,this.fundForm.get('closingPeriods') as FormArray);
+    this.MapDirectors(fundValue.directors,this.fundForm.get('directorsList') as FormArray);
+    this.MapSubs(fundValue.subscribers,this.fundForm.get('subscribers') as FormArray)
+
+    this.fundForm.get('investmentAgreement')?.patchValue(fundValue.Investment_Agreement);
+    this.fundForm.get('subscriptionAgreement')?.patchValue(fundValue.Subscription_Agreement);
+    this.fundForm.get('boardResolutions')?.patchValue(fundValue.boardResolution);
+    this.fundForm.get('fundStatusReason')?.patchValue(fundValue.reason_to_change);
     this.fundForm.get('PPM')?.patchValue(fundValue.PPM);
+    if(fundValue.fund_structure == 'close-ended'){
+      this.isSimpleOption = true;
+      this.fundForm.get('fundLifeYears')?.patchValue(fundValue.fundlifeclose.fundlife);
+    }
+    else{
+      this.isSimpleOption = false;
+      this.fundForm.get('fundLifeYears')?.patchValue(fundValue.fundlifeopen.fundlife);
+      this.fundForm.get('investorExtension')?.patchValue(fundValue.fundlifeopen.investor_extension);
+      this.fundForm.get('boardExtension')?.patchValue(fundValue.fundlifeopen.board_extension);
+      this.fundForm.get('fundLifedocuments')?.patchValue(fundValue.fundlifeopen.fundlife_documents);
+    }
+
     if(fundValue.sub_fund != null){
       this.fundForm.get('subFundData.S_fundName')?.patchValue(fundValue.sub_fund.fund_name);
+      this.MapClosingDates(fundValue.sub_fund.closingDates,this.fundForm.get('subFundData.S_closingPeriods') as FormArray);
+      this.MapDirectors(fundValue.sub_fund.directors,this.fundForm.get('subFundData.S_directorsList') as FormArray);
+      this.MapSubs(fundValue.sub_fund.subscribers,this.fundForm.get('subFundData.S_subscribers') as FormArray)
       this.fundForm.get('subFundData.S_registrationNumber')?.patchValue(fundValue.sub_fund.registration_no);
       this.fundForm.get('subFundData.S_fundDescription')?.patchValue(fundValue.sub_fund.fund_description);
       this.fundForm.get('subFundData.S_fundManagerEntity')?.patchValue(fundValue.sub_fund.fund_manager_entity);
@@ -344,13 +374,25 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_productType')?.patchValue(fundValue.sub_fund && fundValue.sub_fund.product_type != null ? fundValue.sub_fund.product_type.product_type_name : '');      
       this.fundForm.get('subFundData.S_reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
       this.fundForm.get('subFundData.S_preparer')?.patchValue(fundValue.sub_fund.Preparer);
-      this.fundForm.get('subFundData.S_directorsList')?.patchValue(this.MapDirectors(fundValue.sub_fund.directors));
-      this.fundForm.get('subFundData.S_subscribers')?.patchValue(this.MapSubs(fundValue.sub_fund.subscribers));
+      // this.fundForm.get('subFundData.S_directorsList')?.patchValue(this.MapDirectors(fundValue.sub_fund.directors));
+      // this.fundForm.get('subFundData.S_subscribers')?.patchValue(this.MapSubs(fundValue.sub_fund.subscribers));
       this.fundForm.get('subFundData.S_PPM')?.patchValue(fundValue.sub_fund.PPM);
-      this.fundForm.get('subFundData.S_investmentAgreement')?.patchValue(fundValue.sub_fund.PPM);
-      this.fundForm.get('subFundData.S_boardResolutions')?.patchValue(fundValue.sub_fund.boardResolutions);
-      this.fundForm.get('subFundData.S_subscriptionAgreement')?.patchValue(fundValue.sub_fund.S_subscriptionAgreement);
-
+      this.fundForm.get('subFundData.S_investmentAgreement')?.patchValue(fundValue.sub_fund.Investment_Agreement);
+      this.fundForm.get('subFundData.S_boardResolutions')?.patchValue(fundValue.sub_fund.boardResolution);
+      this.fundForm.get('subFundData.S_subscriptionAgreement')?.patchValue(fundValue.sub_fund.Subscription_Agreement);
+      this.fundForm.get('S_fundStatusReason')?.patchValue(fundValue.sub_fund.reason_to_change);
+      if(fundValue.sub_fund.fund_structure == 'close-ended'){
+        this.isSimpleOptionSF = true;
+        this.fundForm.get('subFundData.S_fundLifeYears')?.patchValue(fundValue.sub_fund.fundlifeclose.fundlife);
+      }
+      else{
+        this.isSimpleOptionSF = false;
+        this.fundForm.get('subFundData.S_fundLifeYears')?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife);
+        this.fundForm.get('subFundData.S_investorExtension')?.patchValue(fundValue.sub_fund.fundlifeopen.investor_extension);
+        this.fundForm.get('subFundData.S_boardExtension')?.patchValue(fundValue.sub_fund.fundlifeopen.board_extension);
+        this.fundForm.get('subFundData.S_fundLifedocuments')?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife_documents);
+      }
+      
     }
     console.log(this.fundForm.value);
     
@@ -933,6 +975,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
   }
 
   handleFileInputDirector(index: number, event: any, subfund = false) {
+    let keyName = '';
     if (subfund) {
       let control = (
         (this.fundForm.get('subFundData') as FormGroup).controls[
@@ -942,7 +985,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      formData.append('director_' + control.name[0].id, file);
+      if(!Number.isInteger(control.name[0])){
+        keyName = this.MapIdFromName(control.name[0]).toString();
+      }else{
+        keyName = control.name[0].id;
+      }
+
+      formData.append('director_' + keyName, file);
 
       (
         (this.fundForm.get('subFundData.S_directorsList') as FormArray)
@@ -951,10 +1000,14 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       file = undefined;
     } else {
       let controlForName = this.fundForm.get('directorsList')?.value[index];
-
+      if(!Number.isInteger(controlForName.name[0])){
+        keyName = this.MapIdFromName(controlForName.name[0]).toString();
+      }else{
+        keyName = controlForName.name[0].id;
+      }
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      formData.append('director_' + controlForName.name[0].id, file);
+      formData.append('director_' + keyName , file);
 
       ((this.fundForm.get('directorsList') as FormArray)?.controls as any)[
         index
@@ -1072,6 +1125,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       let dates = this.fundForm.get('closingPeriods') as FormArray;
       dates.push(fb);
     }
+    return fb;
   }
 
   removeClosingPeriod(index: any, subfund = false) {
@@ -1183,18 +1237,39 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return retArr;
   }
 
+  MapFromDirectors(name:string){
+    let str = '';
+    this.directors.map((res:any)=>{
+      if(res.director_name == name) str = res.id;
+    });
+    return str.toString();
+  }
+
   ParseDirectors(arr: any) {
     let retArr: any = [];
     arr.map((result: any) => {
       if (result && result.id) {
         retArr.push(result.id.toString());
       }
+      else{
+        retArr.push(this.MapFromDirectors(result));
+      }
     });
     return retArr;
   }
 
   MapIdFromName(name: any) {
-    return name && name.length ? name[0].id.toString() : '';
+    let str = '';
+    if(this.selectedFund && this.selectedFund.id && !Number.isInteger(name)){
+      this.directors.map((res:any)=>{
+        if(res.director_name === name[0]){
+          str = res.id.toString()
+        }
+      });
+    }else{
+      str = name && name.length ? name[0].id.toString() : '';
+    }
+    return str;
   }
 
   ParseSubscribersOrDirectorList(arr: any) {
@@ -1299,15 +1374,14 @@ export class CreateFundComponent implements OnInit, OnDestroy {
      * fund life docs -> multiple
      * signature -> single
      */
-    
-    console.log(this.fundForm.value);
     this.showInvalidControls = this.findInvalidControls();
+    console.log(this.fundForm.valid);
+    
     let directorsArraySF = [];
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    if (this.fundForm.valid) {
-      
+    // if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -1315,7 +1389,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       let boardResolutionArrsSF: any = [];
       // SUB FUND
       if (this.fundForm.get('subFund')?.value == 'Y') {
-        if (this.fundForm.get('subFundData.S_boardResolutions')?.value) {
+        if (this.fundForm.get('subFundData.S_boardResolutions')?.value && this.fundForm.get('subFundData.S_boardResolutions')?.value instanceof FormData) {
           for (let pair of this.fundForm
             .get('subFundData.S_boardResolutions')
             ?.value.entries()) {
@@ -1332,8 +1406,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
         if (
           this.fundForm.get('subFundData.S_fundStructure')?.value ==
-            'open-ended' &&
-          this.fundForm.get('subFundData.S_fundLifedocuments')?.value
+            'open-ended' && this.fundForm.get('subFundData.S_fundLifedocuments')?.value instanceof FormData
         ) {
           for (let pair of this.fundForm
             .get('subFundData.S_fundLifedocuments')
@@ -1367,6 +1440,14 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             .get('subFundData.S_directorsList')
             ?.value.map((obj: any) => {
               return obj.name;
+            });
+
+            this.fundForm.get('subFundData.S_directorsList')?.value.map((result: any) => {
+              if (result.signature != null && result.signature instanceof FormData) {
+                for (let pair of result.signature.entries()) {
+                  formData.append(pair[0], pair[1]);
+                }
+              }
             });
 
         }
@@ -1637,7 +1718,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
       //END OF SUB FUND
 
-      if (this.fundForm.get('boardResolutions')?.value) {
+      if (this.fundForm.get('boardResolutions')?.value && this.fundForm.get('boardResolutions')?.value instanceof FormData) {
+        
         for (let pair of this.fundForm
           .get('boardResolutions')
           ?.value.entries()) {
@@ -1647,13 +1729,16 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             this.fundForm.get('boardResolutions')?.value.length
           ) {
             formData.append('boardResolutions', boardResolutionArrs);
+            
             return;
           }
         }
+      }else{
+        formData.append('boardResolutions', '');
       }
 
       if (this.fundForm.get('fundStructure')?.value == 'open-ended') {
-        if (this.fundForm.get('fundLifedocuments')?.value) {
+        if (this.fundForm.get('fundLifedocuments')?.value && this.fundForm.get('fundLifedocuments')?.value instanceof FormData) {
           for (let pair of this.fundForm
             .get('fundLifedocuments')
             ?.value.entries()) {
@@ -1666,6 +1751,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               return;
             }
           }
+        }else{
+          formData.append('fundLifedocuments', '');
         }
       }
 
@@ -1681,7 +1768,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             )
           );
         this.fundForm.get('directorsList')?.value.map((result: any) => {
-          if (result.signature != null) {
+          if (result.signature != null && result.signature instanceof FormData) {
             for (let pair of result.signature.entries()) {
               formData.append(pair[0], pair[1]);
             }
@@ -1744,7 +1831,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
       if (
         this.fundForm.get('preparer')?.value &&
-        this.fundForm.get('preparer')?.value.length
+        this.fundForm.get('preparer')?.value.length && this.fundForm.get('preparer')?.value[0] != ''
       ) {
         this.fundForm
           .get('preparer')
@@ -1827,12 +1914,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               this.fundForm.get('subscribers')?.value
             )
           );
-          console.log( this.fundForm
-            .get('subscribers')
-            ?.value);
-          
       }
-
       let obj: any = {
         fundName: this.fundForm.get('fundName')?.value,
         registrationNumber: this.fundForm.get('registrationNumber')?.value,
@@ -1903,13 +1985,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       
       formData.append('json', JSON.stringify(obj));
 
-      if (this.fundForm.get('PPM')?.value) {
+      if (this.fundForm.get('PPM')?.value && this.fundForm.get('PPM')?.value instanceof FormData) {
         for (let pair of this.fundForm.get('PPM')?.value.entries()) {
           formData.append(pair[0], pair[1]);
         }
       }
 
-      if (this.fundForm.get('investmentAgreement')?.value) {
+      if (this.fundForm.get('investmentAgreement')?.value && this.fundForm.get('investmentAgreement')?.value instanceof FormData) {
         for (let pair of this.fundForm
           .get('investmentAgreement')
           ?.value.entries()) {
@@ -1917,7 +1999,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         }
       }
 
-      if (this.fundForm.get('subscriptionAgreement')?.value) {
+      if (this.fundForm.get('subscriptionAgreement')?.value && this.fundForm.get('subscriptionAgreement')?.value instanceof FormData) {
         for (let pair of this.fundForm
           .get('subscriptionAgreement')
           ?.value.entries()) {
@@ -1925,7 +2007,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         }
       }
 
-      if (this.fundForm.get('subscriptionAgreement')?.value) {
+      if (this.fundForm.get('signature')?.value && this.fundForm.get('signature')?.value instanceof FormData) {
         for (let pair of this.fundForm.get('signature')?.value.entries()) {
           formData.append(pair[0], pair[1]);
         }
@@ -1937,6 +2019,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       console.log(id);
       
       if(id){
+        this.spinner.show();
+        formData.append('fund_id',id);
         this.apiService.onEdit(formData).subscribe(
           (result: any) => {
             if (result.status == 'ok') {
@@ -1947,11 +2031,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               });
               this.fundForm.reset();
               this.router.navigate(['dashboard/funds/list']);
+              this.spinner.hide();
             }
           },
-          (err: any) => {}
+          (err: any) => {this.spinner.hide();}
         );
       }else{
+        this.spinner.show();
         this.apiService.onSave(formData).subscribe(
           (result: any) => {
             if (result.status == 'ok') {
@@ -1962,12 +2048,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               });
               this.fundForm.reset();
               this.router.navigate(['dashboard/funds/list']);
+              this.spinner.hide();
             }
           },
-          (err: any) => {}
+          (err: any) => {this.spinner.hide();}
         );
       }
-    }
+    // }
   }
 
   Cancel() {
