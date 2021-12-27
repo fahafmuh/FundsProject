@@ -25,8 +25,8 @@ FUND_STATUS=(
     (1,'open'),
     (2,'funded'),
     (3,'refund'),
-    (4,'frozen'),
-    (5,'unfrozen'),
+    (4,'freeze'),
+    (5,'unfreeze'),
     (6,'close'),
     (7,'extendterm')
 )

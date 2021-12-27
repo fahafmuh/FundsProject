@@ -334,7 +334,7 @@ def approval_view(request):
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication,])
 def getallfunds_view(request):
-    all_funds=Fund.objects.filter(active=True)
+    all_funds=Fund.objects.filter(active=True).order_by('-created_at')
     return Response({'data':FundSerializer(all_funds,many=True).data})
 
 @api_view(["POST",])
