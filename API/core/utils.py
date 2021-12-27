@@ -51,11 +51,11 @@ def get_file_or_none(request,s1,s2,subfund):
         s=s2
     
     if s not in request.POST and s not in request.FILES:
-        return None
+        return -1
     elif s in request.FILES:
         return request.FILES[s]
     elif s in request.POST: #doesn't want to change existing file
-        return -1
+        return None
 
 
 
