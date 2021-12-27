@@ -301,14 +301,13 @@
                           formControlName="S_boardExtension" placeholder="Enter Fund board Extension" />
                         <br />
 
-                        <input class="form-control" type="file" *ngIf="!isSimpleOptionSF" multiple="true"
-                          [attr.disabled]="isDropdownDisabledSF ? '' : null" accept=".pdf,.doc" (change)="
+                        <input class="form-control" type="file" *ngIf="!isSimpleOptionSF"                          [attr.disabled]="isDropdownDisabledSF ? '' : null" accept=".pdf,.doc" (change)="
                               handleFileMultipleInput(
                                 'S_fundLifedocuments',
                                 $event,
                                 true
                               )
-                            " id="formFileMultiple" multiple />
+                            " id="formFileMultiple" />
                         <div id="emailHelp" class="form-text" *ngIf="!isSimpleOptionSF">
                           Multiple file upload allowed.
                         </div>
@@ -411,7 +410,7 @@
                         <label for="staticEmail" class="form-label">Subscription Agreement</label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                               handleFileInput('S_subscriptionAgreement', $event)
-                            " id="formFileMultiple" multiple />
+                            " id="formFileMultiple" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
@@ -421,11 +420,12 @@
                         <label for="staticEmail" class="form-label">Investment Agreement</label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                               handleFileInput('S_investmentAgreement', $event)
-                            " id="formFileMultiple" multiple />
+                            " id="formFileMultiple" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
+
                       </div>
 
                       <div class="mb-3">
@@ -452,7 +452,6 @@
                           Percentage format (%) up to 4 decimal places.
                         </div>
                       </div>
-
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Bank
                         </label>
@@ -541,13 +540,13 @@
                       </div>
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Board Resolutions</label>
-                        <input class="form-control" type="file" accept=".pdf,.doc" multiple="true" (change)="
+                        <input class="form-control" type="file" accept=".pdf,.doc" (change)="
                               handleFileMultipleInput(
                                 'S_boardResolutions',
                                 $event,
                                 true
                               )
-                            " id="formFileMultiple" multiple />
+                            " id="formFileMultiple" />
 
                         <div id="emailHelp" class="form-text">
                           Multiple file upload allowed.
@@ -729,7 +728,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Private Placement Memorandum (PPM)</label>
                         <input class="form-control" type="file" accept=".pdf,.doc"
-                          (change)="handleFileInput('S_PPM', $event)" id="formFileMultiple" multiple />
+                          (change)="handleFileInput('S_PPM', $event)" id="formFileMultiple" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
@@ -1021,10 +1020,10 @@
                 formControlName="boardExtension" placeholder="Enter Fund board Extension" />
               <br />
 
-              <input class="form-control" type="file" *ngIf="!isSimpleOption" multiple="true" accept=".pdf,.doc"
+              <input class="form-control" type="file" *ngIf="!isSimpleOption" accept=".pdf,.doc"
                 (change)="
                     handleFileMultipleInput('fundLifedocuments', $event)
-                  " id="formFileMultiple" multiple />
+                  " id="formFileMultiple" />
 
               <div id="emailHelp" class="form-text" *ngIf="!isSimpleOption">
                 Multiple file upload allowed.
@@ -1204,6 +1203,19 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <label for="staticEmail" class="form-label">Preparer</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Preparer'" [settings]="dropdownSingleSettings"
+              [data]="directors" [disabled]="isDropdownDisabledSF" formControlName="preparer">
+            </ng-multiselect-dropdown>
+            <br />
+            <app-create-directors [directorsList]="directors" [headingPerson]="'Preparer'"
+              (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
+            <div id="emailHelp" class="form-text">
+              Appointed by the Fund Manager.
+            </div>
+          </div>
+
           <div class="mb-3 row" formArrayName="subscribers">
             <label for="staticEmail" class="col-sm-2 col-form-label">Subscriber(s)</label>
             <div class="col-sm-8">
@@ -1222,7 +1234,13 @@
                   <div class="col-auto">
                     <input type="number" min="0.00" step="0.01" class="form-control" formControlName="commitment"
                       placeholder="Subscriber commitment" />
+                     
                   </div>
+
+                  <div class="col-auto">
+                
+                  </div>
+                 
                   <div class="col-auto" *ngIf="checkDeleteAvailibility('subscribers')"  (click)="removeSubscriber(index)">
                     <button type="button" class="btn btn-secondary" > <i class="fa fa-minus"
                       aria-hidden="true"></i></button>
@@ -1273,6 +1291,12 @@
                     <div id="emailHelp" class="form-text">
                       Single file upload only.
                     </div>
+                    <ng-container *ngIf="selectedFund && selectedFund.id && value.get('signature')?.value">
+                      <p>
+                        <ngb-alert [dismissible]="false" type="primary">{{getFileName(value.get('signature')?.value)}}</ngb-alert>
+                      </p>
+                    </ng-container>
+
                   </div>
                   <div class="col-auto" *ngIf="checkDeleteAvailibility('directorsList')" (click)="removeDirector(index)">
                     <button type="button" class="btn btn-secondary" > <i class="fa fa-minus"
@@ -1332,8 +1356,8 @@
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label">Board Resolutions</label>
             <div class="col-sm-10 mb-3">
-              <input class="form-control" type="file" accept=".pdf,.doc" multiple="true"
-                (change)="handleFileMultipleInput('boardResolutions', $event)" id="formFileMultiple" multiple />
+              <input class="form-control" type="file" accept=".pdf,.doc"
+                (change)="handleFileMultipleInput('boardResolutions', $event)" id="formFileMultiple" />
 
               <div id="emailHelp" class="form-text">
                 Multiple files allowed.
@@ -1468,7 +1492,7 @@
                 style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileInput('subscriptionAgreement', $event)" id="formFileMultiple" multiple />
+                (change)="handleFileInput('subscriptionAgreement', $event)" id="formFileMultiple" />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
@@ -1481,7 +1505,7 @@
 
             <div class="col-sm-10">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileInput('investmentAgreement', $event)" id="formFileMultiple" multiple />
+                (change)="handleFileInput('investmentAgreement', $event)" id="formFileMultiple" />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
@@ -1495,11 +1519,12 @@
 
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc" (change)="handleFileInput('PPM', $event)"
-                id="formFileMultiple" multiple />
+                id="formFileMultiple" />
 
               <div id="emailHelp" class="form-text">
                 Single file upload only.
               </div>
+           
             </div>
           </div>
           <div class="mb-3 row">
@@ -1529,6 +1554,19 @@
                 placeholder="Enter Hurdle Rate" />
               <div id="emailHelp" class="form-text">
                 Percentage format (%) up to 4 decimal places.
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="mb-3 row mt-4">
+            <label for="staticEmail" class="form-label">Lock up Period (in years)</label>
+            <div class="col-sm-10">
+
+              <input type="number" min="0" step="1" class="form-control" formControlName="lockupPeriod"
+                placeholder="Lock up Period (in years)" />
+              <div id="emailHelp" class="form-text">
+                Duration where no withdraw or redemption's allowed.
               </div>
             </div>
           </div>
@@ -1687,3 +1725,13 @@
 </div>
 
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "line-spin-clockwise-fade" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
+
+
+<!-- 
+MULTIPLE FILE UPLOAD  
+PPM 
+FUND LIFE 
+SUBSCRIPTION AGG.
+INVESTEMENT AGG.
+BOARD RES. -->
