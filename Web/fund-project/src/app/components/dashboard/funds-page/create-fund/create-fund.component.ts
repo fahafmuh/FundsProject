@@ -264,7 +264,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.investment_committee));
     this.fundForm.get('authorizedSignatory')?.patchValue([fundValue.AuthorizedSignatory['director_name']]);
     this.fundForm.get('approver')?.patchValue([fundValue.Approver['director_name']]);
-    this.fundForm.get('domicile')?.patchValue(fundValue.domicile.country_name);
+    this.fundForm.get('domicile')?.patchValue(fundValue.domicile ? fundValue.domicile.country_name : '');
     this.fundForm.get('offerPrice')?.patchValue(fundValue.offer_price);
     this.fundForm.get('issuedShares')?.patchValue(fundValue.issued_shares);
     this.fundForm.get('ordinaryShares')?.patchValue(fundValue.ordinary_shares);
@@ -1279,6 +1279,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return arr;
   }
 
+
   findInvalidControls() {
     const invalid = [];
     const controls = this.fundForm.controls;
@@ -1381,7 +1382,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    // if (this.fundForm.valid) {
+    if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -1561,36 +1562,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (
-          this.fundForm.get('subFundData.S_preparer')?.value &&
-          this.fundForm.get('subFundData.S_preparer')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_preparer')
-            ?.setValue(
-              this.ParseDirectors(
-                Array.isArray(
-                  this.fundForm.get('subFundData.S_preparer')?.value
-                )
-                  ? this.fundForm.get('subFundData.S_preparer')?.value
-                  : [this.fundForm.get('subFundData.S_preparer')?.value]
-              )
-            );
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_subscribers')?.value &&
-          this.fundForm.get('subFundData.S_subscribers')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_subscribers')
-            ?.setValue(
-              this.ParseSubscribersOrDirectorList(
-                this.fundForm.get('subFundData.S_subscribers')?.value
-              )
-            );
-        }
-
         // SUB FUND:
         if (this.fundForm.get('subFundData.S_PPM')?.value) {
           for (let pair of this.fundForm
@@ -1691,7 +1662,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
           )?.value,
           fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
           GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
-          preparer: this.fundForm.get('subFundData.S_preparer')?.value,
           closingPeriod: closingPeriodArraySF,
           reclassificationFreq: this.fundForm.get(
             'subFundData.S_reclassificationFreq'
@@ -1702,6 +1672,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             ?.value,
           hurdleRate: this.fundForm.get('subFundData.S_hurdleRate')?.value,
           CTC: this.fundForm.get('subFundData.S_CTC')?.value,
+          preparer: this.fundForm.get('subFundData.S_preparer')?.value,
           bank: this.fundForm.get('subFundData.S_bank')?.value,
           bankAccount: this.fundForm.get('subFundData.S_bankAccount')?.value,
           bankAccessId: this.fundForm.get('subFundData.S_bankAccessId')?.value,
@@ -1830,21 +1801,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       }
 
       if (
-        this.fundForm.get('preparer')?.value &&
-        this.fundForm.get('preparer')?.value.length && this.fundForm.get('preparer')?.value[0] != ''
-      ) {
-        this.fundForm
-          .get('preparer')
-          ?.setValue(
-            this.ParseDirectors(
-              Array.isArray(this.fundForm.get('preparer')?.value)
-                ? this.fundForm.get('preparer')?.value
-                : [this.fundForm.get('preparer')?.value]
-            )
-          );
-      }
-
-      if (
         this.fundForm.get('authorizedSignatory')?.value &&
         this.fundForm.get('authorizedSignatory')?.value.length
       ) {
@@ -1888,20 +1844,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
           );
       }
 
-      if (
-        this.fundForm.get('preparer')?.value &&
-        this.fundForm.get('preparer')?.value.length
-      ) {
-        this.fundForm
-          .get('preparer')
-          ?.setValue(
-            this.ParseDirectors(
-              Array.isArray(this.fundForm.get('preparer')?.value)
-                ? this.fundForm.get('preparer')?.value
-                : [this.fundForm.get('preparer')?.value]
-            )
-          );
-      }
+   
 
       if (
         this.fundForm.get('subscribers')?.value &&
@@ -1909,17 +1852,14 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       ) {
         this.fundForm
           .get('subscribers')
-          ?.setValue(
-            this.ParseSubscribersOrDirectorList(
-              this.fundForm.get('subscribers')?.value
-            )
-          );
+          ?.setValue(this.fundForm.get('subscribers')?.value );
       }
       let obj: any = {
         fundName: this.fundForm.get('fundName')?.value,
         registrationNumber: this.fundForm.get('registrationNumber')?.value,
         fundDescription: this.fundForm.get('fundDescription')?.value,
         subFund: this.fundForm.get('subFund')?.value,
+        preparer:this.fundForm.get('preparer')?.value,
         subFundData:
           this.fundForm.get('subFund')?.value == 'Y'
             ? subFundDataObj
@@ -1962,9 +1902,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         directors: directorsArray,
         investmentComittee: this.fundForm.get('investmentComittee')?.value,
         authorizedSignatory: this.fundForm.get('authorizedSignatory')?.value,
-        fundAdmin: this.fundForm.value.fundAdmin,
+        fundAdmin: this.fundForm.get('fundAdmin')?.value,
         GIIN: this.fundForm.get('GIIN')?.value,
-        preparer: this.fundForm.get('preparer')?.value,
         closingPeriod: closingPeriodArray,
         reclassificationFreq: this.fundForm.get('reclassificationFreq')?.value,
         approver: this.fundForm.get('approver')?.value,
@@ -2032,9 +1971,18 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               this.fundForm.reset();
               this.router.navigate(['dashboard/funds/list']);
               this.spinner.hide();
+            }else{
+              this._snackBar.open('Error in editing fund!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.spinner.hide();
             }
           },
-          (err: any) => {this.spinner.hide();}
+          (err: any) => {
+            this.spinner.hide();
+          }
         );
       }else{
         this.spinner.show();
@@ -2049,12 +1997,19 @@ export class CreateFundComponent implements OnInit, OnDestroy {
               this.fundForm.reset();
               this.router.navigate(['dashboard/funds/list']);
               this.spinner.hide();
+            }else{
+              this._snackBar.open('Error in saving fund!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.spinner.hide();
             }
           },
           (err: any) => {this.spinner.hide();}
         );
       }
-    // }
+    }
   }
 
   Cancel() {

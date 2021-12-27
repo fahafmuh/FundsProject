@@ -387,8 +387,8 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Custodian / Truste<span
-                          style="color: rgb(253, 65, 65)">&nbsp;*</span>e</label>
+                        <label for="staticEmail" class="form-label">Custodian / Trustee<span
+                          style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input type="text" class="form-control" formControlName="S_trustee"
                           placeholder="Enter Custodian / Trustee" />
                         <div id="emailHelp" class="form-text">
@@ -605,17 +605,16 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label for="staticEmail" class="form-label">Preparer</label>
-                        <ng-multiselect-dropdown [placeholder]="'Select Preparer'" [settings]="dropdownSingleSettings"
-                          [data]="directors" [disabled]="isDropdownDisabledSF" formControlName="S_preparer">
-                        </ng-multiselect-dropdown>
-                        <br />
-                        <app-create-directors [directorsList]="directors" [headingPerson]="'Preparer'"
-                          (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
-                        <div id="emailHelp" class="form-text">
-                          Appointed by the Fund Manager.
-                        </div>
+                        <label for="staticEmail" class="form-label">Preparer<span
+                            style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
+                          <input type="text" class="form-control" formControlName="S_preparer"
+                            placeholder="Enter Preparer" />
+            
+                          <div id="emailHelp" class="form-text">
+                            Appointed entity by the Fund manager.
+                          </div>
                       </div>
+            
                       <div class="mb-3" formArrayName="S_closingPeriods">
                         <label for="staticEmail" class="form-label">Closing Period<span
                           style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
@@ -1251,20 +1250,18 @@
               </div>
             </div>
           </div>
-
+ 
           <div class="mb-3 row">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Preparer</label>
+            <label for="staticEmail" class="col-sm-2 col-form-label">Preparer<span
+                style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
             <div class="col-sm-10">
+              <input type="text" class="form-control" formControlName="preparer"
+                placeholder="Enter Preparer" />
 
-              <ng-multiselect-dropdown [placeholder]="'Select Preparer'" [settings]="dropdownSingleSettings"
-                [data]="directors" [disabled]="isDropdownDisabledSF" formControlName="preparer">
-              </ng-multiselect-dropdown>
-              <br />
-              <app-create-directors [directorsList]="directors" [headingPerson]="'Preparer'"
-                (sendDirectorsData)="refreshDirectors($event)"></app-create-directors>
               <div id="emailHelp" class="form-text">
-                Appointed by the Fund Manager.
+                Appointed entity by the Fund manager.
               </div>
+
             </div>
           </div>
 
