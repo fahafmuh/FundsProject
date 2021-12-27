@@ -504,7 +504,7 @@ def update_fund_object(fund_obj,data,request,sub_fund=False):
             obj.save()
             #ADDED WORK FOR FUND LIFE OPEN DOCUMENT BELOW 
             file=get_file_or_none(request,'fundLifedocuments','S_fundLifedocuments',sub_fund)
-            obj.fundlifeopendocument_set.all().delete()
+            obj.fundlifeopendocument.all().delete()
             if file!=-1:
                 if file!=None:
                     f_obj=FundLifeOpenDocument(fundlifeopen=obj,document=file)
@@ -516,14 +516,14 @@ def update_fund_object(fund_obj,data,request,sub_fund=False):
     #end
     
     #closingPeriod object creation
-    fund_obj.closingperiod_set.all().delete()
+    fund_obj.closingDates.all().delete()
     for date in data['closingPeriod']:
         obj=closingperiod(fund=fund_obj,closing_Date=date)
         obj.save()
     #end
 
     #subscriber creation
-    fund_obj.subscriber_set.all().delete()
+    fund_obj.subscribers.all().delete()
     if(len(data['subscribers'])!=0):
         for obj in data['subscribers']:
             obj=Subscriber(fund=fund_obj,subscriber_name=obj['name'],subscriber_commitment=float(obj['commitment']))
@@ -534,7 +534,7 @@ def update_fund_object(fund_obj,data,request,sub_fund=False):
     file=get_file_or_none(request,'boardResolutions','S_boardResolutions',sub_fund)
     
     if file!=-1:
-        fund_obj.boardresolution_set.all().delete()
+        fund_obj.boardResolution.all().delete()
         if file!=None:
             obj=BoardResolution(fund=fund_obj,board_resolution=file)
             obj.save()
