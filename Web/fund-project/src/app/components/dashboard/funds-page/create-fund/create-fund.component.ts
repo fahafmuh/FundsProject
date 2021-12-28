@@ -304,12 +304,12 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('created_at')?.patchValue(fundValue.created_at);
     this.fundForm.get('updated_at')?.patchValue(fundValue.updated_at);
     this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
-    // this.fundForm.get('subscribers')?.patchValue(this.MapSubs(fundValue.subscribers));
     this.MapClosingDates(fundValue.closingDates,this.fundForm.get('closingPeriods') as FormArray);
     this.MapDirectors(fundValue.directors,this.fundForm.get('directorsList') as FormArray);
     this.MapSubs(fundValue.subscribers,this.fundForm.get('subscribers') as FormArray)
 
     this.fundForm.get('investmentAgreement')?.patchValue(fundValue.Investment_Agreement);
+    this.fundForm.get('signature')?.patchValue(fundValue.AuthorizedSignatory.director_signature);
     this.fundForm.get('subscriptionAgreement')?.patchValue(fundValue.Subscription_Agreement);
     this.fundForm.get('boardResolutions')?.patchValue(fundValue.boardResolution);
     this.fundForm.get('fundStatusReason')?.patchValue(fundValue.reason_to_change);
@@ -321,9 +321,9 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     else{
       this.isSimpleOption = false;
       this.fundForm.get('fundLifeYears')?.patchValue(fundValue.fundlifeopen.fundlife);
-      this.fundForm.get('investorExtension')?.patchValue(fundValue.fundlifeopen.investor_extension);
-      this.fundForm.get('boardExtension')?.patchValue(fundValue.fundlifeopen.board_extension);
-      this.fundForm.get('fundLifedocuments')?.patchValue(fundValue.fundlifeopen.fundlife_documents);
+      this.fundForm.get('investorExtension')?.patchValue(fundValue.fundlifeopen.Investor_Extension);
+      this.fundForm.get('boardExtension')?.patchValue(fundValue.fundlifeopen.Board_Extension);
+      this.fundForm.get('fundLifedocuments')?.patchValue(fundValue.fundlifeopen.fundlifeopendoc);
     }
 
     if(fundValue.sub_fund != null){
@@ -338,7 +338,9 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.get('subFundData.S_investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.sub_fund.investment_committee));
       this.fundForm.get('subFundData.S_authorizedSignatory')?.patchValue([fundValue.sub_fund.AuthorizedSignatory['director_name']]);
       this.fundForm.get('subFundData.S_approver')?.patchValue([fundValue.sub_fund.Approver['director_name']]);
-      this.fundForm.get('subFundData.S_domicile')?.patchValue(fundValue.sub_fund.domicile.country_name);
+      this.fundForm.get('subFundData.S_domicile')?.patchValue(fundValue.sub_fund.domicile.country_name);    this.fundForm.get('signature')?.patchValue(fundValue.AuthorizedSignatory.director_signature);
+      this.fundForm.get('subFundData.S_signature')?.patchValue(fundValue.sub_fund.AuthorizedSignatory.director_signature);
+
       this.fundForm.get('subFundData.S_offerPrice')?.patchValue(fundValue.sub_fund.offer_price);
       this.fundForm.get('subFundData.S_issuedShares')?.patchValue(fundValue.sub_fund.issued_shares);
       this.fundForm.get('subFundData.S_ordinaryShares')?.patchValue(fundValue.sub_fund.ordinary_shares);
@@ -976,6 +978,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
   handleFileInputDirector(index: number, event: any, subfund = false) {
     let keyName = '';
+    event.target.value = '';
     if (subfund) {
       let control = (
         (this.fundForm.get('subFundData') as FormGroup).controls[
@@ -985,12 +988,11 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      if(!Number.isInteger(control.name[0])){
+      if(!control.name[0].id){
         keyName = this.MapIdFromName(control.name[0]).toString();
       }else{
         keyName = control.name[0].id;
       }
-
       formData.append('director_' + keyName, file);
 
       (
@@ -1000,11 +1002,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       file = undefined;
     } else {
       let controlForName = this.fundForm.get('directorsList')?.value[index];
-      if(!Number.isInteger(controlForName.name[0])){
+      
+      if(!controlForName.name[0].id){
         keyName = this.MapIdFromName(controlForName.name[0]).toString();
       }else{
         keyName = controlForName.name[0].id;
       }
+      
       const formData: FormData = new FormData();
       let file = event.target.files[0];
       formData.append('director_' + keyName , file);
@@ -1279,6 +1283,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return arr;
   }
 
+  MapSubscribers(arr: any){
+    arr.map((res: any) => {
+      res.name = res.name[0].director_name;;
+    });
+    return arr;
+  }
+
 
   findInvalidControls() {
     const invalid = [];
@@ -1382,7 +1393,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    if (this.fundForm.valid) {
+    // if (this.fundForm.valid) {
       let formData = new FormData();
       let boardResolutionArrs: any = [];
       let subFundDataObj = {};
@@ -1595,6 +1606,16 @@ export class CreateFundComponent implements OnInit, OnDestroy {
           }
         }
 
+        if (
+          this.fundForm.get('subFundData.S_subscribers')?.value &&
+          this.fundForm.get('subFundData.S_subscribers')?.value.length
+        ) {
+
+        this.fundForm
+        .get('subFundData.S_subscribers')
+        ?.setValue(this.MapSubscribers(this.fundForm.get('subFundData.S_subscribers')?.value));
+
+        }
         subFundDataObj = {
           fundName: this.fundForm.get('subFundData.S_fundName')?.value,
           registrationNumber: this.fundForm.get(
@@ -1688,22 +1709,20 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       }
 
       //END OF SUB FUND
-
-      if (this.fundForm.get('boardResolutions')?.value && this.fundForm.get('boardResolutions')?.value instanceof FormData) {
+      console.log(this.fundForm.get('boardResolutions')?.value && (this.fundForm.get('boardResolutions')?.value instanceof FormData));
+      
+      if (this.fundForm.get('boardResolutions')?.value && (this.fundForm.get('boardResolutions')?.value instanceof FormData)) {
+        console.log("MapSubscribersdfsdfsd");
         
         for (let pair of this.fundForm
           .get('boardResolutions')
           ?.value.entries()) {
           boardResolutionArrs.push(pair[1]);
-          if (
-            boardResolutionArrs.length ==
-            this.fundForm.get('boardResolutions')?.value.length
-          ) {
-            formData.append('boardResolutions', boardResolutionArrs);
-            
-            return;
-          }
+          console.log(boardResolutionArrs);
         }
+          
+          formData.append('boardResolutions', boardResolutionArrs);
+          
       }else{
         formData.append('boardResolutions', '');
       }
@@ -1714,14 +1733,8 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             .get('fundLifedocuments')
             ?.value.entries()) {
             fundLifeArrs.push(pair[1]);
-            if (
-              fundLifeArrs.length ==
-              this.fundForm.get('fundLifedocuments')?.value.length
-            ) {
-              formData.append('fundLifedocuments', fundLifeArrs);
-              return;
             }
-          }
+              formData.append('fundLifedocuments', fundLifeArrs);
         }else{
           formData.append('fundLifedocuments', '');
         }
@@ -1843,16 +1856,17 @@ export class CreateFundComponent implements OnInit, OnDestroy {
             )
           );
       }
-
-   
-
       if (
         this.fundForm.get('subscribers')?.value &&
-        this.fundForm.get('subscribers')?.value.length
+        this.fundForm.get('subscribers')?.value.length && this.fundForm.get('subscribers')?.value[0].name != ''
       ) {
         this.fundForm
           .get('subscribers')
-          ?.setValue(this.fundForm.get('subscribers')?.value );
+          ?.setValue(this.MapSubscribers(this.fundForm.get('subscribers')?.value));
+          console.log(this.fundForm
+            .get('subscribers')
+            ?.value);
+          
       }
       let obj: any = {
         fundName: this.fundForm.get('fundName')?.value,
@@ -1956,60 +1970,61 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.value.updated_at =  id ? new Date().toISOString() : null;
       console.log(formData.get('json'), typeof formData.get('json'));
       console.log(id);
+      console.log();
       
-      if(id){
-        this.spinner.show();
-        formData.append('fund_id',id);
-        this.apiService.onEdit(formData).subscribe(
-          (result: any) => {
-            if (result.status == 'ok') {
-              this._snackBar.open('Fund edited successfully!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.fundForm.reset();
-              this.router.navigate(['dashboard/funds/list']);
-              this.spinner.hide();
-            }else{
-              this._snackBar.open('Error in editing fund!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.spinner.hide();
-            }
-          },
-          (err: any) => {
-            this.spinner.hide();
-          }
-        );
-      }else{
-        this.spinner.show();
-        this.apiService.onSave(formData).subscribe(
-          (result: any) => {
-            if (result.status == 'ok') {
-              this._snackBar.open('Fund created successfully!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.fundForm.reset();
-              this.router.navigate(['dashboard/funds/list']);
-              this.spinner.hide();
-            }else{
-              this._snackBar.open('Error in saving fund!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.spinner.hide();
-            }
-          },
-          (err: any) => {this.spinner.hide();}
-        );
-      }
-    }
+      // if(id){
+      //   this.spinner.show();
+      //   formData.append('fund_id',id);
+      //   this.apiService.onEdit(formData).subscribe(
+      //     (result: any) => {
+      //       if (result.status == 'ok') {
+      //         this._snackBar.open('Fund edited successfully!', '', {
+      //           horizontalPosition: this.horizontalPosition,
+      //           verticalPosition: this.verticalPosition,
+      //           duration: 4000,
+      //         });
+      //         this.fundForm.reset();
+      //         this.router.navigate(['dashboard/funds/list']);
+      //         this.spinner.hide();
+      //       }else{
+      //         this._snackBar.open('Error in editing fund!', '', {
+      //           horizontalPosition: this.horizontalPosition,
+      //           verticalPosition: this.verticalPosition,
+      //           duration: 4000,
+      //         });
+      //         this.spinner.hide();
+      //       }
+      //     },
+      //     (err: any) => {
+      //       this.spinner.hide();
+      //     }
+      //   );
+      // }else{
+      //   this.spinner.show();
+      //   this.apiService.onSave(formData).subscribe(
+      //     (result: any) => {
+      //       if (result.status == 'ok') {
+      //         this._snackBar.open('Fund created successfully!', '', {
+      //           horizontalPosition: this.horizontalPosition,
+      //           verticalPosition: this.verticalPosition,
+      //           duration: 4000,
+      //         });
+      //         this.fundForm.reset();
+      //         this.router.navigate(['dashboard/funds/list']);
+      //         this.spinner.hide();
+      //       }else{
+      //         this._snackBar.open('Error in saving fund!', '', {
+      //           horizontalPosition: this.horizontalPosition,
+      //           verticalPosition: this.verticalPosition,
+      //           duration: 4000,
+      //         });
+      //         this.spinner.hide();
+      //       }
+      //     },
+      //     (err: any) => {this.spinner.hide();}
+      //   );
+      // }
+    // }
   }
 
   Cancel() {
