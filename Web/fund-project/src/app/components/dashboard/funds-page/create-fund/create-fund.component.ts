@@ -296,7 +296,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
     this.fundForm.get('fundStructure')?.patchValue(fundValue.fund_structure);
     this.fundForm.get('fundStatus')?.patchValue(fundValue.fund_status);
-    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency == null ? '' : fundValue.reporting_frequency);
+    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency == null ? '' : fundValue.reporting_frequency.reporting_frequency_name);
     this.fundForm.get('reclassificationFrequency')?.patchValue(fundValue.ReclassificationFrequency.reclassification_frequency_name);
     this.fundForm.get('productType')?.patchValue(fundValue.product_type != null ? fundValue.product_type.product_type_name : '');
     this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
@@ -978,7 +978,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
   handleFileInputDirector(index: number, event: any, subfund = false) {
     let keyName = '';
-    event.target.value = '';
     if (subfund) {
       let control = (
         (this.fundForm.get('subFundData') as FormGroup).controls[
@@ -1970,60 +1969,61 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm.value.updated_at =  id ? new Date().toISOString() : null;
       console.log(formData.get('json'), typeof formData.get('json'));
       console.log(id);
-      console.log();
+      console.log(formData.getAll('boardResolutions'));
+
       
-      // if(id){
-      //   this.spinner.show();
-      //   formData.append('fund_id',id);
-      //   this.apiService.onEdit(formData).subscribe(
-      //     (result: any) => {
-      //       if (result.status == 'ok') {
-      //         this._snackBar.open('Fund edited successfully!', '', {
-      //           horizontalPosition: this.horizontalPosition,
-      //           verticalPosition: this.verticalPosition,
-      //           duration: 4000,
-      //         });
-      //         this.fundForm.reset();
-      //         this.router.navigate(['dashboard/funds/list']);
-      //         this.spinner.hide();
-      //       }else{
-      //         this._snackBar.open('Error in editing fund!', '', {
-      //           horizontalPosition: this.horizontalPosition,
-      //           verticalPosition: this.verticalPosition,
-      //           duration: 4000,
-      //         });
-      //         this.spinner.hide();
-      //       }
-      //     },
-      //     (err: any) => {
-      //       this.spinner.hide();
-      //     }
-      //   );
-      // }else{
-      //   this.spinner.show();
-      //   this.apiService.onSave(formData).subscribe(
-      //     (result: any) => {
-      //       if (result.status == 'ok') {
-      //         this._snackBar.open('Fund created successfully!', '', {
-      //           horizontalPosition: this.horizontalPosition,
-      //           verticalPosition: this.verticalPosition,
-      //           duration: 4000,
-      //         });
-      //         this.fundForm.reset();
-      //         this.router.navigate(['dashboard/funds/list']);
-      //         this.spinner.hide();
-      //       }else{
-      //         this._snackBar.open('Error in saving fund!', '', {
-      //           horizontalPosition: this.horizontalPosition,
-      //           verticalPosition: this.verticalPosition,
-      //           duration: 4000,
-      //         });
-      //         this.spinner.hide();
-      //       }
-      //     },
-      //     (err: any) => {this.spinner.hide();}
-      //   );
-      // }
+      if(id){
+        this.spinner.show();
+        formData.append('fund_id',id);
+        this.apiService.onEdit(formData).subscribe(
+          (result: any) => {
+            if (result.status == 'ok') {
+              this._snackBar.open('Fund edited successfully!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.fundForm.reset();
+              this.router.navigate(['dashboard/funds/list']);
+              this.spinner.hide();
+            }else{
+              this._snackBar.open('Error in editing fund!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.spinner.hide();
+            }
+          },
+          (err: any) => {
+            this.spinner.hide();
+          }
+        );
+      }else{
+        this.spinner.show();
+        this.apiService.onSave(formData).subscribe(
+          (result: any) => {
+            if (result.status == 'ok') {
+              this._snackBar.open('Fund created successfully!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.fundForm.reset();
+              this.router.navigate(['dashboard/funds/list']);
+              this.spinner.hide();
+            }else{
+              this._snackBar.open('Error in saving fund!', '', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 4000,
+              });
+              this.spinner.hide();
+            }
+          },
+          (err: any) => {this.spinner.hide();}
+        );
+      }
     // }
   }
 
