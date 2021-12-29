@@ -1,10 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2';
 import {
@@ -154,7 +149,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     private config: NgbDatepickerConfig,
     private apiService: APIService,
     private _snackBar: MatSnackBar,
-    private spinner:NgxSpinnerService,
+    private spinner: NgxSpinnerService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder
@@ -164,7 +159,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         if (result.status == 'ok') {
           this.directors = result.directors;
           console.log(this.directors);
-          
+
           this.setMultiDropdownSettings();
           this.setSingleDS();
         } else {
@@ -179,102 +174,119 @@ export class CreateFundComponent implements OnInit, OnDestroy {
         this.setSingleDS();
       }
     );
-
-
   }
 
-  MapArrayDirector(arr:any){
-    let final:any = [];
-    arr.map((res:any)=>{
+  MapArrayDirector(arr: any) {
+    let final: any = [];
+    arr.map((res: any) => {
       final.push(res.director_name);
     });
     return final;
   }
 
-  MapDate(date:any){
-    let splitCreatedDate = date.split("-",3);
+  MapDate(date: any) {
+    let splitCreatedDate = date.split('-', 3);
     let apiYear = Number(splitCreatedDate[0]);
     let apiMonth = Number(splitCreatedDate[1]);
     let apiDay = Number(splitCreatedDate[2]);
-    return {year:apiYear,month:apiMonth,day:apiDay};
+    return { year: apiYear, month: apiMonth, day: apiDay };
   }
 
-  MapDirectors(directors:any,controlsForm:FormArray){
+  MapDirectors(directors: any, controlsForm: FormArray) {
     for (const c of directors) {
       let fb: FormGroup = this.formBuilder.group({
         name: [[c.director_name], [Validators.required]],
         signature: [c.director_signature, [Validators.required]],
       });
-      if(controlsForm) controlsForm.push(fb);
+      if (controlsForm) controlsForm.push(fb);
     }
-    if(controlsForm) controlsForm.removeAt(0);
+    if (controlsForm) controlsForm.removeAt(0);
   }
 
-  MapSubs(persons:any,controlsForm:FormArray){
-   for (const c of persons) {
-    let fb: FormGroup = this.formBuilder.group({
-      name: [[c.subscriber_name], [Validators.required]],
-      commitment: [c.subscriber_commitment, [Validators.required]],
-    });
-    if(controlsForm) controlsForm.push(fb);
-  }
-  if(controlsForm) controlsForm.removeAt(0);
+  MapSubs(persons: any, controlsForm: FormArray) {
+    for (const c of persons) {
+      let fb: FormGroup = this.formBuilder.group({
+        name: [[c.subscriber_name], [Validators.required]],
+        commitment: [c.subscriber_commitment, [Validators.required]],
+      });
+      controlsForm.push(fb);
+    }
+    if (controlsForm) controlsForm.removeAt(0);
   }
 
-  
-  MapClosingDates(dates:any,controlsForm:FormArray){
+  MapClosingDates(dates: any, controlsForm: FormArray) {
     for (const c of dates) {
       let fb: FormGroup = this.formBuilder.group({
         date: [this.MapDate(c.closing_Date), [Validators.required]],
       });
-      if(controlsForm) controlsForm.push(fb);
+      if (controlsForm) controlsForm.push(fb);
     }
-    if(controlsForm) controlsForm.removeAt(0);
+    if (controlsForm) controlsForm.removeAt(0);
   }
 
-  getFileName(data:any){
+  getFileName(data: any) {
     let str = '';
-    if(Array.isArray(data)) data = data[0];
-    if(data && typeof data == 'string'){
+    if (Array.isArray(data)) data = data[0];
+    if (data && typeof data == 'string') {
       str = data.split('/')[3];
     }
     return str;
   }
 
-  checkType(field:any){
+  checkType(field: any) {
     return field instanceof FormData ? true : false;
   }
 
-  MapFiles(files:any){
-    let data:any = Array.isArray(files) ? files : [];
-    if(data && data.length){
-      data.length.map((file:any)=>{
-
-      })
+  MapFiles(files: any) {
+    let data: any = Array.isArray(files) ? files : [];
+    if (data && data.length) {
+      data.length.map((file: any) => {});
     }
   }
 
   MapValues(fundValue: any) {
     console.log(fundValue);
     this.fundForm.get('fundName')?.patchValue(fundValue.fund_name);
-    this.fundForm.get('registrationNumber')?.patchValue(fundValue.registration_no);
-    this.fundForm.get('fundDescription')?.patchValue(fundValue.fund_description);
-    this.fundForm.get('fundManagerEntity')?.patchValue(fundValue.fund_manager_entity);
-    this.fundForm.get('fundManagerRep')?.patchValue([fundValue.fund_manager_rep['director_name']]);
-    this.fundForm.get('investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.investment_committee));
-    this.fundForm.get('authorizedSignatory')?.patchValue([fundValue.AuthorizedSignatory['director_name']]);
-    this.fundForm.get('approver')?.patchValue([fundValue.Approver['director_name']]);
-    this.fundForm.get('domicile')?.patchValue(fundValue.domicile ? fundValue.domicile.country_name : '');
+    this.fundForm
+      .get('registrationNumber')
+      ?.patchValue(fundValue.registration_no);
+    this.fundForm
+      .get('fundDescription')
+      ?.patchValue(fundValue.fund_description);
+    this.fundForm
+      .get('fundManagerEntity')
+      ?.patchValue(fundValue.fund_manager_entity);
+    this.fundForm
+      .get('fundManagerRep')
+      ?.patchValue([fundValue.fund_manager_rep['director_name']]);
+    this.fundForm
+      .get('investmentComittee')
+      ?.patchValue(this.MapArrayDirector(fundValue.investment_committee));
+    this.fundForm
+      .get('authorizedSignatory')
+      ?.patchValue([fundValue.AuthorizedSignatory['director_name']]);
+    this.fundForm
+      .get('approver')
+      ?.patchValue([fundValue.Approver['director_name']]);
+    this.fundForm
+      .get('domicile')
+      ?.patchValue(fundValue.domicile ? fundValue.domicile.country_name : '');
     this.fundForm.get('offerPrice')?.patchValue(fundValue.offer_price);
     this.fundForm.get('issuedShares')?.patchValue(fundValue.issued_shares);
     this.fundForm.get('ordinaryShares')?.patchValue(fundValue.ordinary_shares);
     this.fundForm.get('fundSize')?.patchValue(fundValue.fund_size);
     this.fundForm.get('lockupPeriod')?.patchValue(fundValue.lock_up_period);
     this.fundForm.get('fundYearEnd')?.patchValue(fundValue.fund_year_end);
-    this.fundForm.get('fundEndDate')?.patchValue(fundValue.fund_end_date ? this.MapDate(fundValue.fund_end_date) : '');
+    this.fundForm
+      .get('fundEndDate')
+      ?.patchValue(
+        fundValue.fund_end_date ? this.MapDate(fundValue.fund_end_date) : ''
+      );
     this.fundForm.get('catchUp')?.patchValue(Number(fundValue.catch_up));
     this.fundForm.get('legalCounsel')?.patchValue(fundValue.legal_counsel);
-    this.fundForm.get('legalCounselRep')?.patchValue(fundValue.legal_counsel_rep);
+    this.fundForm
+      .get('legalCounselRep')
+      ?.patchValue(fundValue.legal_counsel_rep);
     this.fundForm.get('auditor')?.patchValue(fundValue.Auditor);
     this.fundForm.get('auditorRep')?.patchValue(fundValue.Auditor_rep);
     this.fundForm.get('trustee')?.patchValue(fundValue.Custodian);
@@ -289,115 +301,307 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     this.fundForm.get('bank')?.patchValue(fundValue.Bank.Bank_name);
     this.fundForm.get('bankAccount')?.patchValue(fundValue.BankAccount);
     this.fundForm.get('bankAccessId')?.patchValue(fundValue.BankAccessID);
-    this.fundForm.get('bankAccessPassword')?.patchValue(fundValue.BankAccessPassword);
-    this.fundForm.get('redeem')?.patchValue(fundValue.redeem ? this.MapDate(fundValue.redeem) : '');
+    this.fundForm
+      .get('bankAccessPassword')
+      ?.patchValue(fundValue.BankAccessPassword);
+    this.fundForm
+      .get('redeem')
+      ?.patchValue(fundValue.redeem ? this.MapDate(fundValue.redeem) : '');
     this.fundForm.get('redeemReason')?.patchValue(fundValue.redeemReason);
     this.fundForm.get('liquidate')?.patchValue(fundValue.liquidate);
     this.fundForm.get('liquidateReason')?.patchValue(fundValue.liquidateReason);
     this.fundForm.get('fundStructure')?.patchValue(fundValue.fund_structure);
     this.fundForm.get('fundStatus')?.patchValue(fundValue.fund_status);
-    this.fundForm.get('reportingFrequency')?.patchValue(fundValue.reporting_frequency == null ? '' : fundValue.reporting_frequency.reporting_frequency_name);
-    this.fundForm.get('reclassificationFrequency')?.patchValue(fundValue.ReclassificationFrequency.reclassification_frequency_name);
-    this.fundForm.get('productType')?.patchValue(fundValue.product_type != null ? fundValue.product_type.product_type_name : '');
-    this.fundForm.get('reportingCurrency')?.patchValue(fundValue.report_currency.currency);
+    this.fundForm
+      .get('reportingFrequency')
+      ?.patchValue(
+        fundValue.reporting_frequency == null
+          ? ''
+          : fundValue.reporting_frequency.reporting_frequency_name
+      );
+    this.fundForm
+      .get('reclassificationFrequency')
+      ?.patchValue(
+        fundValue.ReclassificationFrequency.reclassification_frequency_name
+      );
+    this.fundForm
+      .get('productType')
+      ?.patchValue(
+        fundValue.product_type != null
+          ? fundValue.product_type.product_type_name
+          : ''
+      );
+    this.fundForm
+      .get('reportingCurrency')
+      ?.patchValue(fundValue.report_currency.currency);
     this.fundForm.get('preparer')?.patchValue(fundValue.Preparer);
     this.fundForm.get('created_at')?.patchValue(fundValue.created_at);
     this.fundForm.get('updated_at')?.patchValue(fundValue.updated_at);
-    this.fundForm.get('subFund')?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
-    this.MapClosingDates(fundValue.closingDates,this.fundForm.get('closingPeriods') as FormArray);
-    this.MapDirectors(fundValue.directors,this.fundForm.get('directorsList') as FormArray);
-    this.MapSubs(fundValue.subscribers,this.fundForm.get('subscribers') as FormArray)
+    this.fundForm
+      .get('subFund')
+      ?.patchValue(fundValue.sub_fund != null ? 'Y' : 'N');
+    this.MapClosingDates(
+      fundValue.closingDates,
+      this.fundForm.get('closingPeriods') as FormArray
+    );
+    this.MapDirectors(
+      fundValue.directors,
+      this.fundForm.get('directorsList') as FormArray
+    );
+    this.MapSubs(
+      fundValue.subscribers,
+      this.fundForm.get('subscribers') as FormArray
+    );
 
-    this.fundForm.get('investmentAgreement')?.patchValue(fundValue.Investment_Agreement);
-    this.fundForm.get('signature')?.patchValue(fundValue.AuthorizedSignatory.director_signature);
-    this.fundForm.get('subscriptionAgreement')?.patchValue(fundValue.Subscription_Agreement);
-    this.fundForm.get('boardResolutions')?.patchValue(fundValue.boardResolution);
-    this.fundForm.get('fundStatusReason')?.patchValue(fundValue.reason_to_change);
+    this.fundForm
+      .get('investmentAgreement')
+      ?.patchValue(fundValue.Investment_Agreement);
+    this.fundForm
+      .get('signature')
+      ?.patchValue(fundValue.AuthorizedSignatory.director_signature);
+    this.fundForm
+      .get('subscriptionAgreement')
+      ?.patchValue(fundValue.Subscription_Agreement);
+    this.fundForm
+      .get('boardResolutions')
+      ?.patchValue(fundValue.boardResolution);
+    this.fundForm
+      .get('fundStatusReason')
+      ?.patchValue(fundValue.reason_to_change);
     this.fundForm.get('PPM')?.patchValue(fundValue.PPM);
-    if(fundValue.fund_structure == 'close-ended'){
+    if (fundValue.fund_structure == 'close-ended') {
       this.isSimpleOption = true;
-      this.fundForm.get('fundLifeYears')?.patchValue(fundValue.fundlifeclose.fundlife);
-    }
-    else{
+      this.fundForm
+        .get('fundLifeYears')
+        ?.patchValue(fundValue.fundlifeclose.fundlife);
+    } else {
       this.isSimpleOption = false;
-      this.fundForm.get('fundLifeYears')?.patchValue(fundValue.fundlifeopen.fundlife);
-      this.fundForm.get('investorExtension')?.patchValue(fundValue.fundlifeopen.Investor_Extension);
-      this.fundForm.get('boardExtension')?.patchValue(fundValue.fundlifeopen.Board_Extension);
-      this.fundForm.get('fundLifedocuments')?.patchValue(fundValue.fundlifeopen.fundlifeopendoc);
+      this.fundForm
+        .get('fundLifeYears')
+        ?.patchValue(fundValue.fundlifeopen.fundlife);
+      this.fundForm
+        .get('investorExtension')
+        ?.patchValue(fundValue.fundlifeopen.Investor_Extension);
+      this.fundForm
+        .get('boardExtension')
+        ?.patchValue(fundValue.fundlifeopen.Board_Extension);
+      this.fundForm
+        .get('fundLifedocuments')
+        ?.patchValue(fundValue.fundlifeopen.fundlifeopendoc);
     }
 
-    if(fundValue.sub_fund != null){
-      this.fundForm.get('subFundData.S_fundName')?.patchValue(fundValue.sub_fund.fund_name);
-      this.MapClosingDates(fundValue.sub_fund.closingDates,this.fundForm.get('subFundData.S_closingPeriods') as FormArray);
-      this.MapDirectors(fundValue.sub_fund.directors,this.fundForm.get('subFundData.S_directorsList') as FormArray);
-      this.MapSubs(fundValue.sub_fund.subscribers,this.fundForm.get('subFundData.S_subscribers') as FormArray)
-      this.fundForm.get('subFundData.S_registrationNumber')?.patchValue(fundValue.sub_fund.registration_no);
-      this.fundForm.get('subFundData.S_fundDescription')?.patchValue(fundValue.sub_fund.fund_description);
-      this.fundForm.get('subFundData.S_fundManagerEntity')?.patchValue(fundValue.sub_fund.fund_manager_entity);
-      this.fundForm.get('subFundData.S_fundManagerRep')?.patchValue([fundValue.sub_fund.fund_manager_rep['director_name']]);
-      this.fundForm.get('subFundData.S_investmentComittee')?.patchValue(this.MapArrayDirector(fundValue.sub_fund.investment_committee));
-      this.fundForm.get('subFundData.S_authorizedSignatory')?.patchValue([fundValue.sub_fund.AuthorizedSignatory['director_name']]);
-      this.fundForm.get('subFundData.S_approver')?.patchValue([fundValue.sub_fund.Approver['director_name']]);
-      this.fundForm.get('subFundData.S_domicile')?.patchValue(fundValue.sub_fund.domicile.country_name);    this.fundForm.get('signature')?.patchValue(fundValue.AuthorizedSignatory.director_signature);
-      this.fundForm.get('subFundData.S_signature')?.patchValue(fundValue.sub_fund.AuthorizedSignatory.director_signature);
+    if (fundValue.sub_fund != null) {
+      this.fundForm
+        .get('subFundData.S_fundName')
+        ?.patchValue(fundValue.sub_fund.fund_name);
+      this.MapClosingDates(
+        fundValue.sub_fund.closingDates,
+        this.fundForm.get('subFundData.S_closingPeriods') as FormArray
+      );
+      this.MapDirectors(
+        fundValue.sub_fund.directors,
+        this.fundForm.get('subFundData.S_directorsList') as FormArray
+      );
+      this.MapSubs(
+        fundValue.sub_fund.subscribers,
+        this.fundForm.get('subFundData.S_subscribers') as FormArray
+      );
+      this.fundForm
+        .get('subFundData.S_registrationNumber')
+        ?.patchValue(fundValue.sub_fund.registration_no);
+      this.fundForm
+        .get('subFundData.S_fundDescription')
+        ?.patchValue(fundValue.sub_fund.fund_description);
+      this.fundForm
+        .get('subFundData.S_fundManagerEntity')
+        ?.patchValue(fundValue.sub_fund.fund_manager_entity);
+      this.fundForm
+        .get('subFundData.S_fundManagerRep')
+        ?.patchValue([fundValue.sub_fund.fund_manager_rep['director_name']]);
+      this.fundForm
+        .get('subFundData.S_investmentComittee')
+        ?.patchValue(
+          this.MapArrayDirector(fundValue.sub_fund.investment_committee)
+        );
+      this.fundForm
+        .get('subFundData.S_authorizedSignatory')
+        ?.patchValue([fundValue.sub_fund.AuthorizedSignatory['director_name']]);
+      this.fundForm
+        .get('subFundData.S_approver')
+        ?.patchValue([fundValue.sub_fund.Approver['director_name']]);
+      this.fundForm
+        .get('subFundData.S_domicile')
+        ?.patchValue(fundValue.sub_fund.domicile.country_name);
+      this.fundForm
+        .get('signature')
+        ?.patchValue(fundValue.AuthorizedSignatory.director_signature);
+      this.fundForm
+        .get('subFundData.S_signature')
+        ?.patchValue(fundValue.sub_fund.AuthorizedSignatory.director_signature);
 
-      this.fundForm.get('subFundData.S_offerPrice')?.patchValue(fundValue.sub_fund.offer_price);
-      this.fundForm.get('subFundData.S_issuedShares')?.patchValue(fundValue.sub_fund.issued_shares);
-      this.fundForm.get('subFundData.S_ordinaryShares')?.patchValue(fundValue.sub_fund.ordinary_shares);
-      this.fundForm.get('subFundData.S_fundSize')?.patchValue(fundValue.sub_fund.fund_size);
-      this.fundForm.get('subFundData.S_lockupPeriod')?.patchValue(fundValue.sub_fund.lock_up_period);
-      this.fundForm.get('subFundData.S_fundYearEnd')?.patchValue(fundValue.sub_fund.fund_year_end);
-      this.fundForm.get('subFundData.S_fundEndDate')?.patchValue(fundValue.sub_fund.fund_end_date ? this.MapDate(fundValue.sub_fund.fund_end_date) : '');
-      this.fundForm.get('subFundData.S_catchUp')?.patchValue(fundValue.sub_fund.catch_up);
-      this.fundForm.get('subFundData.S_legalCounsel')?.patchValue(fundValue.sub_fund.legal_counsel);
-      this.fundForm.get('subFundData.S_legalCounselRep')?.patchValue(fundValue.sub_fund.legal_counsel_rep);
-      this.fundForm.get('subFundData.S_auditor')?.patchValue(fundValue.sub_fund.Auditor);
-      this.fundForm.get('subFundData.S_auditorRep')?.patchValue(fundValue.sub_fund.Auditor_rep);
-      this.fundForm.get('subFundData.S_trustee')?.patchValue(fundValue.sub_fund.Custodian);
-      this.fundForm.get('subFundData.S_trusteeRep')?.patchValue(fundValue.sub_fund.Custodian_rep);
-      this.fundForm.get('subFundData.S_fundAdmin')?.patchValue(fundValue.sub_fund.FundAdministrator);
-      this.fundForm.get('subFundData.S_GIIN')?.patchValue(fundValue.sub_fund.GIIN);
-      this.fundForm.get('subFundData.S_directorFee')?.patchValue(fundValue.sub_fund.Director_Fees);
-      this.fundForm.get('subFundData.S_managementFee')?.patchValue(fundValue.sub_fund.Management_Fee);
-      this.fundForm.get('subFundData.S_hurdleRate')?.patchValue(fundValue.sub_fund.Hurdle_Rate);
-      this.fundForm.get('subFundData.S_CTC')?.patchValue(fundValue.sub_fund.CTC);
-      this.fundForm.get('subFundData.S_bank')?.patchValue(fundValue.sub_fund.Bank.Bank_name);
-      this.fundForm.get('subFundData.S_bankAccount')?.patchValue(fundValue.sub_fund.BankAccount);
-      this.fundForm.get('subFundData.S_bankAccessId')?.patchValue(fundValue.sub_fund.BankAccessID);
-      this.fundForm.get('subFundData.S_BankAccessPassword')?.patchValue(fundValue.sub_fund.BankAccessPassword);
-      this.fundForm.get('subFundData.S_redeem')?.patchValue(fundValue.sub_fund.redeem ? this.MapDate(fundValue.sub_fund.redeem) : '');
-      this.fundForm.get('subFundData.S_redeemReason')?.patchValue(fundValue.sub_fund.redeemReason);
-      this.fundForm.get('subFundData.S_liquidate')?.patchValue(fundValue.sub_fund.liquidate);
-      this.fundForm.get('subFundData.S_liquidateReason')?.patchValue(fundValue.liquidateReason);
-      this.fundForm.get('subFundData.S_fundStructure')?.patchValue(fundValue.sub_fund.fund_structure);
-      this.fundForm.get('subFundData.S_fundStatus')?.patchValue(fundValue.sub_fund.fund_status);
-      this.fundForm.get('subFundData.S_reportingFrequency')?.patchValue(fundValue.sub_fund.reporting_frequency == null ? '' : fundValue.sub_fund.reporting_frequency);
-      this.fundForm.get('subFundData.S_reclassificationFrequency')?.patchValue(fundValue.sub_fund.ReclassificationFrequency.reclassification_frequency_name);
-      this.fundForm.get('subFundData.S_productType')?.patchValue(fundValue.sub_fund && fundValue.sub_fund.product_type != null ? fundValue.sub_fund.product_type.product_type_name : '');      
-      this.fundForm.get('subFundData.S_reportingCurrency')?.patchValue(fundValue.sub_fund.report_currency.currency);
-      this.fundForm.get('subFundData.S_preparer')?.patchValue(fundValue.sub_fund.Preparer);
-      // this.fundForm.get('subFundData.S_directorsList')?.patchValue(this.MapDirectors(fundValue.sub_fund.directors));
-      // this.fundForm.get('subFundData.S_subscribers')?.patchValue(this.MapSubs(fundValue.sub_fund.subscribers));
-      this.fundForm.get('subFundData.S_PPM')?.patchValue(fundValue.sub_fund.PPM);
-      this.fundForm.get('subFundData.S_investmentAgreement')?.patchValue(fundValue.sub_fund.Investment_Agreement);
-      this.fundForm.get('subFundData.S_boardResolutions')?.patchValue(fundValue.sub_fund.boardResolution);
-      this.fundForm.get('subFundData.S_subscriptionAgreement')?.patchValue(fundValue.sub_fund.Subscription_Agreement);
-      this.fundForm.get('S_fundStatusReason')?.patchValue(fundValue.sub_fund.reason_to_change);
-      if(fundValue.sub_fund.fund_structure == 'close-ended'){
+      this.fundForm
+        .get('subFundData.S_offerPrice')
+        ?.patchValue(fundValue.sub_fund.offer_price);
+      this.fundForm
+        .get('subFundData.S_issuedShares')
+        ?.patchValue(fundValue.sub_fund.issued_shares);
+      this.fundForm
+        .get('subFundData.S_ordinaryShares')
+        ?.patchValue(fundValue.sub_fund.ordinary_shares);
+      this.fundForm
+        .get('subFundData.S_fundSize')
+        ?.patchValue(fundValue.sub_fund.fund_size);
+      this.fundForm
+        .get('subFundData.S_lockupPeriod')
+        ?.patchValue(fundValue.sub_fund.lock_up_period);
+      this.fundForm
+        .get('subFundData.S_fundYearEnd')
+        ?.patchValue(fundValue.sub_fund.fund_year_end);
+      this.fundForm
+        .get('subFundData.S_fundEndDate')
+        ?.patchValue(
+          fundValue.sub_fund.fund_end_date
+            ? this.MapDate(fundValue.sub_fund.fund_end_date)
+            : ''
+        );
+      this.fundForm
+        .get('subFundData.S_catchUp')
+        ?.patchValue(fundValue.sub_fund.catch_up);
+      this.fundForm
+        .get('subFundData.S_legalCounsel')
+        ?.patchValue(fundValue.sub_fund.legal_counsel);
+      this.fundForm
+        .get('subFundData.S_legalCounselRep')
+        ?.patchValue(fundValue.sub_fund.legal_counsel_rep);
+      this.fundForm
+        .get('subFundData.S_auditor')
+        ?.patchValue(fundValue.sub_fund.Auditor);
+      this.fundForm
+        .get('subFundData.S_auditorRep')
+        ?.patchValue(fundValue.sub_fund.Auditor_rep);
+      this.fundForm
+        .get('subFundData.S_trustee')
+        ?.patchValue(fundValue.sub_fund.Custodian);
+      this.fundForm
+        .get('subFundData.S_trusteeRep')
+        ?.patchValue(fundValue.sub_fund.Custodian_rep);
+      this.fundForm
+        .get('subFundData.S_fundAdmin')
+        ?.patchValue(fundValue.sub_fund.FundAdministrator);
+      this.fundForm
+        .get('subFundData.S_GIIN')
+        ?.patchValue(fundValue.sub_fund.GIIN);
+      this.fundForm
+        .get('subFundData.S_directorFee')
+        ?.patchValue(fundValue.sub_fund.Director_Fees);
+      this.fundForm
+        .get('subFundData.S_managementFee')
+        ?.patchValue(fundValue.sub_fund.Management_Fee);
+      this.fundForm
+        .get('subFundData.S_hurdleRate')
+        ?.patchValue(fundValue.sub_fund.Hurdle_Rate);
+      this.fundForm
+        .get('subFundData.S_CTC')
+        ?.patchValue(fundValue.sub_fund.CTC);
+      this.fundForm
+        .get('subFundData.S_bank')
+        ?.patchValue(fundValue.sub_fund.Bank.Bank_name);
+      this.fundForm
+        .get('subFundData.S_bankAccount')
+        ?.patchValue(fundValue.sub_fund.BankAccount);
+      this.fundForm
+        .get('subFundData.S_bankAccessId')
+        ?.patchValue(fundValue.sub_fund.BankAccessID);
+      this.fundForm
+        .get('subFundData.S_BankAccessPassword')
+        ?.patchValue(fundValue.sub_fund.BankAccessPassword);
+      this.fundForm
+        .get('subFundData.S_redeem')
+        ?.patchValue(
+          fundValue.sub_fund.redeem
+            ? this.MapDate(fundValue.sub_fund.redeem)
+            : ''
+        );
+      this.fundForm
+        .get('subFundData.S_redeemReason')
+        ?.patchValue(fundValue.sub_fund.redeemReason);
+      this.fundForm
+        .get('subFundData.S_liquidate')
+        ?.patchValue(fundValue.sub_fund.liquidate);
+      this.fundForm
+        .get('subFundData.S_liquidateReason')
+        ?.patchValue(fundValue.liquidateReason);
+      this.fundForm
+        .get('subFundData.S_fundStructure')
+        ?.patchValue(fundValue.sub_fund.fund_structure);
+      this.fundForm
+        .get('subFundData.S_fundStatus')
+        ?.patchValue(fundValue.sub_fund.fund_status);
+      this.fundForm
+        .get('subFundData.S_reportingFrequency')
+        ?.patchValue(
+          fundValue.sub_fund.reporting_frequency == null
+            ? ''
+            : fundValue.sub_fund.reporting_frequency
+        );
+      this.fundForm
+        .get('subFundData.S_reclassificationFrequency')
+        ?.patchValue(
+          fundValue.sub_fund.ReclassificationFrequency
+            .reclassification_frequency_name
+        );
+      this.fundForm
+        .get('subFundData.S_productType')
+        ?.patchValue(
+          fundValue.sub_fund && fundValue.sub_fund.product_type != null
+            ? fundValue.sub_fund.product_type.product_type_name
+            : ''
+        );
+      this.fundForm
+        .get('subFundData.S_reportingCurrency')
+        ?.patchValue(fundValue.sub_fund.report_currency.currency);
+      this.fundForm
+        .get('subFundData.S_preparer')
+        ?.patchValue(fundValue.sub_fund.Preparer);
+      this.fundForm
+        .get('subFundData.S_PPM')
+        ?.patchValue(fundValue.sub_fund.PPM);
+      this.fundForm
+        .get('subFundData.S_investmentAgreement')
+        ?.patchValue(fundValue.sub_fund.Investment_Agreement);
+      this.fundForm
+        .get('subFundData.S_boardResolutions')
+        ?.patchValue(fundValue.sub_fund.boardResolution);
+      this.fundForm
+        .get('subFundData.S_subscriptionAgreement')
+        ?.patchValue(fundValue.sub_fund.Subscription_Agreement);
+      this.fundForm
+        .get('S_fundStatusReason')
+        ?.patchValue(fundValue.sub_fund.reason_to_change);
+      if (fundValue.sub_fund.fund_structure == 'close-ended') {
         this.isSimpleOptionSF = true;
-        this.fundForm.get('subFundData.S_fundLifeYears')?.patchValue(fundValue.sub_fund.fundlifeclose.fundlife);
-      }
-      else{
+        this.fundForm
+          .get('subFundData.S_fundLifeYears')
+          ?.patchValue(fundValue.sub_fund.fundlifeclose.fundlife);
+      } else {
         this.isSimpleOptionSF = false;
-        this.fundForm.get('subFundData.S_fundLifeYears')?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife);
-        this.fundForm.get('subFundData.S_investorExtension')?.patchValue(fundValue.sub_fund.fundlifeopen.investor_extension);
-        this.fundForm.get('subFundData.S_boardExtension')?.patchValue(fundValue.sub_fund.fundlifeopen.board_extension);
-        this.fundForm.get('subFundData.S_fundLifedocuments')?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife_documents);
+        this.fundForm
+          .get('subFundData.S_fundLifeYears')
+          ?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife);
+        this.fundForm
+          .get('subFundData.S_investorExtension')
+          ?.patchValue(fundValue.sub_fund.fundlifeopen.investor_extension);
+        this.fundForm
+          .get('subFundData.S_boardExtension')
+          ?.patchValue(fundValue.sub_fund.fundlifeopen.board_extension);
+        this.fundForm
+          .get('subFundData.S_fundLifedocuments')
+          ?.patchValue(fundValue.sub_fund.fundlifeopen.fundlife_documents);
       }
-      
     }
-    console.log(this.fundForm.value);
     
+    this.setValidations();
+    console.log(this.fundForm.value);
   }
 
   refreshDirectors(event: any) {
@@ -686,143 +890,156 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     };
     this.config.outsideDays = 'hidden';
 
-    this.fundForm.get('fundType')!.valueChanges.subscribe((value) => {
-      if (value === 'regulated') {
+    this.setValidations();
+  }
+
+setValidations(){
+  this.fundForm.get('fundType')!.valueChanges.subscribe((value) => {
+    if (value === 'regulated') {
+      this.fundForm
+        .get('fundManagerEntity')!
+        .setValidators([Validators.required]);
+    } else {
+      this.fundForm.get('fundManagerEntity')!.setValidators(null);
+    }
+
+    this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
+  });
+
+  this.fundForm.get('redeem')!.valueChanges.subscribe((value) => {
+    if (value) {
+      this.fundForm
+        .get('redeemReason')!
+        .setValidators([Validators.required, Validators.maxLength(256)]);
+    } else {
+      this.fundForm.get('fundManagerEntity')!.setValidators(null);
+    }
+
+    this.fundForm.get('redeemReason')!.updateValueAndValidity();
+  });
+
+  this.fundForm.valueChanges.subscribe((val) => {
+    if (val.fundSize && val.offerPrice) {
+      const issuedShareValue = val.fundSize / val.offerPrice;
+      this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
+        emitEvent: false,
+      });
+    }
+
+    if (val.subFund && val.subFund == 'Y') {
+      this.fundForm
+        .get('subFundData.S_fundName')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_registrationNumber')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_fundDescription')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_authorizedSignatory')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_signature')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_fundAdmin')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_GIIN')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_closingPeriods')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_approver')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_subscriptionAgreement')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_investmentAgreement')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_PPM')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_bankAccount')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_bankAccessId')!
+        .setValidators([Validators.required]);
+      this.fundForm
+        .get('subFundData.S_bankAccessPassword')!
+        .setValidators([Validators.required]);
+
+      if (val.subFundData.S_fundType == 'regulated') {
         this.fundForm
-          .get('fundManagerEntity')!
+          .get('subFundData.S_fundManagerEntity')!
           .setValidators([Validators.required]);
-      } else {
-        this.fundForm.get('fundManagerEntity')!.setValidators(null);
       }
 
-      this.fundForm.get('fundManagerEntity')!.updateValueAndValidity();
-    });
+      this.fundForm
+        .get('subFundData.S_investmentComittee')!
+        .setValidators([Validators.required]);
 
-    this.fundForm.get('redeem')!.valueChanges.subscribe((value) => {
-      if (value) {
+      if (val.subFundData && val.subFundData.S_fundSize) {
+        const issuedShareValueSF =
+          val.subFundData.S_fundSize / val.subFundData.S_offerPrice;
         this.fundForm
-          .get('redeemReason')!
-          .setValidators([Validators.required, Validators.maxLength(256)]);
-      } else {
-        this.fundForm.get('fundManagerEntity')!.setValidators(null);
-      }
-
-      this.fundForm.get('redeemReason')!.updateValueAndValidity();
-    });
-
-    this.fundForm.valueChanges.subscribe((val) => {
-      if (val.fundSize && val.offerPrice) {
-        const issuedShareValue = val.fundSize / val.offerPrice;
-        this.fundForm.controls.issuedShares.patchValue(issuedShareValue, {
-          emitEvent: false,
-        });
-      }
-
-      if (val.subFund && val.subFund == 'Y') {
-        this.fundForm
-          .get('subFundData.S_fundName')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_registrationNumber')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_fundDescription')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_authorizedSignatory')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_signature')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_fundAdmin')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_GIIN')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_closingPeriods')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_approver')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_subscriptionAgreement')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_investmentAgreement')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_PPM')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_bankAccount')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_bankAccessId')!
-          .setValidators([Validators.required]);
-        this.fundForm
-          .get('subFundData.S_bankAccessPassword')!
-          .setValidators([Validators.required]);
-
-        if (val.subFundData.S_fundType == 'regulated') {
-          this.fundForm
-            .get('subFundData.S_fundManagerEntity')!
-            .setValidators([Validators.required]);
-        }
-
-        this.fundForm
-          .get('subFundData.S_investmentComittee')!
-          .setValidators([Validators.required]);
-
-        if (val.subFundData && val.subFundData.S_fundSize) {
-          const issuedShareValueSF =
-            val.subFundData.S_fundSize / val.subFundData.S_offerPrice;
-          this.fundForm
-            .get('subFundData.S_issuedShares')
-            ?.patchValue(issuedShareValueSF, {
-              emitEvent: false,
-            });
-        }
-
-        //fOR sub Fund
-
-        if (
-          val.subFundData.S_subscribers &&
-          val.subFundData.S_subscribers.length &&
-          val.subFundData.S_subscribers[0].commitment != 0 &&
-          this.fundForm.get('subFundData.S_fundSize')?.value != 0
-        ) {
-          let sum: number = 0;
-          val.subFundData.S_subscribers.map((amount: any) => {
-            sum = sum + amount.commitment;
-            if (sum <= this.fundForm.get('subFundData.S_fundSize')?.value) {
-              this.globalDisableSF = true;
-            } else {
-              this.globalDisableSF = false;
-            }
+          .get('subFundData.S_issuedShares')
+          ?.patchValue(issuedShareValueSF, {
+            emitEvent: false,
           });
-        }
       }
 
-      //fOR Fund
+      //fOR sub Fund
+
       if (
-        val.subscribers &&
-        val.subscribers.length &&
-        this.fundForm.get('fundSize')?.value
+        val.subFundData.S_subscribers &&
+        val.subFundData.S_subscribers.length &&
+        val.subFundData.S_subscribers[0].commitment != 0 &&
+        this.fundForm.get('subFundData.S_fundSize')?.value != 0
       ) {
         let sum: number = 0;
-        val.subscribers.map((amount: any) => {
+        val.subFundData.S_subscribers.map((amount: any) => {
           sum = sum + amount.commitment;
-          if (sum <= this.fundForm.get('fundSize')?.value) {
-            this.globalDisable = true;
+          if (sum <= this.fundForm.get('subFundData.S_fundSize')?.value) {
+            this.globalDisableSF = true;
           } else {
-            this.globalDisable = false;
+            this.globalDisableSF = false;
           }
         });
       }
-    });
-  }
+      if (
+        val.fundStructure == 'open-ended'
+      ) {
+        console.log("here");
+        
+        this.fundForm.get('boardExtension')?.setValidators([Validators.required]);
+        this.fundForm.get('investorExtension')?.setValidators([Validators.required]);
+        this.fundForm.get('fundLifedocuments')?.setValidators([Validators.required]);
+      }
+    }
+
+    //fOR Fund
+    if (
+      val.subscribers &&
+      val.subscribers.length &&
+      this.fundForm.get('fundSize')?.value
+    ) {
+      let sum: number = 0;
+      val.subscribers.map((amount: any) => {
+        sum = sum + amount.commitment;
+        if (sum <= this.fundForm.get('fundSize')?.value) {
+          this.globalDisable = true;
+        } else {
+          this.globalDisable = false;
+        }
+      });
+    }
+  });
+}
 
   refresh() {
     return (this.directors = [...this.directors]);
@@ -887,6 +1104,18 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       this.fundForm
         .get('subFundData.S_trusteeRep')!
         .setValidators([Validators.required, Validators.maxLength(256)]);
+    }
+
+    console.log(this.fundForm
+      .get('subFundData.S_fundStructure')!.value);
+    
+    if (
+      this.fundForm
+      .get('subFundData.S_fundStructure')!.value == 'open-ended'
+    ) {
+      this.fundForm.get('subFundData.S_boardExtension')?.setValidators([Validators.required]);
+      this.fundForm.get('subFundData.S_investorExtension')?.setValidators([Validators.required]);
+      this.fundForm.get('subFundData.S_fundLifedocuments')?.setValidators([Validators.required]);
     }
   }
 
@@ -987,9 +1216,9 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      if(!control.name[0].id){
+      if (!control.name[0].id) {
         keyName = this.MapIdFromName(control.name[0]).toString();
-      }else{
+      } else {
         keyName = control.name[0].id;
       }
       formData.append('director_' + keyName, file);
@@ -1001,16 +1230,16 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       file = undefined;
     } else {
       let controlForName = this.fundForm.get('directorsList')?.value[index];
-      
-      if(!controlForName.name[0].id){
+
+      if (!controlForName.name[0].id) {
         keyName = this.MapIdFromName(controlForName.name[0]).toString();
-      }else{
+      } else {
         keyName = controlForName.name[0].id;
       }
-      
+
       const formData: FormData = new FormData();
       let file = event.target.files[0];
-      formData.append('director_' + keyName , file);
+      formData.append('director_' + keyName, file);
 
       ((this.fundForm.get('directorsList') as FormArray)?.controls as any)[
         index
@@ -1043,7 +1272,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
   }
 
   previousStep() {
-      this.sectionNo = this.sectionNo - 1;
+    this.sectionNo = this.sectionNo - 1;
   }
 
   TransformSubscribers(): FormGroup[] {
@@ -1240,10 +1469,10 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return retArr;
   }
 
-  MapFromDirectors(name:string){
+  MapFromDirectors(name: string) {
     let str = '';
-    this.directors.map((res:any)=>{
-      if(res.director_name == name) str = res.id;
+    this.directors.map((res: any) => {
+      if (res.director_name == name) str = res.id;
     });
     return str.toString();
   }
@@ -1253,8 +1482,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     arr.map((result: any) => {
       if (result && result.id) {
         retArr.push(result.id.toString());
-      }
-      else{
+      } else {
         retArr.push(this.MapFromDirectors(result));
       }
     });
@@ -1263,13 +1491,13 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
   MapIdFromName(name: any) {
     let str = '';
-    if(this.selectedFund && this.selectedFund.id && !Number.isInteger(name)){
-      this.directors.map((res:any)=>{
-        if(res.director_name === name[0]){
-          str = res.id.toString()
+    if (this.selectedFund && this.selectedFund.id && !Number.isInteger(name)) {
+      this.directors.map((res: any) => {
+        if (res.director_name === name[0]) {
+          str = res.id.toString();
         }
       });
-    }else{
+    } else {
       str = name && name.length ? name[0].id.toString() : '';
     }
     return str;
@@ -1282,22 +1510,30 @@ export class CreateFundComponent implements OnInit, OnDestroy {
     return arr;
   }
 
-  MapSubscribers(arr: any){
+  MapSubscribers(arr: any) {
     arr.map((res: any) => {
-      res.name = res.name[0].director_name;;
+      if (res.name[0].director_name) {
+        res.name = res.name[0].director_name;
+      } else {
+        res.name = res.name;
+      }
     });
     return arr;
   }
-
 
   findInvalidControls() {
     const invalid = [];
     const controls = this.fundForm.controls;
     for (const name in controls) {
+      
       if (controls[name].invalid) {
         invalid.push(name);
       }
     }
+    if(this.fundForm.get('fundStructure')?.value == 'open-ended' && (this.fundForm.get('fundLifedocuments')?.value == null || !this.fundForm.get('fundLifedocuments')?.value.length)) invalid.push('fundLifedocuments'); this.fundForm.get('fundLifedocuments')?.setErrors({'incorrect': true});
+    if(this.fundForm.get('fundStructure')?.value == 'open-ended' && !this.fundForm.get('boardExtension')?.value) invalid.push('boardExtension'); this.fundForm.get('boardExtension')?.setErrors({'incorrect': true});
+    if(this.fundForm.get('fundStructure')?.value == 'open-ended' && !this.fundForm.get('investorExtension')?.value) invalid.push('investorExtension'); this.fundForm.get('investorExtension')?.setErrors({'incorrect': true});
+
     return this.MapFieldNames(invalid);
   }
 
@@ -1313,6 +1549,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       boardExtension: 'Board Extension',
       investorExtension: 'Investor Extension',
       fundLifeYears: 'Fund life years',
+      fundLifedocuments: 'Document for Fund Life',
       fundStructure: 'Fund structure',
       directors: 'Directors List',
       offerPrice: 'Offer price',
@@ -1356,25 +1593,25 @@ export class CreateFundComponent implements OnInit, OnDestroy {
       liquidate: 'Liquidate',
       liquidateReason: 'Reason to liquidate',
     };
-    let fieldNames: any =[];
-    fields.map((res:any)=>{
-      if(this.keyInArray(obj,res)){
-        fieldNames.push(obj[res])
+    let fieldNames: any = [];
+    fields.map((res: any) => {
+      if (this.keyInArray(obj, res)) {
+        fieldNames.push(obj[res]);
       }
     });
     return fieldNames;
   }
 
-  keyInArray(obj:any,value:string){
-    let bool=false;
+  keyInArray(obj: any, value: string) {
+    let bool = false;
     let arr = Object.keys(obj);
-    if(arr.includes(value)) bool = true;
+    if (arr.includes(value)) bool = true;
     else bool = false;
 
     return bool;
   }
 
-  Submit(id?:any) {
+  Submit(id?: any) {
     /**
      * file controls:
      * director signature -> single
@@ -1386,645 +1623,664 @@ export class CreateFundComponent implements OnInit, OnDestroy {
      * signature -> single
      */
     this.showInvalidControls = this.findInvalidControls();
-    console.log(this.fundForm.valid);
+    console.log(this.fundForm.get('fundLifedocuments')?.value);
     
+    console.log(this.showInvalidControls);
+    console.log(this.fundForm.valid);
+
     let directorsArraySF = [];
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    // if (this.fundForm.valid) {
-      let formData = new FormData();
-      let boardResolutionArrs: any = [];
-      let subFundDataObj = {};
-      let fundLifeArrs: any = [];
-      let boardResolutionArrsSF: any = [];
-      // SUB FUND
-      if (this.fundForm.get('subFund')?.value == 'Y') {
-        if (this.fundForm.get('subFundData.S_boardResolutions')?.value && this.fundForm.get('subFundData.S_boardResolutions')?.value instanceof FormData) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_boardResolutions')
-            ?.value.entries()) {
-            boardResolutionArrsSF.push(pair[1]);
-            if (
-              boardResolutionArrsSF.length ==
-              this.fundForm.get('subFundData.S_boardResolutions')?.value.length
-            ) {
-              formData.append('S_boardResolutions', boardResolutionArrsSF);
-              return;
-            }
-          }
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_fundStructure')?.value ==
-            'open-ended' && this.fundForm.get('subFundData.S_fundLifedocuments')?.value instanceof FormData
-        ) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_fundLifedocuments')
-            ?.value.entries()) {
-            fundLifeArrs.push(pair[1]);
-            if (
-              fundLifeArrs.length ==
-              this.fundForm.get('subFundData.S_fundLifedocuments')?.value.length
-            ) {
-              formData.append('S_fundLifedocuments', fundLifeArrs);
-              return;
-            }
-          }
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_directorsList')?.value &&
-          this.fundForm.get('subFundData.S_directorsList')?.value.length
-        ) {
-
-
-          this.fundForm
-            .get('subFundData.S_directorsList')
-            ?.setValue(
-              this.ParseSubscribersOrDirectorList(
-                this.fundForm.get('subFundData.S_directorsList')?.value
-              )
-            );
-
-            directorsArraySF = this.fundForm
-            .get('subFundData.S_directorsList')
-            ?.value.map((obj: any) => {
-              return obj.name;
-            });
-
-            this.fundForm.get('subFundData.S_directorsList')?.value.map((result: any) => {
-              if (result.signature != null && result.signature instanceof FormData) {
-                for (let pair of result.signature.entries()) {
-                  formData.append(pair[0], pair[1]);
-                }
-              }
-            });
-
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_closingPeriods')?.value &&
-          this.fundForm.get('subFundData.S_closingPeriods')?.value.length &&
-          this.fundForm.get('subFundData.S_closingPeriods')?.value[0].date != ''
-        ) {
-          let arr = this.ParseDateFormatMultiple(
-            this.fundForm.get('subFundData.S_closingPeriods')?.value
-          );
-          this.fundForm.get('subFundData.S_closingPeriods')?.setValue(arr);
-          closingPeriodArraySF = this.fundForm
-            .get('subFundData.S_closingPeriods')
-            ?.value.map((obj: any) => {
-              return obj.date;
-            });
-        }
-
-        if (this.fundForm.get('subFundData.S_redeem')?.value) {
-          this.fundForm
-            .get('subFundData.S_redeem')
-            ?.setValue(
-              this.ParseDateFormatSingle(
-                this.fundForm.get('subFundData.S_redeem')?.value
-              )
-            );
-        }
-
-        if (this.fundForm.get('subFundData.S_fundEndDate')?.value != null) {
-          this.fundForm
-            .get('subFundData.S_fundEndDate')
-            ?.setValue(
-              this.ParseDateFormatSingle(
-                this.fundForm.get('subFundData.S_fundEndDate')?.value
-              )
-            );
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_approver')?.value &&
-          this.fundForm.get('subFundData.S_approver')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_approver')
-            ?.setValue(
-              this.ParseDirectors(
-                Array.isArray(
-                  this.fundForm.get('subFundData.S_approver')?.value
-                )
-                  ? this.fundForm.get('subFundData.S_approver')?.value
-                  : [this.fundForm.get('subFundData.S_approver')?.value]
-              )
-            );
-        }
-        if (
-          this.fundForm.get('subFundData.S_authorizedSignatory')?.value &&
-          this.fundForm.get('subFundData.S_authorizedSignatory')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_authorizedSignatory')
-            ?.setValue(
-              this.ParseDirectors(
-                Array.isArray(
-                  this.fundForm.get('subFundData.S_authorizedSignatory')?.value
-                )
-                  ? this.fundForm.get('subFundData.S_authorizedSignatory')
-                      ?.value
-                  : [
-                      this.fundForm.get('subFundData.S_authorizedSignatory')
-                        ?.value,
-                    ]
-              )
-            );
-        }
-        if (
-          this.fundForm.get('subFundData.S_fundManagerRep')?.value &&
-          this.fundForm.get('subFundData.S_fundManagerRep')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_fundManagerRep')
-            ?.setValue(
-              this.ParseDirectors(
-                Array.isArray(
-                  this.fundForm.get('subFundData.S_fundManagerRep')?.value
-                )
-                  ? this.fundForm.get('subFundData.S_fundManagerRep')?.value
-                  : [this.fundForm.get('subFundData.S_fundManagerRep')?.value]
-              )
-            );
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_investmentComittee')?.value &&
-          this.fundForm.get('subFundData.S_investmentComittee')?.value.length
-        ) {
-          this.fundForm
-            .get('subFundData.S_investmentComittee')
-            ?.setValue(
-              this.ParseDirectors(
-                Array.isArray(
-                  this.fundForm.get('subFundData.S_investmentComittee')?.value
-                )
-                  ? this.fundForm.get('subFundData.S_investmentComittee')?.value
-                  : [
-                      this.fundForm.get('subFundData.S_investmentComittee')
-                        ?.value,
-                    ]
-              )
-            );
-        }
-
-        // SUB FUND:
-        if (this.fundForm.get('subFundData.S_PPM')?.value) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_PPM')
-            ?.value.entries()) {
-            formData.append(pair[0], pair[1]);
-          }
-        }
-
-        if (this.fundForm.get('subFundData.S_investmentAgreement')?.value) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_investmentAgreement')
-            ?.value.entries()) {
-            formData.append(pair[0], pair[1]);
-          }
-        }
-
-        if (this.fundForm.get('subFundData.S_subscriptionAgreement')?.value) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_subscriptionAgreement')
-            ?.value.entries()) {
-            formData.append(pair[0], pair[1]);
-          }
-        }
-
-        if (this.fundForm.get('subFundData.S_signature')?.value) {
-          for (let pair of this.fundForm
-            .get('subFundData.S_signature')
-            ?.value.entries()) {
-            formData.append(pair[0], pair[1]);
-          }
-        }
-
-        if (
-          this.fundForm.get('subFundData.S_subscribers')?.value &&
-          this.fundForm.get('subFundData.S_subscribers')?.value.length
-        ) {
-
-        this.fundForm
-        .get('subFundData.S_subscribers')
-        ?.setValue(this.MapSubscribers(this.fundForm.get('subFundData.S_subscribers')?.value));
-
-        }
-        subFundDataObj = {
-          fundName: this.fundForm.get('subFundData.S_fundName')?.value,
-          registrationNumber: this.fundForm.get(
-            'subFundData.S_registrationNumber'
-          )?.value,
-          fundDescription: this.fundForm.get('subFundData.S_fundDescription')
-            ?.value,
-          domicile: this.fundForm.get('subFundData.S_domicile')?.value,
-          fundType: this.fundForm.get('subFundData.S_fundType')?.value,
-          fundManagerEntity: this.fundForm.get(
-            'subFundData.S_fundManagerEntity'
-          )?.value,
-          fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
-            ?.value,
-          boardExtension:
-            this.fundForm.get('subFundData.S_fundStructure')?.value ==
-            'open-ended'
-              ? this.fundForm.get('subFundData.S_boardExtension')?.value
-              : '',
-          investorExtension:
-            this.fundForm.get('subFundData.S_fundStructure')?.value ==
-            'open-ended'
-              ? this.fundForm.get('subFundData.S_investorExtension')?.value
-              : '',
-              fundLife: this.fundForm.get('subFundData.S_fundLifeYears')
-            ?.value,
-          fundStructure: this.fundForm.get('subFundData.S_fundStructure')
-            ?.value,
-            assetUnderManagement:'0.0',
-          directors: directorsArraySF,
-          offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
-          fundSize: this.fundForm.get('subFundData.S_fundSize')?.value,
-          issuedShares: this.fundForm.get('subFundData.S_issuedShares')?.value,
-          ordinaryShare: this.fundForm.get('subFundData.S_ordinaryShare')
-            ?.value,
-          fundEndDate: this.fundForm.get('subFundData.S_fundEndDate')?.value,
-          fundStatus: this.fundForm.get('subFundData.S_fundStatus')?.value,
-          fundStatusReason: this.fundForm.get('subFundData.S_fundStatusReason')
-            ?.value,
-          reportingCurrency: this.fundForm.get(
-            'subFundData.S_reportingCurrency'
-          )?.value,
-          lockupPeriod: this.fundForm.get(
-            'subFundData.S_lockupPeriod'
-          )?.value,
-          fundYearEnd: this.fundForm.get('subFundData.S_fundYearEnd')?.value,
-          productType: this.fundForm.get('subFundData.S_productType')?.value,
-          catchup: this.fundForm.get('subFundData.S_catchup')?.value,
-          reportingFrequency: this.fundForm.get(
-            'subFundData.S_reportingFrequency'
-          )?.value,
-          legalCounsel: this.fundForm.get('subFundData.S_legalCounsel')?.value,
-          legalCounselRep: this.fundForm.get('subFundData.S_legalCounselRep')
-            ?.value,
-          auditor: this.fundForm.get('subFundData.S_auditor')?.value,
-          auditorRep: this.fundForm.get('subFundData.S_auditorRep')?.value,
-          trustee: this.fundForm.get('subFundData.S_trustee')?.value,
-          trusteeRep: this.fundForm.get('subFundData.S_trusteeRep')?.value,
-          subscribers: this.fundForm.get('subFundData.S_subscribers')?.value,
-          investmentComittee: this.fundForm.get(
-            'subFundData.S_investmentComittee'
-          )?.value,
-          authorizedSignatory: this.fundForm.get(
-            'subFundData.S_authorizedSignatory'
-          )?.value,
-          fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
-          GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
-          closingPeriod: closingPeriodArraySF,
-          reclassificationFreq: this.fundForm.get(
-            'subFundData.S_reclassificationFreq'
-          )?.value,
-          approver: this.fundForm.get('subFundData.S_approver')?.value,
-          directorFee: this.fundForm.get('subFundData.S_directorFee')?.value,
-          managementFee: this.fundForm.get('subFundData.S_managementFee')
-            ?.value,
-          hurdleRate: this.fundForm.get('subFundData.S_hurdleRate')?.value,
-          CTC: this.fundForm.get('subFundData.S_CTC')?.value,
-          preparer: this.fundForm.get('subFundData.S_preparer')?.value,
-          bank: this.fundForm.get('subFundData.S_bank')?.value,
-          bankAccount: this.fundForm.get('subFundData.S_bankAccount')?.value,
-          bankAccessId: this.fundForm.get('subFundData.S_bankAccessId')?.value,
-          bankAccessPassword: this.fundForm.get(
-            'subFundData.S_bankAccessPassword'
-          )?.value,
-          redeem: this.fundForm.get('subFundData.S_redeem')?.value,
-          redeemReason: this.fundForm.get('subFundData.S_redeemReason')?.value,
-          liquidate: this.fundForm.get('subFundData.S_liquidate')?.value,
-          liquidateReason: this.fundForm.get('subFundData.S_liquidateReason')
-            ?.value,
-        };
-      }
-
-      //END OF SUB FUND
-      console.log(this.fundForm.get('boardResolutions')?.value && (this.fundForm.get('boardResolutions')?.value instanceof FormData));
-      
-      if (this.fundForm.get('boardResolutions')?.value && (this.fundForm.get('boardResolutions')?.value instanceof FormData)) {
-        console.log("MapSubscribersdfsdfsd");
-        
+    if (this.fundForm.valid && this.showInvalidControls && !this.showInvalidControls.length) {
+    let formData = new FormData();
+    let boardResolutionArrs: any = [];
+    let subFundDataObj = {};
+    let fundLifeArrs: any = [];
+    let boardResolutionArrsSF: any = [];
+    // SUB FUND
+    if (this.fundForm.get('subFund')?.value == 'Y') {
+      if (
+        this.fundForm.get('subFundData.S_boardResolutions')?.value &&
+        this.fundForm.get('subFundData.S_boardResolutions')?.value instanceof
+          FormData
+      ) {
         for (let pair of this.fundForm
-          .get('boardResolutions')
+          .get('subFundData.S_boardResolutions')
           ?.value.entries()) {
-          boardResolutionArrs.push(pair[1]);
-          console.log(boardResolutionArrs);
-        }
-          
-          formData.append('boardResolutions', boardResolutionArrs);
-          
-      }else{
-        formData.append('boardResolutions', '');
-      }
-
-      if (this.fundForm.get('fundStructure')?.value == 'open-ended') {
-        if (this.fundForm.get('fundLifedocuments')?.value && this.fundForm.get('fundLifedocuments')?.value instanceof FormData) {
-          for (let pair of this.fundForm
-            .get('fundLifedocuments')
-            ?.value.entries()) {
-            fundLifeArrs.push(pair[1]);
-            }
-              formData.append('fundLifedocuments', fundLifeArrs);
-        }else{
-          formData.append('fundLifedocuments', '');
+          boardResolutionArrsSF.push(pair[1]);
+          if (
+            boardResolutionArrsSF.length ==
+            this.fundForm.get('subFundData.S_boardResolutions')?.value.length
+          ) {
+            formData.append('S_boardResolutions', boardResolutionArrsSF);
+            return;
+          }
         }
       }
 
       if (
-        this.fundForm.get('directorsList')?.value &&
-        this.fundForm.get('directorsList')?.value.length
+        this.fundForm.get('subFundData.S_fundStructure')?.value ==
+          'open-ended' &&
+        this.fundForm.get('subFundData.S_fundLifedocuments')?.value instanceof
+          FormData
+      ) {
+        for (let pair of this.fundForm
+          .get('subFundData.S_fundLifedocuments')
+          ?.value.entries()) {
+          fundLifeArrs.push(pair[1]);
+          if (
+            fundLifeArrs.length ==
+            this.fundForm.get('subFundData.S_fundLifedocuments')?.value.length
+          ) {
+            formData.append('S_fundLifedocuments', fundLifeArrs);
+            return;
+          }
+        }
+      }
+
+      if (
+        this.fundForm.get('subFundData.S_directorsList')?.value &&
+        this.fundForm.get('subFundData.S_directorsList')?.value.length
       ) {
         this.fundForm
-          .get('directorsList')
+          .get('subFundData.S_directorsList')
           ?.setValue(
             this.ParseSubscribersOrDirectorList(
-              this.fundForm.get('directorsList')?.value
+              this.fundForm.get('subFundData.S_directorsList')?.value
             )
           );
-        this.fundForm.get('directorsList')?.value.map((result: any) => {
-          if (result.signature != null && result.signature instanceof FormData) {
-            for (let pair of result.signature.entries()) {
-              formData.append(pair[0], pair[1]);
-            }
-          }
-        });
 
-        directorsArray = this.fundForm
-          .get('directorsList')
+        directorsArraySF = this.fundForm
+          .get('subFundData.S_directorsList')
           ?.value.map((obj: any) => {
             return obj.name;
+          });
+
+        this.fundForm
+          .get('subFundData.S_directorsList')
+          ?.value.map((result: any) => {
+            if (
+              result.signature != null &&
+              result.signature instanceof FormData
+            ) {
+              for (let pair of result.signature.entries()) {
+                formData.append(pair[0], pair[1]);
+              }
+            }
           });
       }
 
       if (
-        this.fundForm.get('closingPeriods')?.value &&
-        this.fundForm.get('closingPeriods')?.value.length &&
-        this.fundForm.get('closingPeriods')?.value[0].date != ''
+        this.fundForm.get('subFundData.S_closingPeriods')?.value &&
+        this.fundForm.get('subFundData.S_closingPeriods')?.value.length &&
+        this.fundForm.get('subFundData.S_closingPeriods')?.value[0].date != ''
       ) {
         let arr = this.ParseDateFormatMultiple(
-          this.fundForm.get('closingPeriods')?.value
+          this.fundForm.get('subFundData.S_closingPeriods')?.value
         );
-        this.fundForm.get('closingPeriods')?.setValue(arr);
-        closingPeriodArray = this.fundForm
-          .get('closingPeriods')
+        this.fundForm.get('subFundData.S_closingPeriods')?.setValue(arr);
+        closingPeriodArraySF = this.fundForm
+          .get('subFundData.S_closingPeriods')
           ?.value.map((obj: any) => {
             return obj.date;
           });
       }
 
-      if (this.fundForm.get('redeem')?.value) {
+      if (this.fundForm.get('subFundData.S_redeem')?.value) {
         this.fundForm
-          .get('redeem')
+          .get('subFundData.S_redeem')
           ?.setValue(
-            this.ParseDateFormatSingle(this.fundForm.get('redeem')?.value)
+            this.ParseDateFormatSingle(
+              this.fundForm.get('subFundData.S_redeem')?.value
+            )
           );
       }
 
-      if (this.fundForm.get('fundEndDate')?.value != null) {
+      if (this.fundForm.get('subFundData.S_fundEndDate')?.value != null) {
         this.fundForm
-          .get('fundEndDate')
+          .get('subFundData.S_fundEndDate')
           ?.setValue(
-            this.ParseDateFormatSingle(this.fundForm.get('fundEndDate')?.value)
-          );
-      }
-
-      if (
-        this.fundForm.get('approver')?.value &&
-        this.fundForm.get('approver')?.value.length
-      ) {
-        this.fundForm
-          .get('approver')
-          ?.setValue(
-            this.ParseDirectors(
-              Array.isArray(this.fundForm.get('approver')?.value)
-                ? this.fundForm.get('approver')?.value
-                : [this.fundForm.get('approver')?.value]
+            this.ParseDateFormatSingle(
+              this.fundForm.get('subFundData.S_fundEndDate')?.value
             )
           );
       }
 
       if (
-        this.fundForm.get('authorizedSignatory')?.value &&
-        this.fundForm.get('authorizedSignatory')?.value.length
+        this.fundForm.get('subFundData.S_approver')?.value &&
+        this.fundForm.get('subFundData.S_approver')?.value.length
       ) {
         this.fundForm
-          .get('authorizedSignatory')
+          .get('subFundData.S_approver')
           ?.setValue(
             this.ParseDirectors(
-              Array.isArray(this.fundForm.get('authorizedSignatory')?.value)
-                ? this.fundForm.get('authorizedSignatory')?.value
-                : [this.fundForm.get('authorizedSignatory')?.value]
+              Array.isArray(this.fundForm.get('subFundData.S_approver')?.value)
+                ? this.fundForm.get('subFundData.S_approver')?.value
+                : [this.fundForm.get('subFundData.S_approver')?.value]
             )
           );
       }
       if (
-        this.fundForm.get('fundManagerRep')?.value &&
-        this.fundForm.get('fundManagerRep')?.value.length
+        this.fundForm.get('subFundData.S_authorizedSignatory')?.value &&
+        this.fundForm.get('subFundData.S_authorizedSignatory')?.value.length
       ) {
         this.fundForm
-          .get('fundManagerRep')
+          .get('subFundData.S_authorizedSignatory')
           ?.setValue(
             this.ParseDirectors(
-              Array.isArray(this.fundForm.get('fundManagerRep')?.value)
-                ? this.fundForm.get('fundManagerRep')?.value
-                : [this.fundForm.get('fundManagerRep')?.value]
+              Array.isArray(
+                this.fundForm.get('subFundData.S_authorizedSignatory')?.value
+              )
+                ? this.fundForm.get('subFundData.S_authorizedSignatory')?.value
+                : [
+                    this.fundForm.get('subFundData.S_authorizedSignatory')
+                      ?.value,
+                  ]
+            )
+          );
+      }
+      if (
+        this.fundForm.get('subFundData.S_fundManagerRep')?.value &&
+        this.fundForm.get('subFundData.S_fundManagerRep')?.value.length
+      ) {
+        this.fundForm
+          .get('subFundData.S_fundManagerRep')
+          ?.setValue(
+            this.ParseDirectors(
+              Array.isArray(
+                this.fundForm.get('subFundData.S_fundManagerRep')?.value
+              )
+                ? this.fundForm.get('subFundData.S_fundManagerRep')?.value
+                : [this.fundForm.get('subFundData.S_fundManagerRep')?.value]
             )
           );
       }
 
       if (
-        this.fundForm.get('investmentComittee')?.value &&
-        this.fundForm.get('investmentComittee')?.value.length
+        this.fundForm.get('subFundData.S_investmentComittee')?.value &&
+        this.fundForm.get('subFundData.S_investmentComittee')?.value.length
       ) {
         this.fundForm
-          .get('investmentComittee')
+          .get('subFundData.S_investmentComittee')
           ?.setValue(
             this.ParseDirectors(
-              Array.isArray(this.fundForm.get('investmentComittee')?.value)
-                ? this.fundForm.get('investmentComittee')?.value
-                : [this.fundForm.get('investmentComittee')?.value]
+              Array.isArray(
+                this.fundForm.get('subFundData.S_investmentComittee')?.value
+              )
+                ? this.fundForm.get('subFundData.S_investmentComittee')?.value
+                : [this.fundForm.get('subFundData.S_investmentComittee')?.value]
             )
           );
       }
+
+      // SUB FUND:
+      if (this.fundForm.get('subFundData.S_PPM')?.value) {
+        for (let pair of this.fundForm
+          .get('subFundData.S_PPM')
+          ?.value.entries()) {
+          formData.append(pair[0], pair[1]);
+        }
+      }
+
+      if (this.fundForm.get('subFundData.S_investmentAgreement')?.value) {
+        for (let pair of this.fundForm
+          .get('subFundData.S_investmentAgreement')
+          ?.value.entries()) {
+          formData.append(pair[0], pair[1]);
+        }
+      }
+
+      if (this.fundForm.get('subFundData.S_subscriptionAgreement')?.value) {
+        for (let pair of this.fundForm
+          .get('subFundData.S_subscriptionAgreement')
+          ?.value.entries()) {
+          formData.append(pair[0], pair[1]);
+        }
+      }
+
+      if (this.fundForm.get('subFundData.S_signature')?.value) {
+        for (let pair of this.fundForm
+          .get('subFundData.S_signature')
+          ?.value.entries()) {
+          formData.append(pair[0], pair[1]);
+        }
+      }
+
       if (
-        this.fundForm.get('subscribers')?.value &&
-        this.fundForm.get('subscribers')?.value.length && this.fundForm.get('subscribers')?.value[0].name != ''
+        this.fundForm.get('subFundData.S_subscribers')?.value &&
+        this.fundForm.get('subFundData.S_subscribers')?.value.length
       ) {
         this.fundForm
-          .get('subscribers')
-          ?.setValue(this.MapSubscribers(this.fundForm.get('subscribers')?.value));
-          console.log(this.fundForm
-            .get('subscribers')
-            ?.value);
-          
+          .get('subFundData.S_subscribers')
+          ?.setValue(
+            this.MapSubscribers(
+              this.fundForm.get('subFundData.S_subscribers')?.value
+            )
+          );
       }
-      let obj: any = {
-        fundName: this.fundForm.get('fundName')?.value,
-        registrationNumber: this.fundForm.get('registrationNumber')?.value,
-        fundDescription: this.fundForm.get('fundDescription')?.value,
-        subFund: this.fundForm.get('subFund')?.value,
-        preparer:this.fundForm.get('preparer')?.value,
-        subFundData:
-          this.fundForm.get('subFund')?.value == 'Y'
-            ? subFundDataObj
-            : undefined,
-            assetUnderManagement:'0.0',  
-        domicile: this.fundForm.get('domicile')?.value,
-        fundType: this.fundForm.get('fundType')?.value,
-        fundManagerEntity: this.fundForm.get('fundManagerEntity')?.value,
-        fundManagerRep: this.fundForm.get('fundManagerRep')?.value,
-        fundStructure: this.fundForm.get('fundStructure')?.value,
-        offerPrice: this.fundForm.get('offerPrice')?.value,
-        fundSize: this.fundForm.get('fundSize')?.value,
+      subFundDataObj = {
+        fundName: this.fundForm.get('subFundData.S_fundName')?.value,
+        registrationNumber: this.fundForm.get(
+          'subFundData.S_registrationNumber'
+        )?.value,
+        fundDescription: this.fundForm.get('subFundData.S_fundDescription')
+          ?.value,
+        domicile: this.fundForm.get('subFundData.S_domicile')?.value,
+        fundType: this.fundForm.get('subFundData.S_fundType')?.value,
+        fundManagerEntity: this.fundForm.get('subFundData.S_fundManagerEntity')
+          ?.value,
+        fundManagerRep: this.fundForm.get('subFundData.S_fundManagerRep')
+          ?.value,
         boardExtension:
-          this.fundForm.get('fundStructure')?.value == 'open-ended'
-            ? this.fundForm.get('boardExtension')?.value
+          this.fundForm.get('subFundData.S_fundStructure')?.value ==
+          'open-ended'
+            ? this.fundForm.get('subFundData.S_boardExtension')?.value
             : '',
         investorExtension:
-          this.fundForm.get('fundStructure')?.value == 'open-ended'
-            ? this.fundForm.get('investorExtension')?.value
+          this.fundForm.get('subFundData.S_fundStructure')?.value ==
+          'open-ended'
+            ? this.fundForm.get('subFundData.S_investorExtension')?.value
             : '',
-        fundLife: this.fundForm.get('fundLifeYears')?.value,
-        issuedShares: this.fundForm.get('issuedShares')?.value,
-        ordinaryShare: this.fundForm.get('ordinaryShare')?.value,
-        fundEndDate: this.fundForm.get('fundEndDate')?.value,
-        fundStatus: this.fundForm.get('fundStatus')?.value,
-        fundStatusReason: this.fundForm.get('fundStatusReason')?.value,
-        reportingCurrency: this.fundForm.get('reportingCurrency')?.value,
-        lockupPeriod: this.fundForm.get('lockupPeriod')?.value,
-        fundYearEnd: this.fundForm.get('fundYearEnd')?.value,
-        productType: this.fundForm.get('productType')?.value,
-        catchup: this.fundForm.get('catchup')?.value,
-        reportingFrequency: this.fundForm.get('reportingFrequency')?.value,
-        legalCounsel: this.fundForm.get('legalCounsel')?.value,
-        legalCounselRep: this.fundForm.get('legalCounselRep')?.value,
-        auditor: this.fundForm.get('auditor')?.value,
-        auditorRep: this.fundForm.get('auditorRep')?.value,
-        trustee: this.fundForm.get('trustee')?.value,
-        trusteeRep: this.fundForm.get('trusteeRep')?.value,
-        subscribers: this.fundForm.get('subscribers')?.value,
-        directors: directorsArray,
-        investmentComittee: this.fundForm.get('investmentComittee')?.value,
-        authorizedSignatory: this.fundForm.get('authorizedSignatory')?.value,
-        fundAdmin: this.fundForm.get('fundAdmin')?.value,
-        GIIN: this.fundForm.get('GIIN')?.value,
-        closingPeriod: closingPeriodArray,
-        reclassificationFreq: this.fundForm.get('reclassificationFreq')?.value,
-        approver: this.fundForm.get('approver')?.value,
-        directorFee: this.fundForm.get('directorFee')?.value,
-        managementFee: this.fundForm.get('managementFee')?.value,
-        hurdleRate: this.fundForm.get('hurdleRate')?.value,
-        CTC: this.fundForm.get('CTC')?.value,
-        bank: this.fundForm.get('bank')?.value,
-        bankAccount: this.fundForm.get('bankAccount')?.value,
-        bankAccessId: this.fundForm.get('bankAccessId')?.value,
-        bankAccessPassword: this.fundForm.get('bankAccessPassword')?.value,
-        redeem: this.fundForm.get('redeem')?.value,
-        redeemReason: this.fundForm.get('redeemReason')?.value,
-        liquidate: this.fundForm.get('liquidate')?.value,
-        liquidateReason: this.fundForm.get('liquidateReason')?.value,
+        fundLife: this.fundForm.get('subFundData.S_fundLifeYears')?.value,
+        fundStructure: this.fundForm.get('subFundData.S_fundStructure')?.value,
+        assetUnderManagement: '0.0',
+        directors: directorsArraySF,
+        offerPrice: this.fundForm.get('subFundData.S_offerPrice')?.value,
+        fundSize: this.fundForm.get('subFundData.S_fundSize')?.value,
+        issuedShares: this.fundForm.get('subFundData.S_issuedShares')?.value,
+        ordinaryShare: this.fundForm.get('subFundData.S_ordinaryShare')?.value,
+        fundEndDate: this.fundForm.get('subFundData.S_fundEndDate')?.value,
+        fundStatus: this.fundForm.get('subFundData.S_fundStatus')?.value,
+        fundStatusReason: this.fundForm.get('subFundData.S_fundStatusReason')
+          ?.value,
+        reportingCurrency: this.fundForm.get('subFundData.S_reportingCurrency')
+          ?.value,
+        lockupPeriod: this.fundForm.get('subFundData.S_lockupPeriod')?.value,
+        fundYearEnd: this.fundForm.get('subFundData.S_fundYearEnd')?.value,
+        productType: this.fundForm.get('subFundData.S_productType')?.value,
+        catchup: this.fundForm.get('subFundData.S_catchup')?.value,
+        reportingFrequency: this.fundForm.get(
+          'subFundData.S_reportingFrequency'
+        )?.value,
+        legalCounsel: this.fundForm.get('subFundData.S_legalCounsel')?.value,
+        legalCounselRep: this.fundForm.get('subFundData.S_legalCounselRep')
+          ?.value,
+        auditor: this.fundForm.get('subFundData.S_auditor')?.value,
+        auditorRep: this.fundForm.get('subFundData.S_auditorRep')?.value,
+        trustee: this.fundForm.get('subFundData.S_trustee')?.value,
+        trusteeRep: this.fundForm.get('subFundData.S_trusteeRep')?.value,
+        subscribers: this.fundForm.get('subFundData.S_subscribers')?.value,
+        investmentComittee: this.fundForm.get(
+          'subFundData.S_investmentComittee'
+        )?.value,
+        authorizedSignatory: this.fundForm.get(
+          'subFundData.S_authorizedSignatory'
+        )?.value,
+        fundAdmin: this.fundForm.get('subFundData.S_fundAdmin')?.value,
+        GIIN: this.fundForm.get('subFundData.S_GIIN')?.value,
+        closingPeriod: closingPeriodArraySF,
+        reclassificationFreq: this.fundForm.get(
+          'subFundData.S_reclassificationFreq'
+        )?.value,
+        approver: this.fundForm.get('subFundData.S_approver')?.value,
+        directorFee: this.fundForm.get('subFundData.S_directorFee')?.value,
+        managementFee: this.fundForm.get('subFundData.S_managementFee')?.value,
+        hurdleRate: this.fundForm.get('subFundData.S_hurdleRate')?.value,
+        CTC: this.fundForm.get('subFundData.S_CTC')?.value,
+        preparer: this.fundForm.get('subFundData.S_preparer')?.value,
+        bank: this.fundForm.get('subFundData.S_bank')?.value,
+        bankAccount: this.fundForm.get('subFundData.S_bankAccount')?.value,
+        bankAccessId: this.fundForm.get('subFundData.S_bankAccessId')?.value,
+        bankAccessPassword: this.fundForm.get(
+          'subFundData.S_bankAccessPassword'
+        )?.value,
+        redeem: this.fundForm.get('subFundData.S_redeem')?.value,
+        redeemReason: this.fundForm.get('subFundData.S_redeemReason')?.value,
+        liquidate: this.fundForm.get('subFundData.S_liquidate')?.value,
+        liquidateReason: this.fundForm.get('subFundData.S_liquidateReason')
+          ?.value,
       };
-      console.log(obj);
+    }
+
+    //END OF SUB FUND
+
+    if (
+      this.fundForm.get('boardResolutions')?.value &&
+      this.fundForm.get('boardResolutions')?.value instanceof FormData
+    ) {
+
+      for (let pair of this.fundForm.get('boardResolutions')?.value.entries()) {
+        boardResolutionArrs.push(pair[1]);
+      }
+
+      formData.append('boardResolutions', boardResolutionArrs);
+    } else {
+      formData.append('boardResolutions', '');
+    }
+
+    if (this.fundForm.get('fundStructure')?.value == 'open-ended') {
       
-      formData.append('json', JSON.stringify(obj));
-
-      if (this.fundForm.get('PPM')?.value && this.fundForm.get('PPM')?.value instanceof FormData) {
-        for (let pair of this.fundForm.get('PPM')?.value.entries()) {
-          formData.append(pair[0], pair[1]);
-        }
-      }
-
-      if (this.fundForm.get('investmentAgreement')?.value && this.fundForm.get('investmentAgreement')?.value instanceof FormData) {
+      if (
+        this.fundForm.get('fundLifedocuments')?.value &&
+        this.fundForm.get('fundLifedocuments')?.value instanceof FormData
+      ) {
         for (let pair of this.fundForm
-          .get('investmentAgreement')
+          .get('fundLifedocuments')
           ?.value.entries()) {
-          formData.append(pair[0], pair[1]);
-        }
+          fundLifeArrs.push(pair[1]);
+        } 
+        formData.append('fundLifedocuments', fundLifeArrs);
+      }else {
+        formData.append('fundLifedocuments', '');
       }
-
-      if (this.fundForm.get('subscriptionAgreement')?.value && this.fundForm.get('subscriptionAgreement')?.value instanceof FormData) {
-        for (let pair of this.fundForm
-          .get('subscriptionAgreement')
-          ?.value.entries()) {
-          formData.append(pair[0], pair[1]);
-        }
-      }
-
-      if (this.fundForm.get('signature')?.value && this.fundForm.get('signature')?.value instanceof FormData) {
-        for (let pair of this.fundForm.get('signature')?.value.entries()) {
-          formData.append(pair[0], pair[1]);
-        }
-      }
-
-      this.fundForm.value.created_at = id ? this.fundForm.value.created_at : new Date().toISOString();
-      this.fundForm.value.updated_at =  id ? new Date().toISOString() : null;
-      console.log(formData.get('json'), typeof formData.get('json'));
-      console.log(id);
-      console.log(formData.getAll('boardResolutions'));
-
       
-      if(id){
-        this.spinner.show();
-        formData.append('fund_id',id);
-        this.apiService.onEdit(formData).subscribe(
-          (result: any) => {
-            if (result.status == 'ok') {
-              this._snackBar.open('Fund edited successfully!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.fundForm.reset();
-              this.router.navigate(['dashboard/funds/list']);
-              this.spinner.hide();
-            }else{
-              this._snackBar.open('Error in editing fund!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.spinner.hide();
-            }
-          },
-          (err: any) => {
+    }
+
+    if (
+      this.fundForm.get('directorsList')?.value &&
+      this.fundForm.get('directorsList')?.value.length
+    ) {
+      this.fundForm
+        .get('directorsList')
+        ?.setValue(
+          this.ParseSubscribersOrDirectorList(
+            this.fundForm.get('directorsList')?.value
+          )
+        );
+      this.fundForm.get('directorsList')?.value.map((result: any) => {
+        if (result.signature != null && result.signature instanceof FormData) {
+          for (let pair of result.signature.entries()) {
+            formData.append(pair[0], pair[1]);
+          }
+        }
+      });
+
+      directorsArray = this.fundForm
+        .get('directorsList')
+        ?.value.map((obj: any) => {
+          return obj.name;
+        });
+    }
+
+    if (
+      this.fundForm.get('closingPeriods')?.value &&
+      this.fundForm.get('closingPeriods')?.value.length &&
+      this.fundForm.get('closingPeriods')?.value[0].date != ''
+    ) {
+      let arr = this.ParseDateFormatMultiple(
+        this.fundForm.get('closingPeriods')?.value
+      );
+      this.fundForm.get('closingPeriods')?.setValue(arr);
+      closingPeriodArray = this.fundForm
+        .get('closingPeriods')
+        ?.value.map((obj: any) => {
+          return obj.date;
+        });
+    }
+
+    if (this.fundForm.get('redeem')?.value) {
+      this.fundForm
+        .get('redeem')
+        ?.setValue(
+          this.ParseDateFormatSingle(this.fundForm.get('redeem')?.value)
+        );
+    }
+
+    if (this.fundForm.get('fundEndDate')?.value != null) {
+      this.fundForm
+        .get('fundEndDate')
+        ?.setValue(
+          this.ParseDateFormatSingle(this.fundForm.get('fundEndDate')?.value)
+        );
+    }
+
+    if (
+      this.fundForm.get('approver')?.value &&
+      this.fundForm.get('approver')?.value.length
+    ) {
+      this.fundForm
+        .get('approver')
+        ?.setValue(
+          this.ParseDirectors(
+            Array.isArray(this.fundForm.get('approver')?.value)
+              ? this.fundForm.get('approver')?.value
+              : [this.fundForm.get('approver')?.value]
+          )
+        );
+    }
+
+    if (
+      this.fundForm.get('authorizedSignatory')?.value &&
+      this.fundForm.get('authorizedSignatory')?.value.length
+    ) {
+      this.fundForm
+        .get('authorizedSignatory')
+        ?.setValue(
+          this.ParseDirectors(
+            Array.isArray(this.fundForm.get('authorizedSignatory')?.value)
+              ? this.fundForm.get('authorizedSignatory')?.value
+              : [this.fundForm.get('authorizedSignatory')?.value]
+          )
+        );
+    }
+    if (
+      this.fundForm.get('fundManagerRep')?.value &&
+      this.fundForm.get('fundManagerRep')?.value.length
+    ) {
+      this.fundForm
+        .get('fundManagerRep')
+        ?.setValue(
+          this.ParseDirectors(
+            Array.isArray(this.fundForm.get('fundManagerRep')?.value)
+              ? this.fundForm.get('fundManagerRep')?.value
+              : [this.fundForm.get('fundManagerRep')?.value]
+          )
+        );
+    }
+
+    if (
+      this.fundForm.get('investmentComittee')?.value &&
+      this.fundForm.get('investmentComittee')?.value.length
+    ) {
+      this.fundForm
+        .get('investmentComittee')
+        ?.setValue(
+          this.ParseDirectors(
+            Array.isArray(this.fundForm.get('investmentComittee')?.value)
+              ? this.fundForm.get('investmentComittee')?.value
+              : [this.fundForm.get('investmentComittee')?.value]
+          )
+        );
+    }
+
+    if (
+      this.fundForm.get('subscribers')?.value &&
+      this.fundForm.get('subscribers')?.value.length &&
+      this.fundForm.get('subscribers')?.value[0].name &&
+      this.fundForm.get('subscribers')?.value[0].name.length
+    ) {
+      this.fundForm
+        .get('subscribers')
+        ?.setValue(
+          this.MapSubscribers(this.fundForm.get('subscribers')?.value)
+        );
+      console.log(this.fundForm.get('subscribers')?.value);
+      console.log(this.fundForm.get('subscribers')?.value);
+    }
+    let obj: any = {
+      fundName: this.fundForm.get('fundName')?.value,
+      registrationNumber: this.fundForm.get('registrationNumber')?.value,
+      fundDescription: this.fundForm.get('fundDescription')?.value,
+      subFund: this.fundForm.get('subFund')?.value,
+      preparer: this.fundForm.get('preparer')?.value,
+      subFundData:
+        this.fundForm.get('subFund')?.value == 'Y' ? subFundDataObj : undefined,
+      assetUnderManagement: '0.0',
+      domicile: this.fundForm.get('domicile')?.value,
+      fundType: this.fundForm.get('fundType')?.value,
+      fundManagerEntity: this.fundForm.get('fundManagerEntity')?.value,
+      fundManagerRep: this.fundForm.get('fundManagerRep')?.value,
+      fundStructure: this.fundForm.get('fundStructure')?.value,
+      offerPrice: this.fundForm.get('offerPrice')?.value,
+      fundSize: this.fundForm.get('fundSize')?.value,
+      boardExtension:
+        this.fundForm.get('fundStructure')?.value == 'open-ended'
+          ? this.fundForm.get('boardExtension')?.value
+          : '',
+      investorExtension:
+        this.fundForm.get('fundStructure')?.value == 'open-ended'
+          ? this.fundForm.get('investorExtension')?.value
+          : '',
+      fundLife: this.fundForm.get('fundLifeYears')?.value,
+      issuedShares: this.fundForm.get('issuedShares')?.value,
+      ordinaryShare: this.fundForm.get('ordinaryShare')?.value,
+      fundEndDate: this.fundForm.get('fundEndDate')?.value,
+      fundStatus: this.fundForm.get('fundStatus')?.value,
+      fundStatusReason: this.fundForm.get('fundStatusReason')?.value,
+      reportingCurrency: this.fundForm.get('reportingCurrency')?.value,
+      lockupPeriod: this.fundForm.get('lockupPeriod')?.value,
+      fundYearEnd: this.fundForm.get('fundYearEnd')?.value,
+      productType: this.fundForm.get('productType')?.value,
+      catchup: this.fundForm.get('catchup')?.value,
+      reportingFrequency: this.fundForm.get('reportingFrequency')?.value,
+      legalCounsel: this.fundForm.get('legalCounsel')?.value,
+      legalCounselRep: this.fundForm.get('legalCounselRep')?.value,
+      auditor: this.fundForm.get('auditor')?.value,
+      auditorRep: this.fundForm.get('auditorRep')?.value,
+      trustee: this.fundForm.get('trustee')?.value,
+      trusteeRep: this.fundForm.get('trusteeRep')?.value,
+      subscribers: this.fundForm.get('subscribers')?.value,
+      directors: directorsArray,
+      investmentComittee: this.fundForm.get('investmentComittee')?.value,
+      authorizedSignatory: this.fundForm.get('authorizedSignatory')?.value,
+      fundAdmin: this.fundForm.get('fundAdmin')?.value,
+      GIIN: this.fundForm.get('GIIN')?.value,
+      closingPeriod: closingPeriodArray,
+      reclassificationFreq: this.fundForm.get('reclassificationFreq')?.value,
+      approver: this.fundForm.get('approver')?.value,
+      directorFee: this.fundForm.get('directorFee')?.value,
+      managementFee: this.fundForm.get('managementFee')?.value,
+      hurdleRate: this.fundForm.get('hurdleRate')?.value,
+      CTC: this.fundForm.get('CTC')?.value,
+      bank: this.fundForm.get('bank')?.value,
+      bankAccount: this.fundForm.get('bankAccount')?.value,
+      bankAccessId: this.fundForm.get('bankAccessId')?.value,
+      bankAccessPassword: this.fundForm.get('bankAccessPassword')?.value,
+      redeem: this.fundForm.get('redeem')?.value,
+      redeemReason: this.fundForm.get('redeemReason')?.value,
+      liquidate: this.fundForm.get('liquidate')?.value,
+      liquidateReason: this.fundForm.get('liquidateReason')?.value,
+    };
+    console.log(obj);
+
+    formData.append('json', JSON.stringify(obj));
+
+    if (
+      this.fundForm.get('PPM')?.value &&
+      this.fundForm.get('PPM')?.value instanceof FormData
+    ) {
+      for (let pair of this.fundForm.get('PPM')?.value.entries()) {
+        formData.append(pair[0], pair[1]);
+      }
+    }
+
+    if (
+      this.fundForm.get('investmentAgreement')?.value &&
+      this.fundForm.get('investmentAgreement')?.value instanceof FormData
+    ) {
+      for (let pair of this.fundForm
+        .get('investmentAgreement')
+        ?.value.entries()) {
+        formData.append(pair[0], pair[1]);
+      }
+    }
+
+    if (
+      this.fundForm.get('subscriptionAgreement')?.value &&
+      this.fundForm.get('subscriptionAgreement')?.value instanceof FormData
+    ) {
+      for (let pair of this.fundForm
+        .get('subscriptionAgreement')
+        ?.value.entries()) {
+        formData.append(pair[0], pair[1]);
+      }
+    }
+
+    if (
+      this.fundForm.get('signature')?.value &&
+      this.fundForm.get('signature')?.value instanceof FormData
+    ) {
+      for (let pair of this.fundForm.get('signature')?.value.entries()) {
+        formData.append(pair[0], pair[1]);
+      }
+    }
+
+    this.fundForm.value.created_at = id
+      ? this.fundForm.value.created_at
+      : new Date().toISOString();
+    this.fundForm.value.updated_at = id ? new Date().toISOString() : null;
+    console.log(formData.get('json'), typeof formData.get('json'));
+    console.log(id);
+    console.log(formData.getAll('boardResolutions'));
+
+    if (id) {
+      this.spinner.show();
+      formData.append('fund_id', id);
+      this.apiService.onEdit(formData).subscribe(
+        (result: any) => {
+          console.log(result);
+          
+          if (result.status == 'ok') {
+            this._snackBar.open('Fund edited successfully!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+              duration: 4000,
+            });
+            this.fundForm.reset();
+            this.router.navigate(['dashboard/funds/list']);
+            this.spinner.hide();
+          } else {
+            this._snackBar.open('Error in editing fund!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+              duration: 4000,
+            });
             this.spinner.hide();
           }
-        );
-      }else{
-        this.spinner.show();
-        this.apiService.onSave(formData).subscribe(
-          (result: any) => {
-            if (result.status == 'ok') {
-              this._snackBar.open('Fund created successfully!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.fundForm.reset();
-              this.router.navigate(['dashboard/funds/list']);
-              this.spinner.hide();
-            }else{
-              this._snackBar.open('Error in saving fund!', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 4000,
-              });
-              this.spinner.hide();
-            }
-          },
-          (err: any) => {this.spinner.hide();}
-        );
-      }
-    // }
+        },
+        (err: any) => {
+          this.spinner.hide();
+        }
+      );
+    } else {
+      this.spinner.show();
+      this.apiService.onSave(formData).subscribe(
+        (result: any) => {
+          if (result.status == 'ok') {
+            this._snackBar.open('Fund created successfully!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+              duration: 4000,
+            });
+            this.fundForm.reset();
+            this.router.navigate(['dashboard/funds/list']);
+            this.spinner.hide();
+          } else {
+            this._snackBar.open('Error in saving fund!', '', {
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+              duration: 4000,
+            });
+            this.spinner.hide();
+          }
+        },
+        (err: any) => {
+          this.spinner.hide();
+        }
+      );
+    }
+    }
   }
 
   Cancel() {
@@ -2045,6 +2301,6 @@ export class CreateFundComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.selectedFund = undefined;
+    this.selectedFund = undefined;
   }
 }
