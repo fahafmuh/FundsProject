@@ -93,7 +93,6 @@ export class APIService {
           .post(this.serverURL + this.fundEditApi, formData, this.setHeaders())
           .subscribe(
             (response: any) => {
-              console.log(response);
               observer.next({
                 status: 'ok',
               });

@@ -19,7 +19,7 @@
     "module": "esnext",
     "lib": [
       "es2018",
-      "dom"
+      "dom","es5", "es6", "dom.iterable"
     ]
   },
   "angularCompilerOptions": {
