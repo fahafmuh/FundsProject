@@ -307,7 +307,7 @@
                         <br />
 
                         <input class="form-control" type="file" *ngIf="!isSimpleOptionSF"                          [attr.disabled]="isDropdownDisabledSF ? '' : null" accept=".pdf,.doc" (change)="
-                              handleFileMultipleInput(
+                              handleFileInput(
                                 'S_fundLifedocuments',
                                 $event,
                                 true
@@ -570,7 +570,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Board Resolutions</label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
-                              handleFileMultipleInput(
+                              handleFileInput(
                                 'S_boardResolutions',
                                 $event,
                                 true
@@ -1070,7 +1070,7 @@
 
               <input class="form-control" type="file" *ngIf="!isSimpleOption" accept=".pdf,.doc"
                 (change)="
-                    handleFileMultipleInput('fundLifedocuments', $event)
+                  handleFileInput('fundLifedocuments', $event)
                   "  />
 
               <div id="emailHelp" class="form-text" *ngIf="!isSimpleOption">
@@ -1413,7 +1413,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label">Board Resolutions</label>
             <div class="col-sm-10 mb-3">
               <input class="form-control" type="file" accept=".pdf,.doc"
-                (change)="handleFileMultipleInput('boardResolutions', $event)" />
+                (change)="handleFileInput('boardResolutions', $event)" />
 
               <div id="emailHelp" class="form-text">
                 Single file allowed.

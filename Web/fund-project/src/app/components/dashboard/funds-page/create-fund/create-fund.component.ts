@@ -1632,7 +1632,7 @@ setValidations(){
     let directorsArray = [];
     let closingPeriodArraySF = [];
     let closingPeriodArray = [];
-    if (this.fundForm.valid && this.showInvalidControls && !this.showInvalidControls.length) {
+    // if (this.fundForm.valid && this.showInvalidControls && !this.showInvalidControls.length) {
     let formData = new FormData();
     let boardResolutionArrs: any = [];
     let subFundDataObj = {};
@@ -1945,22 +1945,56 @@ setValidations(){
 
     //END OF SUB FUND
 
+    // if (
+    //   this.fundForm.get('boardResolutions')?.value &&
+    //   this.fundForm.get('boardResolutions')?.value instanceof FormData
+    // ) {
+
+    //   for (let pair of this.fundForm.get('boardResolutions')?.value.entries()) {
+    //     boardResolutionArrs.push(pair[1]);
+    //   }
+      
+
+    //   formData.append('boardResolutions', boardResolutionArrs);
+    // } else {
+    //   formData.append('boardResolutions', '');
+    // }
+
     if (
       this.fundForm.get('boardResolutions')?.value &&
       this.fundForm.get('boardResolutions')?.value instanceof FormData
     ) {
-
-      for (let pair of this.fundForm.get('boardResolutions')?.value.entries()) {
-        boardResolutionArrs.push(pair[1]);
+      for (let pair of this.fundForm
+        .get('boardResolutions')
+        ?.value.entries()) {
+        formData.append(pair[0], pair[1]);
       }
-
-      formData.append('boardResolutions', boardResolutionArrs);
     } else {
       formData.append('boardResolutions', '');
     }
 
+
+    
+    console.log(this.fundForm.get('boardResolutions')?.value);
+    console.log(formData.getAll('boardResolutions')[0]);
+
+    
     if (this.fundForm.get('fundStructure')?.value == 'open-ended') {
       
+      // if (
+      //   this.fundForm.get('fundLifedocuments')?.value &&
+      //   this.fundForm.get('fundLifedocuments')?.value instanceof FormData
+      // ) {
+      //   for (let pair of this.fundForm
+      //     .get('fundLifedocuments')
+      //     ?.value.entries()) {
+      //     fundLifeArrs.push(pair[1]);
+      //   } 
+      //   formData.append('fundLifedocuments', fundLifeArrs);
+      // }else {
+      //   formData.append('fundLifedocuments', '');
+      // }
+
       if (
         this.fundForm.get('fundLifedocuments')?.value &&
         this.fundForm.get('fundLifedocuments')?.value instanceof FormData
@@ -1968,14 +2002,16 @@ setValidations(){
         for (let pair of this.fundForm
           .get('fundLifedocuments')
           ?.value.entries()) {
-          fundLifeArrs.push(pair[1]);
-        } 
-        formData.append('fundLifedocuments', fundLifeArrs);
-      }else {
+          formData.append(pair[0], pair[1]);
+        }
+      } else {
         formData.append('fundLifedocuments', '');
       }
       
     }
+
+    console.log(this.fundForm.get('fundLifedocuments')?.value);
+    console.log(formData.getAll('fundLifedocuments')[0]);
 
     if (
       this.fundForm.get('directorsList')?.value &&
@@ -2216,13 +2252,17 @@ setValidations(){
       }
     }
 
+    console.log(this.fundForm.get('boardResolutions'));
+
+    console.log(this.fundForm.get('signature')?.value);
+    console.log(formData.get('signature'));
+    
     this.fundForm.value.created_at = id
       ? this.fundForm.value.created_at
       : new Date().toISOString();
     this.fundForm.value.updated_at = id ? new Date().toISOString() : null;
     console.log(formData.get('json'), typeof formData.get('json'));
     console.log(id);
-    console.log(formData.getAll('boardResolutions'));
 
     if (id) {
       this.spinner.show();
@@ -2280,7 +2320,7 @@ setValidations(){
         }
       );
     }
-    }
+    // }
   }
 
   Cancel() {
