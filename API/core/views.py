@@ -392,7 +392,7 @@ def update_fund_object(fund_obj,data,request,sub_fund=False):
     fund_obj.issued_shares=int(data['issuedShares'])
     fund_obj.ordinary_shares=int(data['ordinaryShare'])
     fund_obj.fund_status=get_id_of_tuple(data['fundStatus'],FUND_STATUS)
-    fund_obj.reason_to_change=''    # what ??
+    fund_obj.reason_to_change=data['fundStatusReason']
     fund_obj.report_currency=report_currency
     fund_obj.fund_size=float(data['fundSize'])
     fund_obj.lock_up_period=int(data['lockupPeriod'])
@@ -504,7 +504,7 @@ def update_fund_object(fund_obj,data,request,sub_fund=False):
             obj.save()
             #ADDED WORK FOR FUND LIFE OPEN DOCUMENT BELOW 
             file=get_file_or_none(request,'fundLifedocuments','S_fundLifedocuments',sub_fund)
-            obj.fundlifeopendocument.all().delete()
+            obj.fundlifeopendoc.all().delete()
             if file!=-1:
                 if file!=None:
                     f_obj=FundLifeOpenDocument(fundlifeopen=obj,document=file)
