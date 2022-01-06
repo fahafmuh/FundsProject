@@ -32,7 +32,6 @@ export class APIService {
         })
         .subscribe(
           (response: any) => {
-            console.log(response);
             
             observer.next({
               status: 'ok',
@@ -73,7 +72,6 @@ export class APIService {
         .get(this.serverURL + this.logoutApi, this.setHeaders())
         .subscribe(
           (response) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });
@@ -112,7 +110,6 @@ export class APIService {
         .post(this.serverURL + this.fundCreateApi, formData, this.setHeaders())
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });
@@ -132,6 +129,7 @@ export class APIService {
         .get(this.serverURL + this.DirectorsApi, this.setHeaders())
         .subscribe(
           (res) => {
+            
             let response: any = res;
             observer.next({
               status: 'ok',
@@ -152,9 +150,9 @@ export class APIService {
       this.http
         .get(this.serverURL + this.getAllFundsApi, this.setHeaders())
         .subscribe(
+          
           (res) => {
             let response: any = res;
-            console.log(response);
             
             observer.next({
               status: 'ok',
@@ -177,8 +175,6 @@ export class APIService {
         .subscribe(
           (res) => {
             let response: any = res;
-            console.log(response);
-            
             observer.next({
               status: 'ok',
               fundsByRoles: response.data
@@ -204,7 +200,6 @@ export class APIService {
         .post(this.serverURL + this.DirectorsApi, formData, this.setHeaders())
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });
@@ -225,7 +220,6 @@ export class APIService {
         .post(this.serverURL + this.ApprovalApi, formValues, this.setHeaders())
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });
@@ -247,7 +241,6 @@ export class APIService {
         .post(this.serverURL + this.deleteDirectorsApi,formData,this.setHeaders())
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });
@@ -269,7 +262,6 @@ export class APIService {
         .post(this.serverURL + this.deleteFundApi,formData,this.setHeaders())
         .subscribe(
           (response: any) => {
-            console.log(response);
             observer.next({
               status: 'ok',
             });

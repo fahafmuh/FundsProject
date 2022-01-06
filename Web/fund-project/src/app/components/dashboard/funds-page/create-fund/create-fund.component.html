@@ -306,7 +306,8 @@
                           formControlName="S_boardExtension" placeholder="Enter Fund board Extension" />
                         <br />
 
-                        <input class="form-control" type="file" *ngIf="!isSimpleOptionSF"                          [attr.disabled]="isDropdownDisabledSF ? '' : null" accept=".pdf,.doc" (change)="
+                        <input class="form-control" type="file" *ngIf="!isSimpleOptionSF"                          
+                          [attr.disabled]="isDropdownDisabledSF ? '' : null" accept=".pdf,.doc" (change)="
                               handleFileInput(
                                 'S_fundLifedocuments',
                                 $event,
@@ -316,6 +317,11 @@
                         <div id="emailHelp" class="form-text" *ngIf="!isSimpleOptionSF">
                           Single file upload allowed.
                         </div>
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_fundLifedocuments')?.value && !checkType(fundForm.get('subFundData.S_fundLifedocuments')?.value)">
+                          <p>
+                            <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_fundLifedocuments')?.value)}}</ngb-alert>
+                          </p>
+                        </ng-container>
                       </div>
 
                       <div class="mb-3 row">
@@ -421,13 +427,13 @@
                         <label for="staticEmail" class="form-label">Subscription Agreement<span
                           style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
-                              handleFileInput('S_subscriptionAgreement', $event)
+                              handleFileInput('S_subscriptionAgreement', $event,true)
                             " />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
                         </div>
-                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_subscriptionAgreement')?.value && checkType(fundForm.get('subFundData.S_subscriptionAgreement')?.value)">
+                        <ng-container>
                           <p>
                             <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_subscriptionAgreement')?.value)}}</ngb-alert>
                           </p>
@@ -437,7 +443,7 @@
                         <label for="staticEmail" class="form-label">Investment Agreement<span
                           style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc" (change)="
-                              handleFileInput('S_investmentAgreement', $event)
+                              handleFileInput('S_investmentAgreement', $event,true)
                             "  />
 
                         <div id="emailHelp" class="form-text">
@@ -556,7 +562,7 @@
                         <label for="staticEmail" class="form-label">Signature<span
                           style="color: rgb(253, 65, 65)">&nbsp;*</span></label>
                         <input class="form-control" type="file" accept=".pdf,.doc"
-                          (change)="handleFileInput('S_signature', $event)" />
+                          (change)="handleFileInput('S_signature', $event,true)" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
@@ -580,7 +586,7 @@
                         <div id="emailHelp" class="form-text">
                           Single file upload allowed.
                         </div>
-                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_boardResolutions')?.value && fundForm.get('subFundData.S_boardResolutions')?.value.length && !checkType(fundForm.get('subFundData.S_boardResolutions')?.value)">
+                        <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('subFundData.S_boardResolutions')?.value && !checkType(fundForm.get('subFundData.S_boardResolutions')?.value)">
                           <p>
                             <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('subFundData.S_boardResolutions')?.value)}}</ngb-alert>
                           </p>
@@ -765,7 +771,7 @@
                       <div class="mb-3">
                         <label for="staticEmail" class="form-label">Private Placement Memorandum (PPM)</label>
                         <input class="form-control" type="file" accept=".pdf,.doc"
-                          (change)="handleFileInput('S_PPM', $event)" />
+                          (change)="handleFileInput('S_PPM', $event,true)" />
 
                         <div id="emailHelp" class="form-text">
                           Single file upload only.
@@ -1076,6 +1082,11 @@
               <div id="emailHelp" class="form-text" *ngIf="!isSimpleOption">
                 Single file upload allowed.
               </div>
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('fundLifedocuments')?.value && !checkType(fundForm.get('fundLifedocuments')?.value)">
+                <p>
+                  <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{getFileName(fundForm.get('fundLifedocuments')?.value)}}</ngb-alert>
+                </p>
+              </ng-container>
             </div>
           </div>
           <div class="mb-3 row">
@@ -1418,7 +1429,7 @@
               <div id="emailHelp" class="form-text">
                 Single file allowed.
               </div>
-              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('boardResolutions')?.value && fundForm.get('boardResolutions')?.value.length && !checkType(fundForm.get('boardResolutions')?.value)">
+              <ng-container *ngIf="selectedFund && selectedFund.id && fundForm.get('boardResolutions')?.value && !checkType(fundForm.get('boardResolutions')?.value)">
                 <p>
                   <ngb-alert [dismissible]="false" type="primary">Uploaded File: {{ getFileName(fundForm.get('boardResolutions')?.value)}}</ngb-alert>
                 </p>
@@ -1659,6 +1670,22 @@
               </select>
               <div id="emailHelp" class="form-text">
                 Select bank from list above.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Product Type</label>
+            <div class="col-sm-10">
+
+              <select class="form-select" aria-label="Default select example" formControlName="productType">
+                <option value="" disabled>Select Product Type</option>
+                <option *ngFor="let data of productTypeData" [value]="data.value">
+                  {{ data.viewValue }}
+                </option>
+              </select>
+              <div id="emailHelp" class="form-text">
+                This list can be edited at system setup with new products, but cannot remove.
               </div>
             </div>
           </div>
