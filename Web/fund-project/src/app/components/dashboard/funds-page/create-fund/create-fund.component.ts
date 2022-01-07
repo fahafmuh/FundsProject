@@ -123,7 +123,7 @@ export class CreateFundComponent implements OnInit, OnDestroy {
 
   reportingFrequencyData = [
     { value: 'weekly', viewValue: 'Weekly' },
-    { value: 'fortnight', viewValue: 'Weekly' },
+    { value: 'fortnight', viewValue: 'Fortnight' },
     { value: 'month', viewValue: 'Month' },
     { value: 'quarter', viewValue: 'Quarter' },
     { value: 'semi-annual', viewValue: 'Semi Annual' },
@@ -1250,7 +1250,7 @@ setValidations(){
       const formData: FormData = new FormData();
       let file = event.target.files[0];
       if (!control.name[0].id) {
-        keyName = this.MapIdFromName(control.name[0]).toString();
+        keyName = this.MapIdFromName(control.name).toString();
       } else {
         keyName = control.name[0].id;
       }
@@ -1263,9 +1263,9 @@ setValidations(){
       file = undefined;
     } else {
       let controlForName = this.fundForm.get('directorsList')?.value[index];
-
+      
       if (!controlForName.name[0].id) {
-        keyName = this.MapIdFromName(controlForName.name[0]).toString();
+        keyName = this.MapIdFromName(controlForName.name).toString();
       } else {
         keyName = controlForName.name[0].id;
       }
@@ -1524,6 +1524,8 @@ setValidations(){
 
   MapIdFromName(name: any) {
     let str = '';
+    console.log(name);
+    
     if (this.selectedFund && this.selectedFund.id && !Number.isInteger(name)) {
       this.directors.map((res: any) => {
         if (res.director_name === name[0]) {
@@ -1533,10 +1535,14 @@ setValidations(){
     } else {
       str = name && name.length ? name[0].id.toString() : '';
     }
+    console.log(str);
+    
     return str;
   }
 
   ParseSubscribersOrDirectorList(arr: any) {
+    console.log(arr);
+    
     arr.map((res: any) => {
       res.name = this.MapIdFromName(res.name);
     });
@@ -1544,11 +1550,13 @@ setValidations(){
   }
 
   MapSubscribers(arr: any) {
+    console.log(arr);
+    
     arr.map((res: any) => {
       if (res.name[0].director_name) {
         res.name = res.name[0].director_name;
       } else {
-        res.name = res.name;
+        res.name = res.name[0];
       }
     });
     return arr;
@@ -2133,6 +2141,8 @@ setValidations(){
           )
         );
     }
+    console.log(this.fundForm.get('subscribers')?.value);
+    
     if (
       this.fundForm.get('subscribers')?.value &&
       this.fundForm.get('subscribers')?.value.length &&
@@ -2260,6 +2270,7 @@ setValidations(){
     if (id) {
       this.spinner.show();
       formData.append('fund_id', id);
+      formData.append('id', id);
       this.apiService.onEdit(formData).subscribe(
         (result: any) => {
           
